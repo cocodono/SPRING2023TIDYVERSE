@@ -1,0 +1,373 @@
+---
+title: "Week 9 Project"
+author: "Taha Ahmad"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r package loading, message=FALSE}
+library(tidyverse)
+library(httr2)
+library(jsonlite)
+library(keyring)
+```
+
+## Introduction
+
+For this assignment, we'll be practicing our knowledge of Tidyverse functions by creating vignette examples of the packages that make up Tidyverse. In my case, I wanted to attempt going over the forcats package which focuses on manipulating factor elements in a dataframe, as I have no experience with using it at this point.
+
+### Loading a Dataset
+
+In order to make examples for forcats, we need a dataset loaded into R with categorical data. Preferably both ordinal and nominal. The dataset I have chosen is Employee Attrition and Factors from Kaggle <https://www.kaggle.com/datasets/thedevastator/employee-attrition-and-factors>. We begin by loading the data through the Kaggle API. After loading it in we take a subset of the data with a few columns and rows that will be relevant with the examples.
+
+```{r loading dataset}
+username = "tahamad"
+filename = "attrition.zip"
+
+if (!("kaggle" %in% as_vector(key_list()[2]))) {
+  key_set("APIKeys","kaggle")
+}
+
+api <- request(r"(https://www.kaggle.com/api/v1/datasets/download/thedevastator/employee-attrition-and-factors)")
+req <- api %>%
+  req_auth_basic(username = username, password = key_get("APIKeys","kaggle")) %>%
+  req_method("GET")
+
+resp <- req %>%
+  req_perform()
+
+download.file(resp$url, filename, mode="wb", quiet = TRUE)
+
+att_df <- read_csv(filename, show_col_types = FALSE)
+
+att_df <- att_df %>%
+  select(Age, Attrition, BusinessTravel, DailyRate, Department, JobRole) %>%
+  head(20)
+
+glimpse(att_df)
+```
+
+### Factors
+
+Our dataframe now has categorical data multiple columns of categorical data. However, let's focus on the ordinal variable of "BusinessTravel" and nominal variable of "JobRole". Looking at the glimpse of the dataframe, we actually don't have any factors as a column type. Forcats can help us fix that!
+
+#### factor()
+
+factor() is the function which lets us create the factor datatype. It has the following arguments:
+
+factor(x = character(), levels, labels = levels, exclude = NA, ordered = is.ordered(x), nmax = NA)
+
+-   x is the character vector which we want to factorize. With levels being the different unique values the character vectors can be.
+
+-   levels are the specific character values within the data that form the unique values. Factor() will automatically retrieve these unique values but you can specify these if you would like to order the factors or only take certain values as factors. Those left unspecified will turn into NA values.
+
+-   labels are new names you can specify for the various different factors. By default the names are the same as the levels, however if you would like to change the names you can from here.
+
+-   exclude allows you to input a character vector of unique values that you would not like to be included within your level.
+
+-   ordered will take a boolean that sets if the factor variable is ordered or not.
+
+-   nmax can be set to an integer that will only allow a maximum number of levels.
+
+##### Examples
+
+Let's use factor() to turn our dataframe columns of "BusinessTravel" and "JobRole" into factored columns. Notice how we specify the order of levels for "BusinessTravel" as we want to ensure the levels go from least to most amount of travel. A clear order. However, for "JobRole" we set ordered to FALSE as by being a nominal variable, these variables do not actually have a set order.
+
+```{r factor}
+att_df$BusinessTravel <- factor(att_df$BusinessTravel,levels=c("Non-Travel","Travel_Rarely","Travel_Frequently"))
+att_df$JobRole <- factor(att_df$JobRole, ordered = FALSE)
+glimpse(att_df)
+```
+
+Notice how the column type has changed to <fct>!
+
+#### levels()
+
+levels() is the function which shows us the levels set to a factor. It has the following arguments:
+
+levels(x)
+
+-   x is the factor vector which we want to see the levels of.
+
+##### Examples
+
+Let's use levels() to see which levels the now factorized column of "JobRole" has.
+
+```{r levels}
+levels(att_df$JobRole)
+```
+
+### Inspecting Factors
+
+Now that we have factor columns, what exactly else does forcats let us do with them? Well forcats provides for many functions that apply to factor vectors and we'll go over inspecting factors in this section.
+
+#### fct_count()
+
+fct_count() is the function which allows to get the counts of each value in a factor. It has the following arguments:
+
+fct_count(f, sort = FALSE, prop = FALSE)
+
+-   f is the factor vector which we want to see the levels of.
+
+-   sort takes a boolean which allows us to sort the data by count value instead of level order if set to true.
+
+-   prop takes a boolean which allows us to convert the count to proportions of each level instead.
+
+##### Examples
+
+Let's use fct_count() to see the counts of people's travel habits from "BusinessTravel". Once with sort disabled and once with sort and prop set to TRUE.
+
+```{r levels 1}
+fct_count(att_df$BusinessTravel)
+```
+
+```{r levels 2}
+fct_count(att_df$BusinessTravel, sort= TRUE, prop = TRUE)
+```
+
+#### fct_match()
+
+fct_match() is the function which allows to find the presence of values in a factor. It has the following arguments:
+
+fct_count(f, lvls)
+
+-   f is the factor vector which we want to see the levels of.
+
+-   lvls takes a character vector of each value that you want the presence of checked. Note that you can not check for values that are not in the factor vector itself.
+
+##### Examples
+
+Let's use fct_match() to see the which rows of our dataframe have the levels of "BusinessTravel" of "Travel_Frequently" and "Non-Travel".
+
+```{r match 1}
+att_df %>%
+  filter(fct_match(att_df$BusinessTravel, c("Travel_Frequently","Non-Travel")))
+```
+
+### Combining Factors
+
+There are occasions where we'll have multiple factor vectors of data which we'll want to combine. Forcats provides for this as well.
+
+#### fct_c()
+
+fct_c() is the function which allows to combine together factor vectors with different levels. It has the following arguments:
+
+fct_c(...)
+
+-   ... includes each factor vector that you want to combine.
+
+##### Examples
+
+Let's use fct_c() to combine the two columns "BusinessTravel" and "JobRole" into one.
+
+```{r fct_c 1}
+fct_c(att_df$BusinessTravel,att_df$JobRole)
+```
+
+#### fct_unify()
+
+fct_unify() is the function which allows for sharing the levels of different factor vectors with each other. It has the following arguments:
+
+fct_c(fs, levels = lvls_union(fs))
+
+-   fs includes each factor vector that you want to combine the levels of.
+
+-   levels can be set to a character vector of the specific values that you want shared if you have them.
+
+##### Examples
+
+Let's use fct_unify() to combine the levels of the two columns "BusinessTravel" and "JobRole" for each column.
+
+```{r fct_unify 1}
+businesstrav <- att_df$BusinessTravel
+jobrol <- att_df$JobRole
+fct_unify(list(businesstrav,jobrol))
+```
+
+### Changing Order
+
+In order to explore data we may want to look at different orders of the levels. Forcats allows for multiple different ways to do this.
+
+#### fct_relevel()
+
+fct_relevel() is the function which allows you to manually change the order of factor levels. It has the following arguments:
+
+fct_relevel(.f, ..., after = 0L)
+
+-   .f is the factor vector you want to relevel.
+
+-   ... includes a character vector of the new order of the levels or any functions that you might want to relevel by such as sort().
+
+-   after is the position you want to place the levels included in ... after.
+
+##### Examples
+
+Let's use fct_relevel() to reverse the ordering of "BusinessTravel". (fct_reverse() actually does this exact same thing but we won't be going over it in this vignette).
+
+```{r fct_relevel 1}
+att_df %>%
+  pull(BusinessTravel) %>%
+  fct_relevel(c('Travel_Frequently', 'Travel_Rarely', 'Non-Travel'))
+```
+
+Let's also showcase the use of the after parameter. Here we move the level "Non-Travel" to after the first position where it previously was.
+
+```{r fct_relevel 2}
+att_df %>%
+  pull(BusinessTravel) %>%
+  fct_relevel(c('Non-Travel'), after = 1)
+```
+
+#### fct_shift()
+
+fct_shift() is the function which allows for moving the order of factors to the left or to the right. It has the following arguments:
+
+fct_shift(f, n = 1L)
+
+-   f includes the factor vector that you want to shift the levels of.
+
+-   n is a integer which determines what direction and how many levels you'll be shifting the order in said direction. A postive n shifts all levels n times to the left, while a negative n shifts all levels n times to the right.
+
+##### Examples
+
+Let's use fct_shift() shift the order of "JobRole" around first to the left and then to the right.
+
+```{r fct_shift 1}
+att_df %>%
+  pull(JobRole) %>%
+  fct_shift(1)
+```
+
+```{r fct_shift 2}
+att_df %>%
+  pull(JobRole) %>%
+  fct_shift(-1)
+```
+
+### Change Values
+
+With each value in a factor being mapped to a level, it becomes easy to modify these values through forcats functions operating on the levels.
+
+#### fct_recode()
+
+fct_recode() is the function which allows you to manually change the values of each level. It has the following arguments:
+
+fct_recode(.f, ...)
+
+-   .f is the factor vector you want to change the values of.
+
+-   ... includes a mapping of each new value to the existing levels.
+
+##### Examples
+
+Let's use fct_recode() to change the values of "BusinessTravel". A simple renaming should suffice here. We'll change "Non-Travel" to "No", "Travely_Rarely" to "Some", and "Travel_Frequently" to "Yes".
+
+```{r fct_recode 1}
+att_df %>%
+  pull(BusinessTravel) %>%
+  fct_recode(Yes = "Travel_Frequently", Some = "Travel_Rarely", No = "Non-Travel")
+```
+
+Let's also showcase that you can simply rename a single value below.
+
+```{r fct_recode 2}
+att_df %>%
+  pull(BusinessTravel) %>%
+  fct_recode(Yes = "Travel_Frequently")
+```
+
+#### fct_other()
+
+fct_other() is a very useful function which allows for replacing certain levels to a single other value. It has the following arguments:
+
+fct_other(f, keep, drop, other_level = "Other")
+
+-   f includes the factor vector that you want to change the levels of.
+
+-   keep is a character vector of the values that you would like to keep.
+
+-   drop is a character vector of the values that you would like to remove.
+
+-   other_level is a string that you would like to change the removed values to, by default this is "Other".
+
+##### Examples
+
+Let's use fct_other() on "JobRole" to first change any levels that are not "Research Scientist" and "Laboratory Technician" to other.
+
+```{r fct_other 1}
+att_df %>%
+  pull(JobRole) %>%
+  fct_other(keep = c("Research Scientist", "Laboratory Technician"))
+```
+
+Afterwards we showcase using drop to only change the levels "Research Scientist" and "Laboratory Technician" to "Unimportant Role" by utilizing the other_level argument.
+
+```{r fct_other 2}
+att_df %>%
+  pull(JobRole) %>%
+  fct_other(drop = c("Research Scientist", "Laboratory Technician"), other_level = "Unimportant Role")
+```
+
+### Adding or Removing Levels
+
+Occasionally we'll want to add new levels to expand our dataset or remove levels that don't end up being used. Forcats lets us do that!
+
+#### fct_expand()
+
+fct_expand() is the function which allows you to manually add levels to a factor vector. It has the following arguments:
+
+-   fct_expand(.f, ...)
+
+-   .f is the factor vector you want to change the values of.
+
+-   ... includes each new level that you want to add.
+
+##### Examples
+
+Let's use fct_expand() to add the level of "Travel_Always" to "BusinessTravel".
+
+```{r fct_expand 1}
+att_df %>%
+  pull(BusinessTravel) %>%
+  fct_drop("Travel_Rarely")
+  
+  fct_expand("Travel_Always")
+```
+
+#### fct_drop()
+
+fct_drop() is a function that removes any unused levels from a factor vector. It has the following arguments:
+
+fct_drop(f, only)
+
+-   f includes the factor vector that you want to drop the levels of.
+
+-   only is a character vector of the values that you would like to drop so other unused values stay.
+
+##### Examples
+
+Let's use fct_drop() on "JobRole" to drop "Research Scientist" from levels after filtering it out.
+
+```{r fct_drop 1}
+att_df %>%
+  filter(JobRole != "Research Scientist") %>%
+  pull(JobRole) %>%
+  fct_drop()
+```
+
+Afterwards we showcase using drop to only remove the level of "Laboratory Technician" despite also not having "Research Scientist" as a value within the data.
+
+```{r fct_drop 2}
+att_df %>%
+  filter(JobRole != "Research Scientist" & JobRole != "Laboratory Technician") %>%
+  pull(JobRole) %>%
+  fct_drop(only = "Laboratory Technician")
+```
+
+## Conclusions
+
+We've learned some forcats functions that allow us to factorize data and also manipulate the factorize data. This comes in handy when working with categorical variables of both the ordinal and nominal kind. If we wanted to extend this vignette, we could either tackle more forcats functions or apply our examples in some real world scenarios where they could be used.
