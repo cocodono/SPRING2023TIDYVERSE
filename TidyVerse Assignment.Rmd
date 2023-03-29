@@ -1,0 +1,150 @@
+---
+title: "DATA607: TidyVerse"
+author: "Farhana Akther"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### TidyVerse Assignment: Collaborating Around a Code Project with GitHub.
+
+
+## Overview
+
+In this assignment we will get to practice collaborating around a code project with GitHub. We will create and example using one or more TidyVerse packages and demonstrate how to use the capabilities.
+
+**We will use a birth dataset from 'fivethirtyeight.com'. This dataset contains U.S. births data for 1994 - 2003 which, is provided by the Centers for Disease Control and Prevention's (CDC's) National Center for Health Statistics (NCNS). We will load the data from their GitHub repository.**
+
+#### Load Library
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+## Load Data
+
+```{r}
+us_births <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/births/US_births_1994-2003_CDC_NCHS.csv", header = TRUE)
+```
+
+#### Header Defination Table.
+
+![](HeaderDefinition.png)
+
+## View  Data
+
+*View the dataset*
+
+```{r}
+dim_desc(us_births)
+```
+
+```{r}
+head(us_births)
+tail(us_births)
+```
+*there are 3652obs/rows and 5 variables/columns*
+
+**Now, I will transform the dataset by using functions from the dplyr and ggplot package.**
+
+## dplyr::summerize() & dplyr::sum()
+
+**How many total number of births in the US from 1994-2003?**
+
+```{r}
+us_births %>% summarise(total_births = sum(births)) 
+```
+
+## dplyr::Groupby(), dplyr::summerize() & dplyr::sum()
+
+**How many total number of births in the US from 1994-2003 each year?**
+  
+```{r}
+Totalbirth<-us_births %>%
+  group_by(year) %>%
+  summarise(total_births = sum(births))
+Totalbirth
+```
+
+## ggplot2::ggplot()
+
+**Showing in graph the total number of births in the US from 1994-2203 each year**
+
+```{r}
+ggplot(Totalbirth, aes(x=(year), total_births)) + geom_bar(stat="identity", width = 0.5, color = "black", fill = "lightblue") + labs(x = "Year", y = "Total Births", title = "Total Birth in Each Year 1994-2003") + theme(axis.text.x = element_text(angle = 60, hjust = 1, size=8)) + geom_label(aes(label=total_births), position = position_dodge(width = 0.1), size = 3, label.padding = unit(0.1, "lines"), label.size = 0.09, inherit.aes = TRUE)
+```
+
+## dplyr::Groupby(), dplyr::summerize() & dplyr::mean()
+
+**What was the average births in the US from 1994-2203 per month?**
+
+```{r}
+avg_month <- us_births %>%
+   group_by(month) %>%
+  summarize(Average = mean(births))
+avg_month
+```
+
+
+## dplyr::filter(), dplyr::mutate() & dplyr::select()
+
+**What was the birth rates in a given year (ex: year in 2000)?**
+
+```{r}
+births_2000 <- us_births %>%
+  filter(year == 2000) %>%
+  group_by(month)%>%
+  summarise(births = sum(births))%>%
+  mutate (birth_rate = round((births/281400000)*10000,2)) # As per CDC, birth rate is calculated by dividing the number of live births in a population in a year by the midyear resident population. Birth rates are expressed as the number of live births per 1,000 population. In 2000, the U.S. Census Bureau counted 281.4 million people in the United States.  
+births_2000 
+max(births_2000$birth_rate, na.rm = FALSE )
+```
+
+
+## ggplot2::ggplot()
+
+**Showing in graph the birth rate per month in the Year 2000**
+
+```{r}
+ggplot(births_2000, aes(x = factor(month), y = birth_rate)) +
+  geom_bar(stat = "identity", width = 0.5, color = "black", fill = "lightblue") +
+  scale_x_discrete(labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                              "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) +
+  labs(x = "Month", y = "Birth rate", title = "Birth Rate Per Month in Year 2000")+
+  geom_label(aes(label=birth_rate), position = position_dodge(width = 0.1), size = 3, label.padding = unit(0.1, "lines"), label.size = 0.09, inherit.aes = TRUE)
+```
+
+Based on our data set from the Centers for Disease Control and Prevention (CDC), the birth rate in the United States in January 2000 was approximately 11.73 compared to December 2000 was approximately 11.97 births per 1,000 population. The highest birth rate in the United States was in August, which was approximately 12.80 births per 1,000 population. It's important to note that birth rates can vary by state and demographic group, so this is an overall national estimate.
+
+## Conclusion
+
+In this assignment we were able to extract dataset from fivethirtyeight.com and use TidyVerse packages, specifically dplyr and ggplot2 to demonstrate it's capabilities. 
+We have used dplyr to manipulate our data by using mutate(), select(), filter() and summarise() functions. These all combine with group_by() which allowed us to perform our operation “by group”. We have also used ggplot2 to have a visual representation of our data as it is easier and faster to transmit in our brain.
+
+
+
+## Source
+
+https://dplyr.tidyverse.org/articles/dplyr.html
+
+https://rdrr.io/cran/dplyr/man/dim_desc.html
+
+https://rdrr.io/github/tidyverse/dplyr/man/dim_desc.html
+
+https://www.cdc.gov/nchs/hus/sources-definitions/rate.htm
+
+https://www.census.gov/library/publications/2001/dec/c2kbr01-12.html
+
+
+
+
+
+
