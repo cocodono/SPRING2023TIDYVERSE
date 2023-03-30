@@ -3,7 +3,8 @@ Spring 2023 Tidyverse create and extend assignments
 
 # Waheeb Algabri
 
-
+<li> <a href = "https://github.com/waheeb123/SPRING2023TIDYVERSE/blob/main/Waheeb_Algabri.Rmd"> Github </a> </li>
+<li> <a href = " file:///Users/waheebalgabri/Desktop/Tidyverse_Waheeb/SPRING2023TIDYVERSE/Waheeb_Algabri.html "> Rpubs </a> </li>
 
 # Taha A
 Initial Description and Link:
