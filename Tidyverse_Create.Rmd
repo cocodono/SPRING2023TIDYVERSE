@@ -1,0 +1,115 @@
+---
+title: "Tidyverse Create"
+author: "Coco Donovan"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## Introduction:
+
+For my tidyverse create assignment, I chose a data set containing roster
+information for all NCAA Women's Basketball teams. I intend to use readr to read 
+in my data, dplyr to manipulate my data and ggplot2 to display my analysis.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading/Installing Packages
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(readr)
+```
+
+## readr
+
+### read_csv()
+
+I used the read_csv() function to read in my csv of NCAA Women's Basketball 
+roster info. Within read_csv() I used the col_types argument to change data types
+of certain columns. Initially the columns that I changed inside read_csv() were
+chr type, but to do meaningful analysis I needed to make them numerical, hence 
+setting them to col_double() (which sets the data type of the column to a double).
+This same logic can be applied to height_
+
+```{r}
+ncaa_wbb_rosters <- read_csv('https://raw.githubusercontent.com/Sports-Roster-Data/womens-college-basketball/main/wbb_rosters_2022_23.csv', col_types = list(total_inches = col_double(), height_ft = col_double(), height_in = col_double()))
+
+ncaa_avg_height <- round(mean(ncaa_wbb_rosters$total_inches, na.rm = TRUE),2)
+```
+
+## dyplr
+
+### distinct()
+
+I am unsure what values the redshirt column could possibly take on, so I use a 
+pipe and the distinct() function to highlight the possible values 'redshirt' may 
+take on. I find that redshirt can either be 1, for "yes, a student athlete was 
+redshirted," or 0, for "no, a student athlete was not redshirted."
+
+```{r}
+knitr::kable(ncaa_wbb_rosters %>%
+  distinct(redshirt))
+```
+
+### select(), group_by(), summarize(), and arrange() 
+
+Now, I wanted to get a glimpse of the teams with the tallest average height. To 
+do this I used pipes. I selected the team variable and the total_inches variable.
+Then I grouped by height using the group_by function. I then used the summarize 
+function to provide the counts of players for players per team the corresponding 
+average height per team.
+
+```{r}
+avg_heights <- ncaa_wbb_rosters %>%
+  select('team','total_inches') %>%
+  group_by(team) %>%
+  summarize(number_of_players = n(), Avg_height = round(mean(total_inches),2)) %>%
+  arrange(desc(Avg_height))
+
+knitr::kable(head(avg_heights))
+```
+
+## ggplot2
+
+### Plotting Average Heights per team
+
+The primary package I used here was ggplot2, although I do start this code chunk 
+off with some dplyr. I used top_n() so that I could get the stop six results 
+for the teams with the highest average heights. Then I piped those top 6 results
+into a bar chart. I made sure to change the order of the x-axis as the default is
+to sort the items alphabetically, but I want the value to be sorted based 
+height in a descending order. I then limited the x-axis to better range to show
+the difference between the top average heights (using coord_cartesian()), and
+finished off my visualization by displaying the numerical values on top of each 
+bar using geom_text() and displaying a line to show the average height of an NCAA
+women's basketball team for perspective.
+
+```{r}
+top_n(avg_heights, n=6, Avg_height) %>%
+  ggplot(., mapping = aes(x=reorder(team, desc(Avg_height)),y=Avg_height, fill=team)) +
+  geom_bar(stat='identity') +
+  coord_cartesian(ylim = c(66,74)) +
+  geom_hline(aes(yintercept=ncaa_avg_height,linetype = "NCAA Average Height")) +
+  geom_text(aes(label = Avg_height), vjust = 1.5,
+              position = position_dodge(width = 0.9))+
+  xlab("Team") +
+  ylab("Average Height (in)")
+```
+
+## Conclusion:
+
+As you can see Indiana has the tallest average height, followed by UConn, Michigan,
+South Carolina, Rutgers and Stanford. As a huge women's basketball fan, one thing 
+that stands out to me is that all but two of these teams have been nationally
+ranked in the top 5 this season, and of the two that have not been ranked in the
+top 5, Rutgers and Michigan, Michigan has been ranked in the top 20, pretty
+consistently. Rutgers has been going through a rough patch in the absence of their
+hall-of-fame coach C. Vivian Stringer and their roster only contains 8 players
+(their average height may be inflated by the lack of players on the roster). However,
+my first thought after looking at this would be that it seems that height plays
+some component in basketball (stating the obvious).
