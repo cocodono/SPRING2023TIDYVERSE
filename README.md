@@ -8,3 +8,6 @@ For this assignment, we’ll be practicing our knowledge of Tidyverse functions 
 
 <li> <a href = "https://github.com/alu-potato/DATA607/blob/main/Assignments/Week%209%20Project/Week%209%20Project.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/tahmad/DATA607Week9Project"> Rpubs </a> </li>
+
+# Glen Davis
+A vignette of example use cases for the purrr library within the tidyverse. 
