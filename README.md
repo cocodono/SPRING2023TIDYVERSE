@@ -21,3 +21,9 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 # Glen Davis
 A vignette of example use cases for the purrr library within the tidyverse. 
 
+
+#Miguel G
+
+<li> <a href = "https://github.com/miguelgomez7287/Tidyverse_Miguel.g/blob/main/Miguel%20Gomez%20Data%20607%20TidyVerse%20CREATE.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
+<li> <a href = "https://fivethirtyeight.com/features/where-police-have-killed-americans-in-2015/"> fivethirtyeight </a> </li>
