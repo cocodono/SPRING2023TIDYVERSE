@@ -21,3 +21,10 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 # Glen Davis
 A vignette of example use cases for the purrr library within the tidyverse. 
 
+# Alex K
+Initial Description and Link:
+
+In this assignment we will get to practice collaborating around a code project with GitHub. We will create and example using one or more TidyVerse packages and demonstrate how to use the capabilities. I will use a birth dataset from 'fivethirtyeight.com'.
+
+<li> <a href = "https://github.com/akhaykin/MS_DS/blob/master/DATA%20607/TidyVerse/Create_Tidyverse_Part1.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/akhaykin/1022461"> Rpubs </a> </li>
