@@ -26,7 +26,7 @@ For this assignment dplyr was utilized to conduct a superficial analysis of the 
 Dataset : 1950 to 2019' which provides a list of songs 'from 1950 to 2019 describing
 music metadata as sadness, danceability, loudness, acousticness, etc.'  More
 specifically, dplyr was used to analyze aspects of the 'sadness' variable to demonstrate
-the main functions of the dplyr package.  The final product is a playlist of songs between the years 1950-2019 which includes the top one 'saddest' song from each genre for each year.  
+the main functions of the dplyr package.  The final product is a playlist of songs between the years 1950-2019 which includes the top one 'saddest' song from each year.  
 
 <li> <a href = "https://github.com/greggmaloy/Data607_R/blob/main/Data_607_Tidyverse_Extend.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/greggmaloy/1027079"> Rpubs </a> </li>
