@@ -1,0 +1,26 @@
+---
+title: "DATA 607 - Tidyverse CREATE"
+author: "Eddie Xu"
+date: "2023-04-12"
+output: html_document
+---
+##TIDYVERSE CREATE
+
+This assignment will be create a vignette about one of TIDYVERSE libraries, ggplot. In this case, a dataset from kaggle (https://www.kaggle.com/datasets/ivanchvez/ny-rental-properties-pricing) will be used to demostrate the capacity of data visualization in R Studio.
+
+## Load Packages
+```{r}
+library(tidyverse)
+```
+```{r}
+
+```
+
+## Including Plots
+
+
+```{r}
+
+```
+
+
