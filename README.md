@@ -18,6 +18,12 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 <li> <a href = "https://rpubs.com/ading56/1024722"> Rpubs </a> </li>
 <li> <a href = "https://www.kaggle.com/datasets/ashishraut64/internet-users?select=Final.csv"> Kaggle </a> </li>
 =======
+
 # Glen Davis
 A vignette of example use cases for the purrr library within the tidyverse. 
+
+# Eddie Xu
+Initial Description and Link:
+
+For this assignment, I decided to use `ggplot2` and associated map package to present a visual presentation for data analysis.
 
