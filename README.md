@@ -17,6 +17,16 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 <li> <a href = "https://github.com/addsding/data607/blob/main/tidyverse/ading%20ggplot2%20create.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/ading56/1024722"> Rpubs </a> </li>
 <li> <a href = "https://www.kaggle.com/datasets/ashishraut64/internet-users?select=Final.csv"> Kaggle </a> </li>
+
+# John Cruz
+Initial Description and Link:
+
+I worked using the lubridate package within the Tidyverse ensemble. With this, I created examples exploring NYC Filming Permits data. 
+
+<li> <a href = "https://github.com/hellojohncruz/SPRING2023TIDYVERSE/blob/main/lubridate.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/hellojohncruz/lubridate"> RPubs </a> </li>
+<li> <a href = "https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p"> NYC Open Data </a> </li>
+
 =======
 # Glen Davis
 A vignette of example use cases for the purrr library within the tidyverse. 
