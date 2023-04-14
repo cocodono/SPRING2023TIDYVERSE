@@ -21,3 +21,11 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 # Glen Davis
 A vignette of example use cases for the purrr library within the tidyverse. 
 
+
+# Kayleah Griffen
+
+The objective of this assignment was twofold (1) to practice collaborating around a code project with GitHub and (2) to use a capability of tidyverse and demonstrate it with a vignette. The gitHub repository the code was submitted to with a pull request is https://github.com/acatlin/SPRING2023TIDYVERSE. 
+
+The dataset I chose to work with is data that I obtained from working with the Franklin Community Center. The Franklin Community Center is a nonprofit organization that aims to help families and individuals in Saratoga County. They have been in operation for 40 years and their Food Pantry has been operational since 2018. In 2019, the Food Pantry began using the Oasis database to manage their cases. Each family or individual is assigned a case number, and every time a person from the case comes in to receive a service it is documented. I worked with the Oasis team to understand how to extract data from their database. With the data I extracted, my goal is to visualizations showing what parts of NY the food bank services are going to. 
+
+The tidyverse capabilities that I wanted to demonstrate using the dataset are extensions of `ggplot2`. The Simple Features for R, or `sf` package, can be used in conjunction with `ggplot2` in tidyverse to create maps. Additionally the `treemapify` can be used with `ggplot2` to make treemaps. 
