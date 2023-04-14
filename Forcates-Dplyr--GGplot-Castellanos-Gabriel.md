@@ -1,0 +1,1 @@
+The purpose of this mardown is to provide an introduction to the following 3 packages: Forcats, Dplyr, and GGplot. This vignette shows how using these 3 packages from the larger tidyverse package can help the user enhance data visuals (using GGPlot). 
