@@ -21,3 +21,8 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 # Glen Davis
 A vignette of example use cases for the purrr library within the tidyverse. 
 
+# Gabriel Castellanos 
+
+Inital Description:
+
+The purpose of this mardown is to provide an introduction to the following 3 packages: Forcats, Dplyr, and GGplot. This vignette shows how using these 3 packages from the larger tidyverse package can help the user enhance data visuals (using GGPlot).
