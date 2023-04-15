@@ -1,0 +1,49 @@
+---
+title: "Tidyverse"
+---
+
+## Introduction
+
+The goal of the package is to detail a package in Tidyverse. We will discuss forcats/dplyr. Dplyr is much more versatile by nature. We will also take a look at the purr package.   
+
+```{r, load-data, message=FALSE, echo=TRUE}
+women <- read.csv("https://raw.githubusercontent.com/gc521/DATA-607-Tidyverse/main/women-stem.csv")
+install.packages("tidyverse")
+library(tidyverse)
+install.packages('DT')
+library(DT)
+```
+Fac_infreq function can be called to quickly order factor variable by appearance/level of frequency. This makes the appearance of tables/graphs more apparent. We also make use of the DPLYR to create a count of the major_category variable. It is important to remember to first convert character variables into factor variables. The real power of the infreq package is that it allows us to easily order each factor by frequency. This allows us to create more intutive tables and visuals with ggplot, another key package within the tidyverse library. 
+
+```{r, fct}
+women$Major_category <- as.factor(women$Major_category)
+women$Major_category <- fct_infreq(women$Major_category)
+
+
+summary(women$Major_category)
+#We can see that the factors are now orders by frequency. Alternatively, we can order factors if each factor represents a number with the fct_inseq method. 
+
+
+
+Major_category <- as.data.frame(summary(women$Major_category))
+
+datatable(Major_category, colnames = c("Count"))
+
+women <- women |> group_by(Major_category) |> mutate(Count = n())
+
+#Here, we create a new variable that counts the appearance of each category major within the data set and name said variable. "Count". Creating count variables is also useful when calling the geom_text function, which allows us to add text to bar graphs. 
+
+
+p <-ggplot(women, aes(x=Major_category, fill = Major_category)) + geom_bar() + theme_dark() + coord_flip() + geom_text(aes(y=1, label = Count), hjust = -2.0, color = 'white')
+
+
+
+
+
+
+
+```
+
+## Conclusion
+The data visual shows that not only engineering is the most frequent chosen major among the woman data set, but also gives us a clear description of just exactly how big that dependency is.
+

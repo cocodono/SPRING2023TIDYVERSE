@@ -1,0 +1,155 @@
+---
+title: "Data 607 Tidyverse Create Assignment"
+author: "Mohamed Hassan-El Serafi"
+date: "2023-04-10"
+output: html_document
+---
+
+For this assignment, I will use dplyr, stringr, and ggplot2 packages from the tidyverse library. The dataset used was obtained from Kaggle, detailing the amount of money American sports owners have contributed to political campaigns and organizations during the 2016, 2018 and 2020 election cycles.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+library(tidyverse)
+library(DT)
+library(data.table)
+library(plyr)
+library(janitor)
+```
+
+
+```{r}
+df <- read.csv("https://raw.githubusercontent.com/moham6839/SPRING2023TIDYVERSE/main/sports-political-donations.csv", check.names = FALSE)
+head(df)
+```
+```{r}
+glimpse(df)
+```
+
+```{r}
+df$Amount <- str_replace_all(df$Amount, "\\$", "")
+df$Amount <- str_replace_all(df$Amount, ",", "")
+```
+
+
+
+
+```{r}
+df$Amount <- as.integer(df$Amount)
+```
+
+
+
+
+
+### Which Political Party received the most contributors?
+
+```{r}
+new_df <- df %>%
+  filter(`Party` == "Republican" | `Party` == "Democrat") %>%
+  dplyr::count(Party) %>%
+  group_by(Party) %>%
+  arrange(desc(n))
+new_df
+```
+
+```{r}
+ggplot(new_df, aes(x=`n`, y=`Party`)) +
+  geom_bar(stat="identity", position="dodge", width=0.7) + 
+  labs(title="Number of Contributors for Each Political Party",
+       x="Number of Contributors",
+       y="Political Party") 
+```
+
+
+### Which sports owner donated the most?
+
+```{r}
+owner_df <- df %>%
+  filter(Team != "Commissioner") %>%
+  group_by(Owner, League) %>%
+  dplyr::summarise(Amount = sum(Amount)) %>%
+  arrange(desc(Amount)) 
+DT::datatable(owner_df)
+```
+
+```{r}
+ggplot(owner_df[tail(order(owner_df$Amount), 10), ], aes(x=`Amount`, y=`Owner`, fill=`League`)) +
+  geom_bar(stat="identity", position="dodge", width=0.7) + 
+  labs(title="American Sports Owners That Politically Contributed the Most Money",
+       x="Name of Sports Owners",
+       y="Amount Contributed (in millions $)") 
+```
+
+
+
+### Which Leagues provided the most political donations?
+
+
+```{r}
+league_df <- df %>%
+  group_by(League) %>%
+  dplyr::summarise(Amount = sum(Amount)) %>%
+  arrange(desc(Amount))
+DT::datatable(league_df)
+```
+
+```{r}
+ggplot(league_df, aes(x=`Amount`, y=`League`)) +
+  geom_bar(stat="identity", position="dodge", width=0.7) + 
+  labs(title="Number of Contributors for Each Political Party",
+       x="Amount Contributed (in millions $)",
+       y="Professional American Sports Leagues") 
+```
+
+
+
+
+### Which recipient received the most political donations?
+
+
+
+```{r}
+recipient_df <- df %>%
+  group_by(Recipient, Amount) %>%
+  dplyr::summarise(Amount = sum(Amount)) %>%
+  #dplyr::count(Recipient) %>% 
+  arrange(desc(Amount)) 
+DT::datatable(recipient_df)
+#setDT(recipient_df) [order(-n), .SD[1:10]]
+```
+
+
+
+```{r}
+ggplot(recipient_df[tail(order(recipient_df$Amount), 10), ], aes(x=`Amount`, y=`Recipient`)) +
+  geom_bar(stat="identity", position="dodge", width=0.7) + 
+  labs(title="Top 10 Recipients That Received the Most Money",
+       x="Amount Contributed (in millions $)",
+       y="Recipients") 
+```
+
+
+
+
+
+### Which Political Party received the most amount of money in each Election Year?
+
+```{r}
+year_df <- df %>%
+  filter(Party == "Republican" | Party == "Democrat") %>%
+  group_by(`Election Year`, `Party`) %>%
+  dplyr::summarise(Amount = sum(Amount)) %>%
+  arrange(desc(Amount))
+year_df
+```
+
+```{r}
+ggplot(year_df, aes(`Election Year`, `Amount`, fill=`Party`)) +
+  geom_bar(stat="identity", position="dodge", width=0.7) +
+  labs(title="Total Amount Contributed to Each Political Party",
+       x="Amount Contributed (in millions $)",
+       y="Election Year")
+```
+
+
+

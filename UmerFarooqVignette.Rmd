@@ -1,0 +1,211 @@
+---
+title: "GGPLOT2"
+author: "Umer Farooq"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+ggplot2 is an R package which is designed to carry out hassle free data visualization and exploratory data analysis. This package is designed to work in a layered fashion, one can start working by plotting raw data and carrying out exploratory data analysis and then later on can add layers to the existing plot to add more details and display/draw more insights out of data. ggplot2 works under deep grammar called as “Grammar of graphics” which is made up of a set of independent components that can be created in many ways.
+
+
+
+## How to get ggplot2 in R
+
+In order to make ggplot2 available in your R and Rstudio you'll have to install the packages first with the help of `install.packages()` function. The command that you will be running is `install.packages("ggplot2")` but ggplot2 is also part of tidyverse so if you are using other packages like `dplyr`,`forcats`,`tidyr` and `readr`, it is better to install the tidyverse package. Once you have installed the package then you can call the library for that particular package. In order to use ggplot2 one will have to call the library and this could de done using `library()` function. If you have installed tidyverse instead of ggplot2 then using the command `library(tidyverse)` and it will load all the packages including ggplot2 and make the function of ggplot2 available for user (you) to use. Since we will be using it in this vignette so let install and call ggplot2
+
+```{r installing-loading-ggplot, include=FALSE}
+#install.packages("ggplot2")
+library(ggplot2)
+```
+
+
+## Table of Contents:
+
+Before jumping into explaining the function of ggplot2 lets quickly go through over what we will be covering in this vignette:
+
+ * Basics of ggplot
+ * Layers
+ * Themes
+ * Facets
+ * Labs and Annotations
+ * Scales
+
+
+
+## Basics of ggplot2
+
+In this section we will try to understand how the basic of ggplot2 works. We already have an idea that ggplot2 is a plotting package that provides helpful commands to create complex plots from data in a data frame. It provides a more programmatic interface for specifying what variables to plot, how they are displayed, and general visual properties.
+
+ggplot2 refers to the name of the package itself. When using the package we use the function `ggplot()` to generate the plots, and so references to using the function will be referred to as `ggplot()` and the package as a whole as ggplot2. In order to make plot with ggplot2 we will be using the following template as a reference:
+
+`ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +  <GEOM_FUNCTION>()`
+
+If you look closely the ggplot() function would ask you for a data and then map the data to aesthetics. Mapping will map the aesthetic i.e. x and y axis to the data. But before we go any further we will have to have a data set to work with So let me add a data set to this vignette. I found this data set about diabatese patients on Kaggle and here is the link: 
+
+https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset
+
+you can also get this data set from my Github, here is the link for that:
+
+https://github.com/Umerfarooq122/Data_sets/blob/main/diabetes_data.csv
+
+Now lets load this data set and get on with the basics of ggplot2. We will be using `read.csv()` from the base R to load the data set and in order to confirm if the data set loaded has all the variables we can use `head()` function from base R. Below code chunk represents that 
+
+```{r Loading-dataset , fig.show='hold', results='asis'}
+dataset <- read.csv("https://raw.githubusercontent.com/Umerfarooq122/Data_sets/main/diabetes_data.csv")
+knitr::kable(head(dataset))
+```
+
+Now that we have got the data set lets try to use ggplot() function and make some basic plot. We will make a simple bar chart first to get an idea of how everything works together.
+
+```{r first-plot}
+ggplot(data = dataset, mapping = aes(x=HighChol))+geom_bar()
+
+```
+ 
+ 
+ As we can see that there were two response for `HighChol` column in the data set so the ggplot actually plotted tow bars one for each response. The `dataset` data frame was loaded through `data = ` and then mapped to the aesthetic i.e. `aes` through `mapping = `and then we added a layer called `geom_bar` which specify what kind of plot do we need from the data that mapped to the aesthetics. Similarly we can plot another variable (column) from the data set to better under the basic of `ggplot()` function. Let's take two variable i.e. Age and BMI and plot it against each other using another geom.
+ 
+```{r two-variable-plot}
+ggplot(data = dataset, mapping = aes(x=Age, y=BMI))+geom_point()
+```
+
+The graph above plot two variable from the `dataset` data frame. It plot Age variable on X-axis and BMI on Y-axis and try to depict the relationship between the two variable. We can clearly see that `geom_point()` helps us to create scatter plot which could be really helpful in understanding the aggregation of data with the help of some other layers.
+
+Some of the popular geoms to create different types of graph with their respective outcome as below:
+
+ * `geom_line()` : Creates a line graph between two relational variable with numerical data 
+ * `geom_bar()` : Creates a bar graph for categorical data by setting the categorical variable for the X axis, use the numeric for the Y axis.
+ * `geom_histogram()`
+ * `geom_point()` : Creates a scatter plot between two relational variables.
+ * `geom_boxplot()` : Creates a box plot. The box plot compactly displays the distribution of a continuous variable. It visualizes five summary statistics (the median, two hinges and two whiskers), and all "outlying" points individually
+ * `geom_polygon()` : Creates a polygons, which are filled paths.
+ 
+The above mentioned geoms are the most commonly used geoms out there. In fact, there are in total more than 40 geoms available in ggplot2 to create effective and meaningful visualization. We are just scratching the surface over here.
+ 
+ 
+## Layers
+
+One of the key ideas behind ggplot2 is that it allows you to easily iterate, building up a complex plot a layer at a time. Each layer can come from a different data set and have a different aesthetic mappings, making it possible to create sophisticated plots that display data from multiple sources.
+
+Previously, We did use function like `geom_bar()` or `geom_point()`and added the data set and mapped it to aesthetics in the global `ggplot()` function but The beauty of working with ggplot2 is that we can also define that in `geom` too. Which helps in adding layers for plot from multiple data sets. In order to demonstrate that let me load another data set
+
+```{r}
+dataset_new <- read.csv("https://raw.githubusercontent.com/Umerfarooq122/Data_sets/main/stroke_data.csv")
+```
+
+Now we got another data set that contains information about stroke and some factors that can have possible contributions in the cause of stroke. Now we are going to plot a graph from the first data frame called `dataset` and add a new layer of plot from another data frame called as `dataset_new` with the help of `+` sign.
+
+```{r}
+plot1 <-ggplot()+
+  geom_bar(data = dataset, aes(x=HighChol), fill = "blue",)+
+  geom_bar(data = dataset_new, aes(x=work_type), fill='red')
+plot1
+```
+
+I added the colors so that we can differentiate between the data plotted from two different data sets with help of `fill` argument. Similarly, apart from adding plots from different data set we can add some much stuff like themes, labels, scales, and much more as different layers on plot. Layers will be discussed in every session coming up.
+
+## Themes
+
+Another plus point in working in ggplot2 is that we can add different themes to our plots and make them aesthetically more acceptable.The theme system does not affect how the data is rendered by geoms, or how it is transformed by scales. Themes don’t change the perceptual properties of the plot but they do offer some control over things like fonts, ticks, panel strips, and backgrounds.
+
+
+The function `theme_bw()` will change the background into black and white as show below:
+
+```{r}
+ggplot(data = dataset, mapping = aes(x=HighChol), fill=HighChol)+geom_bar()+theme_bw()
+```
+
+Similar we can also as legend to our graph by using fill argument and assigning categorical data to that fill argument inside the `aes()` as shown below. But before that we have to change the data type of `HighChol` from `int` to `factor` to be considered as category
+
+```{r}
+dataset$HighChol <- as.factor(dataset$HighChol)
+```
+
+```{r}
+ggplot(data = dataset, mapping = aes(x=HighChol, fill=HighChol))+geom_bar()
+```
+
+As we can see that we did add the legend and ggplot2 automatically picks up the color for different categories. In case you want to take control of parameters like font, legends, scale, and backgrounds I would suggest to explore the function `theme()` but I will leave that for the extension part.
+
+Coming back to themes we can use other themes like `theme_linedraw()`, `theme_light()`, `theme_dark()`, `theme_minimal()`, `theme_classic()`, `theme_void()` and `theme_test()`. I would suggest to try each one of them out to see what it adds to the current plot. 
+
+
+## Facets
+
+Faceting is to create subplot based on a subgroup with in the data set. These subplots are plots of same parameters from the same data but divided by a subgroup in a data. The subplots are placed next to each other and the number of subplots depends upon the number of subgroups in the data. If there are two subgroups in the data there will be only two subplots. Similarly if there are more than two sub groups in the data there will be more two subplots. Lets take the very first graph that we made in explaining the basic of ggplot2 and use `facet()` function on it. Again a quick reminder that `facet()` function is going to be an added layer to the current graph. Over here I will facet the data based on graph that has the information about general health.
+
+```{r}
+ggplot(data = dataset, mapping = aes(x=HighChol, fill=HighChol))+geom_bar()+facet_wrap(~GenHlth)
+```
+Now we can see that instead of one plot we got five subplots since we facet the column `GenHlth` and we got five kinds of categorical values which is from 1 to 5. We can re define our own labels and title for faceting and overall plot but for now I will leave that to the next section.
+
+Apart from creating subplots using `facet_wrap()` function, we can also make a large grid and plot the data divide but subgroups in the data on one large axes using `facet_grid()` function. Lets try to recreate the the same plot using `facet_grid()`.
+
+```{r}
+ggplot(data = dataset, mapping = aes(x=HighChol, fill=HighChol))+geom_bar()+facet_grid(~GenHlth)
+```
+So we can clearly see that `facet_grid()` makes one giant graph and plots every subgroup on the same plot rather than creating subplots for every subgroup as we saw in case of `facet_wrap()`
+
+
+## Labels and Annotations
+### i) Labels
+The purpose of creating visualization is to communicate certain important information with decision making entity. The graph might not translate or convey the information that we want it to convey if the graph is not properly labeled. Labeling properly means to define the axes properly and add a meaningful title along with annotation if required to highlight important point or key takeaways on the graph. Since the beauty of ggplot2 is that we can work with layers so we can add layers for labeling and annotating the graph effectively. Let's go back the first graph again and this time lets properly label the graph using `labs()` function.
+
+```{r}
+ggplot(data = dataset, mapping = aes(x=HighChol, fill=HighChol))+geom_bar()+labs(x="High Cholesterol", y="Count", title= "Cholesterol Frequnecy")
+```
+
+Now we can see that the labels are properly labeled plus we have a title added to our plot. By adding this information now we know right away what this graph is all about and it sets the mind of the reader right away. 
+
+We can also add a subtitle and a caption to our graph too:
+```{r}
+ggplot(data = dataset, mapping = aes(x=HighChol, fill=HighChol))+geom_bar()+labs(x="High Cholesterol", y="Count", title= "Cholesterol Frequnecy", subtitle = "Cholesterol vs the number of people having it", caption = "Each count represents one human")
+```
+
+So now our graph looks more informative as compared to the previous one. We can do so much more with `labs()` function but for now we will leave it to this point.
+
+### ii) Annotation:
+
+We can highlight key takeaways and important points by directing the attention of the reader toward that point using proper annotations on the graph. We can use `annotate()` function to achieve that. Let's take the graph that we recently labeled. Again we will be adding a layer of annotation to the existing graph
+
+```{r}
+ggplot(data = dataset, mapping = aes(x=HighChol, fill=HighChol))+geom_bar()+labs(x="High Cholesterol", y="Count", title= "Cholesterol Frequnecy", subtitle = "Cholesterol vs the number of people having it", caption = "Each count represents one human")+annotate("text", x = 1:2, y = 35000:35000, label = c("Lower", "Higher"))
+```
+
+So we can see that we have two text annotations on our graph that stats the lower and higher bar. Similarly, we can do much more with annotations like introducing an arrow marker, point or a line to highlight or point towards the key takeaway but I will leave that to the extension part of this vignette. 
+
+## Scales
+
+There are a lot to cover here but we just scratch the surface.One of the most difficult parts of any graphics package is scaling, converting from data values to perceptual properties. There are numerous ways to control the scale of axes, for example, we can use all three methods mentioned below:
+ * xlim() and ylim()
+ * expand_limits()
+ * scale_x_continuous() and scale_y_continuous()
+
+Over here, I will be touching on `scale_x()` functions with break,labels and limits. We will be using the graph that we recently labeled and annotated. Since, we got categorical data on x-axis and numbers on y-axis so in this particular example we will be fiddling with y-axis of the plot. So let's use `scale_y_continuous()` as an added layer with `breaks`, `labels` and `limits` arguments.
+
+```{r}
+ggplot(data = dataset, mapping = aes(x=HighChol, fill=HighChol))+geom_bar()+labs(x="High Cholesterol", y="Count", title= "Cholesterol Frequnecy", subtitle = "Cholesterol vs the number of people having it", caption = "Each count represents one human")+annotate("text", x = 1:2, y = 35000, label = c("Lower", "Higher"))+scale_y_continuous("Count",breaks = scales::breaks_extended(8), labels = scales::label_number() , limits = c(0,40000))
+```
+As we can that the scale of the plot or graph has been altered and increased to 40000 using `limits` argument and simultaneously, the breaks between every increased to 8 breaks using `break` argument similarly in `label` argument we kind of defined what are we dealing with.
+
+## Conclusion:
+
+There way more discuss and learn about ggplot2 library and we have only scratch the surface in every section but we the above basic knowledge of each and every aspect of ggplot2 will enable us enough to create a meaningful and effective plots. Plots made in ggplot2 are very flexible and customizable, we have not really talked much amount customizing the plot. While customizing, we can add our own pre-defined colors palette to graph's data and legends, we can play around with the size and fonts styling of different types texts used in labeling, legends, titles e.t.c and much more. 
+
+
+
