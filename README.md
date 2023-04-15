@@ -36,8 +36,18 @@ the main functions of the dplyr package.  The final product is a playlist of son
 A vignette of example use cases for the purrr library within the tidyverse. 
 
 
+# Alex K
+Initial Description and Link:
+
+In this assignment we will get to practice collaborating around a code project with GitHub. We will create and example using one or more TidyVerse packages and demonstrate how to use the capabilities. I will use a birth dataset from 'fivethirtyeight.com'.
+
+<li> <a href = "https://github.com/akhaykin/MS_DS/blob/master/DATA%20607/TidyVerse/Create_Tidyverse_Part1.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/akhaykin/1022461"> Rpubs </a> </li>
+=======
+
 #Miguel G
 
 <li> <a href = "https://github.com/miguelgomez7287/Tidyverse_Miguel.g/blob/main/Miguel%20Gomez%20Data%20607%20TidyVerse%20CREATE.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/where-police-have-killed-americans-in-2015/"> fivethirtyeight </a> </li>
+
