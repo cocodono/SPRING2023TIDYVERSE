@@ -80,6 +80,13 @@ the main functions of the dplyr package.  The final product is a playlist of son
 A vignette of example use cases for the purrr library within the tidyverse. 
 
 
+# Gabriel Castellanos 
+
+Inital Description:
+
+The purpose of this mardown is to provide an introduction to the following 3 packages: Forcats, Dplyr, and GGplot. This vignette shows how using these 3 packages from the larger tidyverse package can help the user enhance data visuals (using GGPlot).
+=======
+
 # Kayleah Griffen
 
 The objective of this assignment was twofold (1) to practice collaborating around a code project with GitHub and (2) to use a capability of tidyverse and demonstrate it with a vignette. The gitHub repository the code was submitted to with a pull request is https://github.com/acatlin/SPRING2023TIDYVERSE. 
@@ -113,6 +120,7 @@ In this assignment we will get to practice collaborating around a code project w
 <li> <a href = "https://github.com/miguelgomez7287/Tidyverse_Miguel.g/blob/main/Miguel%20Gomez%20Data%20607%20TidyVerse%20CREATE.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/where-police-have-killed-americans-in-2015/"> fivethirtyeight </a> </li>
+
 
 
 
