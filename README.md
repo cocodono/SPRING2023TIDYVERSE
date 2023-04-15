@@ -40,4 +40,4 @@ Links:
 
 -   [FiveThirtyEight](https://github.com/fivethirtyeight/data/tree/master/college-majors)
 -   [Github](https://github.com/suswong/DATA-607-Tidyverse/blob/main/DATA%20607%20Tidyverse%20create%20Susanna.Rmd)
--   [Rpub](https://rpubs.com/sussing/1028922)
+-   [Rpub](https://rpubs.com/sussing/1028956)
