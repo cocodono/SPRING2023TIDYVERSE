@@ -20,6 +20,16 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 <li> <a href = "https://www.kaggle.com/datasets/ashishraut64/internet-users?select=Final.csv"> Kaggle </a> </li>
 
 
+# John Cruz
+Initial Description and Link:
+
+I worked using the lubridate package within the Tidyverse ensemble. With this, I created examples exploring NYC Filming Permits data. 
+
+<li> <a href = "https://github.com/hellojohncruz/SPRING2023TIDYVERSE/blob/main/lubridate.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/hellojohncruz/lubridate"> RPubs </a> </li>
+<li> <a href = "https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p"> NYC Open Data </a> </li>
+=======
+
 =======
 
 # Gregg Maloy
@@ -34,6 +44,7 @@ the main functions of the dplyr package.  The final product is a playlist of son
 <li> <a href = "https://github.com/greggmaloy/Data607_R/blob/main/Data_607_Tidyverse_Extend.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/greggmaloy/1027079"> Rpubs </a> </li>
 <li> <a href = "https://www.kaggle.com/datasets/saurabhshahane/music-dataset-1950-to-2019?resource=downoad"> Kaggle </a> </li>
+
 
 =======
 # Glen Davis
