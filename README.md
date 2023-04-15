@@ -30,13 +30,11 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 
 For this create assignment, I used the following packages and functions to analyze college major dataset from FiveThirtyEight.
 
-| Package   | Function                                                                                                                                  |
+| Package   | Function                                                                                                                              |
 |--------------------------|----------------------------------------------|
-| `readr`   | `read_csv`                                                                                                                                |
-| `dplyr`   | `glimpse()` `group_by()` `summarise()` `mutate()`                                                                                         |
-| `ggplot2` | `ggplot()` `geom_bar()` `scale_x_continuous()` `scale_y_continuous()` `labs()` ``` xlab``ylab ``` `ggtitle` ``` theme()``coord_flip() ``` |
-| `scales`  | `percent()`                                                                                                                               |
-| `DT`      | `datatable()`                                                                                                                             |
+| `readr`   | `read_csv`                                                                                                                            |
+| `dplyr`   | `glimpse()` `group_by()` `summarise()` `mutate()`                                                                                     |
+| `ggplot2` | `ggplot()` `geom_bar()` `scale_x_continuous()` `scale_y_continuous()` `labs()` `xlab()` `ylab()` `ggtitle()` `theme()` `coord_flip()` |
 
 Links:
 
