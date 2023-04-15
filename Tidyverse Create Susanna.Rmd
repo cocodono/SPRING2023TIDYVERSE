@@ -19,7 +19,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Assignment Prompt
 
-Mohamed is modifying this assignment.
 
 In this assignment, you'll practice collaborating around a code project with GitHub.
 You could consider our collective work as building out a book of examples on how to use TidyVerse functions.
