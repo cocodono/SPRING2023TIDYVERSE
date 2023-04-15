@@ -17,9 +17,24 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 <li> <a href = "https://github.com/addsding/data607/blob/main/tidyverse/ading%20ggplot2%20create.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/ading56/1024722"> Rpubs </a> </li>
 <li> <a href = "https://www.kaggle.com/datasets/ashishraut64/internet-users?select=Final.csv"> Kaggle </a> </li>
+
+
+# Gregg Maloy
+Initial Description and Link:
+
+For this assignment dplyr was utilized to conduct a superficial analysis of the 'Music
+Dataset : 1950 to 2019' which provides a list of songs 'from 1950 to 2019 describing
+music metadata as sadness, danceability, loudness, acousticness, etc.'  More
+specifically, dplyr was used to analyze aspects of the 'sadness' variable to demonstrate
+the main functions of the dplyr package.  The final product is a playlist of songs between the years 1950-2019 which includes the top one 'saddest' song from each year.  
+
+<li> <a href = "https://github.com/greggmaloy/Data607_R/blob/main/Data_607_Tidyverse_Extend.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/greggmaloy/1027079"> Rpubs </a> </li>
+<li> <a href = "https://www.kaggle.com/datasets/saurabhshahane/music-dataset-1950-to-2019?resource=downoad"> Kaggle </a> </li>
 =======
 # Glen Davis
 A vignette of example use cases for the purrr library within the tidyverse. 
+
 
 # Alex K
 Initial Description and Link:
@@ -28,3 +43,11 @@ In this assignment we will get to practice collaborating around a code project w
 
 <li> <a href = "https://github.com/akhaykin/MS_DS/blob/master/DATA%20607/TidyVerse/Create_Tidyverse_Part1.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/akhaykin/1022461"> Rpubs </a> </li>
+=======
+
+#Miguel G
+
+<li> <a href = "https://github.com/miguelgomez7287/Tidyverse_Miguel.g/blob/main/Miguel%20Gomez%20Data%20607%20TidyVerse%20CREATE.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
+<li> <a href = "https://fivethirtyeight.com/features/where-police-have-killed-americans-in-2015/"> fivethirtyeight </a> </li>
+
