@@ -134,6 +134,18 @@ In this assignment we will get to practice collaborating around a code project w
 <li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/where-police-have-killed-americans-in-2015/"> fivethirtyeight </a> </li>
 
+=======
 
+# Kory Martin
 
+Initial Description and Link:
+
+For this assignment, I choose the <b>dplyr<b> library in Tidyverse to show how to work with a dataframe that shows Netflix TV Shows and Movies dataset, which was pulled from Kaggle. 
+=======
+
+<li><a href = ""> Github </a></li>
+
+<li><a href = "http://rpubs.com/korymartin/data607_tidyverse_assignment"> Rpubs </a></li>
+
+<li><a href = "https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/download?datasetVersionNumber=2"> Kaggle </a></li>
 
