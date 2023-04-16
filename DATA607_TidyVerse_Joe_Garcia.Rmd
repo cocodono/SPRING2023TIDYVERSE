@@ -1,0 +1,116 @@
+---
+title: "DATA 607  TidyVerse Create"
+author: "Joe Garcia"
+date: "2023-04-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+
+In this assignment, you’ll practice collaborating around a code project with GitHub.  You could consider our collective work as building out a book of examples on how to use TidyVerse functions.
+GitHub repository:  
+
+https://github.com/acatlin/SPRING2023TIDYVERSE
+
+FiveThirtyEight.com datasets.
+
+Kaggle datasets. 
+
+Your task here is to Create an Example.  Using one or more TidyVerse packages, and any dataset from fivethirtyeight.com or Kaggle, create a programming sample “vignette” that demonstrates how to use one or more of the capabilities of the selected TidyVerse package with your selected dataset. (25 points)
+
+Later, you'll be asked to extend an existing vignette.  Using one of your classmate’s examples (as created above), you'll then extend his or her example with additional annotated code. (15 points)
+You should clone the provided repository.  Once you have code to submit, you should make a pull request on the shared repository.  
+
+You should also update the README.md file with your example.
+After you’ve created your vignette, please submit your GitHub handle name in the submission link provided below. This will let your instructor know that your work is ready to be peer-graded.
+You should complete your submission on the schedule stated in the course syllabus.
+
+# TidyVerse Package
+
+We are going to use the following packages `dplyr`,`ggplot2`, and `readr`.
+
+# Dataset
+
+We took a dataset from Fivethirtyeight we have recent college grads. We can see how many of of each have jobs etc.
+
+```{r}
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"
+
+raw_data <- read_csv(url)
+
+# head(raw_data)
+
+glimpse(raw_data)
+
+```
+
+
+
+## Creating the Vignette
+
+We first take the raw_data and then take the top 10 from the Unemployment rate, and see what majors pop out.
+
+```{r}
+
+df1 <- raw_data %>% arrange(desc(Unemployment_rate)) %>% head(10)
+
+ggplot(df1, aes(x = reorder(Major, Unemployment_rate), y = Unemployment_rate)) +
+  geom_bar(stat = "identity", fill = "steelblue", height = 0.8) +
+  labs(title = "Top 10 College Majors with \nHighest Unemployment Rates",
+       x = "Major",
+       y = "Unemployment Rate") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  coord_flip()
+
+```
+
+This seems a little odd considering Nuclear Engineering seems very employable. We then turn to see how many people are sampled in each of the majors from above, then we will be able to see a clearer picture as to why they are organized in that way.
+
+```{r}
+ggplot(df1, aes(x = reorder(Major, Unemployment_rate), y = Sample_size)) +
+  geom_bar(stat = "identity", fill = "steelblue", height = 0.8) +
+  labs(title = "Sampe size of Majors",
+       x = "Major",
+       y = "Sample Size") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  coord_flip()
+
+```
+
+Well that makes more sense according to the data; less than 25 Nuclear Engineers were sampled in this data exploration, while Architecture had roughly around more than 350! This means that the data for the Unemployment statistic for Nuclear Engineering might be inaccurate. 
+
+Next we look at the majors with the most jobs.
+
+```{r}
+
+df2 <-raw_data %>% arrange(desc(College_jobs)) %>% head(10)
+
+ggplot(df2, aes(x = reorder(Major, College_jobs), y = College_jobs)) +
+  geom_bar(stat = "identity", fill = "steelblue", width = 0.5) +  
+  labs(title = "Top 10 College Majors by Number of College Jobs",
+       x = "Major",
+       y = "Number of College Jobs") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  coord_flip() 
+
+```
+
+Overall, there more than 150000 jobs for Nursing and about 60000  jobs for Computer Science.
+
+# Conclusion
+
+ggplot, which is part of the Tidyverse, is a versatile and powerful tool for creating visualizations in R, providing a rich and flexible grammar of graphics that allows for the creation of highly customizable and professional-quality plots and charts.
+
+
