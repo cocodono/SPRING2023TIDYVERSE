@@ -26,4 +26,6 @@ A vignette of example use cases for the purrr library within the tidyverse.
 Initial Description and Link:
 
 For this assignment, I decided to use `ggplot2` and associated map package to present a visual presentation for data analysis.
+<li> <a href = "https://github.com/eddiexunyc/SPRING2023TIDYVERSE/tree/exu"> Github </a> </li>
+<li> <a href = "https://rpubs.com/eddiexunyc/1029465"> Rpubs </a> </li>
 
