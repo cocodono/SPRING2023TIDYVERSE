@@ -143,7 +143,13 @@ In this assignment we will get to practice collaborating around a code project w
 
 We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contains U.S. births data for 1994 - 2003 which, is provided by the Centers for Disease Control and Prevention’s (CDC’s) National Center for Health Statistics (NCNS). We will load the data from their GitHub repository.
 
+=======
 
+# Jacob Silver
+
+This vignette demonstrates how to use the **str_replace_all** function within the tidyverse's **stringr** package in the context of tabular data. The data is a compilation of 2,498 articles about data science, pulled from the data science site Kaggle. See link here:
+
+https://www.kaggle.com/datasets/arnabchaki/medium-articles-dataset?resource=download
 
 
 
