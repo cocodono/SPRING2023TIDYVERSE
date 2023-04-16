@@ -143,7 +143,15 @@ In this assignment we will get to practice collaborating around a code project w
 
 We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contains U.S. births data for 1994 - 2003 which, is provided by the Centers for Disease Control and Prevention’s (CDC’s) National Center for Health Statistics (NCNS). We will load the data from their GitHub repository.
 
+=======
 
+# Joe Garcia
 
+Initial Description and Links:
 
+For this assignment, we explore TidyVerse and how to use some of its features. In my case, we use ggplot2 to explore some recent college grads and unemployment attributed to the field of study. 
+
+<li> <a href = "https://github.com/Foxxenn/DATA607_TidyVerse_Create/blob/main/DATA607_TidyVerse.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/joeG1212/1029214"> RPubs </a> </li>
+<li> <a href = "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"> FiveThirtyEight </a> </li>
 
