@@ -138,6 +138,7 @@ Initial Description and Link:
 
 The dataset I used was obtained from [Kaggle](https://www.kaggle.com/datasets/rahul253801/political-donations-by-american-sports-owners). It contained the amount of political donations given by American sports owners to political campaigns and Political Action Committee organizations. Using dyplyr, stringr, and ggplot2 from tidyverse, I explored various questions from the dataset. 
 
+
 [Rpubs](https://rpubs.com/moham6839/1028523)
 [GitHub](https://rpubs.com/moham6839/1028523)
 
