@@ -128,7 +128,7 @@ In this assignment we will get to practice collaborating around a code project w
 <li> <a href = "https://rpubs.com/akhaykin/1022461"> Rpubs </a> </li>
 =======
 
-#Miguel G
+# Miguel G
 
 <li> <a href = "https://github.com/miguelgomez7287/Tidyverse_Miguel.g/blob/main/Miguel%20Gomez%20Data%20607%20TidyVerse%20CREATE.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
@@ -142,6 +142,18 @@ Initial Description and Links:
 In this assignment we will get to practice collaborating around a code project with GitHub. We will create, and example using one or more TidyVerse packages and demonstrate how to use the capabilities.
 
 We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contains U.S. births data for 1994 - 2003 which, is provided by the Centers for Disease Control and Prevention’s (CDC’s) National Center for Health Statistics (NCNS). We will load the data from their GitHub repository.
+
+# Shoshana Farber
+
+This vignette demonstrates some of the capabilities of the **tidyr** package from the **tidyverse** suite. It also utilizes **dplyr** and **ggplot2** functions. 
+
+The data set used was from FiveThirtyEight.com and it focused on Elo ratings and other metrics for NBA basketball teams. 
+
+Links: 
+
+- [Dataset](https://github.com/fivethirtyeight/data/tree/master/nba-forecasts)
+- [Rpubs](https://rpubs.com/ShanaFarber/data607tidyversecreate)
+- [GitHub](https://github.com/ShanaFarber/cuny-sps/blob/master/DATA_607/Tidyverse_CREATE/TidyverseCREATE.Rmd)
 
 
 
