@@ -146,7 +146,7 @@ We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contain
 # Ross Boehme
 
 <li> <a href = "https://github.com/rossboehme/DATA607/blob/main/tidyverse/data607_tidyverseCreate_rossboehme.Rmd"> Github </a> </li>
-<li> <a href = "https://rpubs.com/rossboehme/1029702 </a> </li>
+<li> <a href = "https://rpubs.com/rossboehme/1029702"> RPubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/aging-congress-boomers/"> FiveThirtyEight Article </a> </li>
 
 
