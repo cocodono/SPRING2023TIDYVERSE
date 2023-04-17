@@ -122,12 +122,13 @@ Let's now separate the stats back into their original columns using the `separat
 - `into` - a vector of names to assign for each new column
 - `sep` - the separator by which to split the columns
 
-Keep in mind that the column created from `unite()` is now a character vector. The original data types are, therefore, not preserved and we will need to recast these columns if we wish to perform analysis on these numbers. To do this, we will use **`dplyr`**'s `mutate()` function to recast these columns to numeric.
+Keep in mind that the column created from `unite()` is now a character vector. The original data types are, therefore, not preserved and we will need to recast these columns if we wish to perform analysis on these numbers. To do this, we will use **`dplyr`**'s `mutate()` function to recast these columns to numeric. If we want to graph over time using the date, we will also need to cast the `date` column as a date data type. 
 
 ```{r separate}
 nba_final <- nba_longer |>
   separate(stats, into = c("team_abr", "pre_elo", "post_elo", "score"), sep=";") |>
-  mutate(pre_elo = as.numeric(pre_elo),
+  mutate(date = as.Date(date),
+         pre_elo = as.numeric(pre_elo),
          post_elo = as.numeric(post_elo),
          score = as.numeric(score))
 
@@ -176,10 +177,10 @@ nba_final_names <- nba_final |>
 
 nba_final_names |>
   filter(team_name %in% c("Boston Celtics", "Philadelphia 76ers", "Denver Nuggets", "Milwaukee Bucks")) |>
-  ggplot(aes(x = season, y = pre_elo)) +
+  ggplot(aes(x = date, y = pre_elo)) +
   geom_line() +
   facet_wrap(~team_name) +
-  labs(title = "Pre Game Elo Rating Over Time", x = "Season", y = "Pre Elo Rating")
+  labs(title = "Pre Game Elo Rating Over Time", x = "Year", y = "Pre Elo Rating")
 ```
 
 ## Conclusion
