@@ -143,7 +143,7 @@ In this assignment we will get to practice collaborating around a code project w
 
 We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contains U.S. births data for 1994 - 2003 which, is provided by the Centers for Disease Control and Prevention’s (CDC’s) National Center for Health Statistics (NCNS). We will load the data from their GitHub repository.
 
-#Ross Boehme
+# Ross Boehme
 
 <li> <a href = "https://github.com/rossboehme/DATA607/blob/main/tidyverse/data607_tidyverseCreate_rossboehme.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/rossboehme/1029702 </a> </li>
