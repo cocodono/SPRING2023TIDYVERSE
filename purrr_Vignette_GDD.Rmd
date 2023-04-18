@@ -1,0 +1,202 @@
+---
+title: "purrr Vignette - GDD"
+author: "Glen Dale Davis"
+date: "2023-03-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load the Required Packages:
+
+Below we load the **tidyverse** library, which includes our library of interest: **purrr**. We also load the **knitr** library for displaying simple tables with **kable**, as well as the **cowplot** library for creating one grid of many plots with **plot_grid**.
+
+```{r packages, warning=FALSE, message=FALSE}
+library(knitr)
+library(tidyverse)
+library(cowplot)
+```
+
+### Load the Disney Movies Data Frame:
+
+Below we load a [Disney movies data frame from Kaggle](https://www.kaggle.com/datasets/therealsampat/disney-movies-dataset) that was last updated a couple years ago. We will use this data frame to demonstrate examples of the data cleaning, transformation, and visualization tasks possible with **purrr**. In essence, this library is mainly useful once you identify a problem for a particular kind of data you're working with, you know how to develop a solution that will work on one element of that data, and you would then like to apply that solution to the entire column/list/vector at hand. The solutions can range from simple to complex, and therein often lies the power of **purrr**.
+
+```{r data, message=FALSE}
+my_url <- "https://raw.githubusercontent.com/geedoubledee/SPRING2023TIDYVERSE/main/DisneyMoviesDataset.csv"
+disney_movies_df <- as.data.frame(read_csv(file = my_url))
+disney_movies_df <- disney_movies_df[, -1]
+
+```
+
+### Using purrr to Rename Columns:
+
+We examine the original column names in our data frame to assess where we can make some improvements by renaming the columns.
+
+```{r examine_column_names}
+colnames(disney_movies_df)
+```
+
+We write a short function to do all the string formatting we would like to perform on our data frame's vector of column names. This includes making everything lowercase, eliminating parentheses, and replacing spaces with underscores. 
+
+```{r rename_columns1}
+fix_col_names <- function(s){
+    s <- gsub("[()]", "", tolower(s))
+    s <- gsub(" ", "_", s)
+    s
+}
+
+```
+
+Then we use **purrr::map_char** to apply our function to that vector. It returns a character vector of the same length. We then set the data frame's column names to the values in that character vector.
+
+```{r rename_columns2}
+col_names <- map_chr(colnames(disney_movies_df), fix_col_names)
+colnames(disney_movies_df) <- col_names
+colnames(disney_movies_df)
+
+```
+
+### Updating Column Classes with purrr:
+
+Next, we examine the current classes of our columns by using **purrr::map_dfr** to apply the base R **class** function to all of our columns. It returns a data frame that we transpose to better display the column names and column classes. Then we can easily locate any columns we want to fix.
+
+```{r update_column_classes1}
+kable(t(map_dfr(disney_movies_df, class)), format = "simple")
+
+```
+
+There are four character-class and other columns that will benefit from being updated to more accurate integer-class and numeric-class columns: **running_time_int**, **imdb**, **metascore**, and **rotten_tomatoes**.
+
+Before we can update those classes though, we need to replace all instances of "N/A" with NA. 
+
+```{r update_column_classes2}
+disney_movies_df <- disney_movies_df %>%
+    mutate_if(is.character, list(~na_if(., "N/A")))
+
+```
+
+We then update the column classes using **purrr::map_int** and **purrr::map_dbl** to apply the base R functions **as.double** and **as.integer** as needed. 
+
+```{r update_column_classes3}
+disney_movies_df$running_time_int <- map_int(disney_movies_df$running_time_int,
+                                             as.integer)
+disney_movies_df$imdb <- map_dbl(disney_movies_df$imdb, as.double)
+disney_movies_df$metascore <- map_int(disney_movies_df$metascore, as.integer)
+
+```
+
+For one column, we instead apply a custom function designed to convert percentages stored as characters to numeric values between 0 and 1. 
+
+```{r update_column_classes4}
+fix_percentage <- function(s){
+    s <- gsub("%", "", s)
+    s <- as.double(as.integer(s) / 100)
+    s
+}
+disney_movies_df$rotten_tomatoes <- map_dbl(disney_movies_df$rotten_tomatoes, fix_percentage)
+
+```
+
+There are also two numeric columns, **budget_float** and **box_office_float**, that need adjustments. They store mostly very large numbers, so we combine **purrr::map_dbl** and a formula instead of a function this time to divide all the original values by one million. The formula is initiated by the "~", the "." is a stand-in for each input variable, and the "/ 1000000" indicates the math we want performed on each input variable.
+
+```{r update_column_classes5}
+renames <- c(budget_float_in_millions = "budget_float", box_office_float_in_millions = "box_office_float")
+disney_movies_df <- rename(disney_movies_df, all_of(renames))
+disney_movies_df$budget_float_in_millions <- map_dbl(
+    disney_movies_df$budget_float_in_millions, ~ . / 1000000)
+disney_movies_df$box_office_float_in_millions <- map_dbl(
+    disney_movies_df$box_office_float_in_millions, ~ . / 1000000)
+
+```
+
+Now these columns' unit of measure is millions, and we rename their columns to reflect that by adding "_in_millions" to their names. Later, these more reasonable figures will make summarizing our data a little easier.
+
+### Getting Summary Statistics with purrr:
+
+We would like to see min, mean, and max values for all six columns we updated: **running_time_int**, **imdb**, **metascore**, **rotten_tomatoes**, **budget_float_in_millions**, and **box_office_float_in_millions**. We use **purrr::map_dbl** to apply each of these functions to this subset of columns, and then we combine a list of the resulting vectors into a data frame using **purrr::map_dfr**, which also rounds all entries to six digits.
+
+```{r get_summary_stats1}
+cols <- c("running_time_int", "budget_float_in_millions",
+          "box_office_float_in_millions", "imdb", "metascore",
+          "rotten_tomatoes")
+p1 <- map_dbl(disney_movies_df[, cols], min, na.rm = TRUE)
+p2 <- map_dbl(disney_movies_df[, cols], mean, na.rm = TRUE)
+p3 <- map_dbl(disney_movies_df[, cols], max, na.rm = TRUE)
+disney_movies_summary <- as.data.frame(map_dfr(list(p1, p2, p3),
+                                               round, digits = 6))
+
+```
+
+We name the rows of this new summary data frame by the summary statistic the values in that row represent, and we further round many of the columns to two digits because we only need six digits to capture the smallest values in the **budget_float_in_millions** and **box_office_float_in_millions** columns.
+
+```{r get_summary_stats2}
+row_names <- c("min", "mean", "max")
+rownames(disney_movies_summary) <- row_names
+disney_movies_summary <- disney_movies_summary %>%
+    mutate(across(c(1, 4:6), \(x) round(x, digits = 2)))
+kable(disney_movies_summary, format = "simple")
+
+```
+
+### Plotting Data with purrr:
+
+We would like to look at the distribution of imdb scores for Disney movies by the decade in which they were released. So we use **lubridate::year** to extract the year value from our **release_date_datetime** column and store it in a new **release_year** column. We can then subtract the release year modulo 10 from itself to get the decade value and store that in a new **release_decade** column.
+
+```{r plots1}
+disney_movies_df <- disney_movies_df %>%
+    mutate(release_year = lubridate::year(release_date_datetime),
+           release_decade = release_year - release_year %% 10)
+
+```
+
+Then we use **group_nest** to group the data by the **release_decade** column and store each decade's matching rows of the remaining columns in a list column of tibbles. 
+
+```{r plots2}
+by_decade <- disney_movies_df %>%
+    filter(!is.na(imdb)) %>%
+    group_nest(release_decade)
+
+```
+
+This will allow us to create one plot that visualizes each decade. To accomplish this, we first create a function that will produce histogram plot data for our decades. 
+
+```{r plots3}
+imdb_hist <- function(dat){
+    ggplot(dat, aes(x = imdb)) +
+    geom_histogram(binwidth = 0.5, fill="lightblue") + 
+    xlim(0,10) + 
+    ylim(0,20) +
+    labs(x = "imdb score", y = "movie count") + 
+    theme(plot.margin = unit(c(1.5, 0.5, 0, 0), "lines"),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = "darkblue"))
+}
+
+```
+
+Then we use **purrr::map** to apply the histogram plot data producing function to each decade and return a list that we store in a new **plot** column.
+
+```{r plots4}
+by_decade <- by_decade %>%
+    filter(!is.na(release_decade)) %>%
+    mutate(plot = map(data, imdb_hist))
+
+```
+
+Finally, we pass our plot list column to **cowplot::plot_grid** to look at all the decade's imdb score distributions together.
+
+```{r plots5, warning=FALSE, message=FALSE}
+plot_grid(plotlist = by_decade$plot, labels = by_decade$release_decade,
+          label_colour = "darkblue")
+
+```
+
+### Conclusions:
+
+The plots have the same x- and y-axes so that eyeball comparisons can be made quickly. It looks like the 2000s have the highest mean imdb score. This decade also has the widest spread, with a couple of very low scores skewing the distribution left. The 1960s and 1970s appear to have the smallest spreads and the most normal distributions when you only consider decades with more than 10 movies with imdb scores. 
+
+So we've been able to do a lot with **purrr** here. It's a nice library that  eliminates the need for long and repetitive code like for loops in many instances. It could definitely be useful for handling more complex data problems than we've looked at here, as it encourages users to write functions that work on a piece of data and let it handle applying that function to all the data it needs to be applied to. So users' functions can probably be less complex and more readable without losing power/utility.
