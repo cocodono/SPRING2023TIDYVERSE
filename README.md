@@ -134,7 +134,20 @@ In this assignment we will get to practice collaborating around a code project w
 <li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/where-police-have-killed-americans-in-2015/"> fivethirtyeight </a> </li>
 
+=======
 
+# Kory Martin
+
+Initial Description and Link:
+
+For this assignment, I choose the <b>dplyr<b> library in Tidyverse to show how to work with a dataframe that shows Netflix TV Shows and Movies dataset, which was pulled from Kaggle. 
+=======
+
+<li><a href = "https://github.com/klmartin1998/SPRING2023TIDYVERSE/blob/5d4e6d44e46e6da3221e55d85639799465567f6e/kmartin_dplyr.Rmd"> GitHub </a></li>
+
+
+<li><a href = "http://rpubs.com/korymartin/data607_tidyverse_assignment"> Rpubs </a></li>
+=======
 # Farhana Akther
 
 Initial Description and Links:
@@ -146,4 +159,5 @@ We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contain
 
 
 
+<li><a href = "https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/download?datasetVersionNumber=2"> Kaggle </a></li>
 
