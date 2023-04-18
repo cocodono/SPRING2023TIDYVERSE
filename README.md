@@ -36,9 +36,7 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 ======= \# Glen Davis A vignette of example use cases for the purrr library within the tidyverse.
 
 
-# Mohamed Hassan 
 
-Initial Description:
 
 =======
 # Susanna W
@@ -134,7 +132,36 @@ In this assignment we will get to practice collaborating around a code project w
 <li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/where-police-have-killed-americans-in-2015/"> fivethirtyeight </a> </li>
 
+# Mohamed Hassan
 
+Initial Description and Link:
+
+The dataset I used was obtained from [Kaggle](https://www.kaggle.com/datasets/rahul253801/political-donations-by-american-sports-owners). It contained the amount of political donations given by American sports owners to political campaigns and Political Action Committee organizations. Using dyplyr, stringr, and ggplot2 from tidyverse, I explored various questions from the dataset. 
+
+
+[Rpubs](https://rpubs.com/moham6839/1028523)
+[GitHub](https://rpubs.com/moham6839/1028523)
+
+<li> <a href = "https://github.com/moham6839/SPRING2023TIDYVERSE/blob/main/Data607_tidyverse_create.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/moham6839/1028523"> Rpubs </a> </li>
+<li> <a href = "https://www.kaggle.com/datasets/rahul253801/political-donations-by-american-sports-owners"> Kaggle </a> </li>
+
+=======
+=======
+=======
+
+# Kory Martin
+
+Initial Description and Link:
+
+For this assignment, I choose the <b>dplyr<b> library in Tidyverse to show how to work with a dataframe that shows Netflix TV Shows and Movies dataset, which was pulled from Kaggle. 
+=======
+
+<li><a href = "https://github.com/klmartin1998/SPRING2023TIDYVERSE/blob/5d4e6d44e46e6da3221e55d85639799465567f6e/kmartin_dplyr.Rmd"> GitHub </a></li>
+
+
+<li><a href = "http://rpubs.com/korymartin/data607_tidyverse_assignment"> Rpubs </a></li>
+=======
 # Farhana Akther
 
 Initial Description and Links:
@@ -154,4 +181,7 @@ For this assignment, we explore TidyVerse and how to use some of its features. I
 <li> <a href = "https://github.com/Foxxenn/DATA607_TidyVerse_Create/blob/main/DATA607_TidyVerse.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/joeG1212/1029214"> RPubs </a> </li>
 <li> <a href = "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"> FiveThirtyEight </a> </li>
+=======
+<li><a href = "https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/download?datasetVersionNumber=2"> Kaggle </a></li>
+
 
