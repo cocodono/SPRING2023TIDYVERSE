@@ -172,9 +172,16 @@ We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contain
 
 =======
 
+# Jacob Silver
+
+This vignette demonstrates how to use the **str_replace_all** function within the tidyverse's **stringr** package in the context of tabular data. The data is a compilation of 2,498 articles about data science, pulled from the data science site Kaggle. See link here:
+
+https://www.kaggle.com/datasets/arnabchaki/medium-articles-dataset?resource=download
+=======
 # Joe Garcia
 
 Initial Description and Links:
+
 
 For this assignment, we explore TidyVerse and how to use some of its features. In my case, we use ggplot2 to explore some recent college grads and unemployment attributed to the field of study. 
 
