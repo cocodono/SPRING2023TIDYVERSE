@@ -178,6 +178,16 @@ In this assignment we will get to practice collaborating around a code project w
 
 We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contains U.S. births data for 1994 - 2003 which, is provided by the Centers for Disease Control and Prevention’s (CDC’s) National Center for Health Statistics (NCNS). We will load the data from their GitHub repository.
 
+
+# Jian Quan Chen
+
+Initial Description and Link:
+
+For this assignment, I will be creating a programming sample vignette to demonstrate the use of the tidyr package in the tidyverse package. I will be working with the “Video Game Sales” (https://www.kaggle.com/datasets/gregorut/videogamesales) dataset from Kaggle. The dataset was generated from a scrape of vgchartz.com and contains the sales of video games that sold greater than 100,000 copies from 1980 to 2020.
+
+<li> <a href = "https://github.com/LeJQC/MSDS/blob/main/DATA%20607/TidyVerse%20CREATE%20Assignment/tidyverse_create_assignment_LeJQC.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/jianjqc/1029686"> Rpubs </a> </li>
+=======
 =======
 
 # Jacob Silver
@@ -198,5 +208,6 @@ For this assignment, we explore TidyVerse and how to use some of its features. I
 <li> <a href = "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"> FiveThirtyEight </a> </li>
 =======
 <li><a href = "https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/download?datasetVersionNumber=2"> Kaggle </a></li>
+
 
 
