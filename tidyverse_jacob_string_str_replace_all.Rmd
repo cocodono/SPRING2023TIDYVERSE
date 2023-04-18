@@ -1,0 +1,99 @@
+---
+title: "tidyverse_create_stringr"
+output: html_document
+date: "2023-04-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Tidyverse CREATE
+
+In this markdown notebook, I'm going to demonstrate how to use the functions **str_replace** and **str_replace_all**. These functions are part of the **stringr** package, which itself sits in the **tidyverse** sweet of packages. Therefore, I'll start by importing the tidyverse.
+
+```{r}
+library(tidyverse)
+```
+For data, I downloaded a table of Medium articles about data science from kaggle. See link here:
+https://www.kaggle.com/datasets/arnabchaki/medium-articles-dataset?resource=download
+
+```{r}
+df <- read.csv('medium_data.csv')
+```
+
+AI, or Artificial Intelligence, is a popular topic for the articles in this dataset. Ignoring for a moment how buzzy the subject is in general, presume you are sharing this list of articles with a non-technical audience who may not be familiar with the abbreviation "AI". In that case, it might be valuable to change all instances of that substring in article titles with the substring "Artificial Intelligence" (NOTE: If putting this in practice, you should disclose any changes you make, lest you attribute words to people they did not write).
+
+First, let's see how many article titles actually include the case-sensitive sub-string "AI", and manually confirm that they are all relevant to the topic we care about. We can do this using 
+
+```{r}
+#Total number of rows
+print(nrow(df))
+
+#Number of rows containing the substring "AI"
+df$title %>%
+  str_subset("AI") %>%
+  length() %>%
+  print()
+
+df$title %>%
+  str_subset("AI")
+```
+Of the 2,498 articles in the dataset, 126 contain the string "AI." At a glance, each appearance of the term appears relevant to the context of Artificial Intelligence. Given that, I am comfortable replacing all instances with the phrase "AI" stands for.
+
+This is where **str_replace_all** comes in. The function takes a vector of strings (or a single string) and returns that same vector (or string) with all instances of a specified substring replaced with a different specified substring. That's a mouthful, so let me demonstrate using a small example.
+
+```{r}
+#store your vector as a variable
+test_sentence_vector <- c("My favorite soda is Coca-Cola. Coca-Cola is the best soft drink ever made.",
+                          "I just can't get enought Coca-Cola!",
+                          "Can you grab me a Coca-Cola? I only drink Coca-Cola.")
+
+#create a new vector using str_replace_all
+test_sentence_vector2 <- test_sentence_vector %>%
+  str_replace_all("Coca-Cola", "Pepsi")
+
+#print the result
+print(test_sentence_vector2)
+```
+
+In the above example, I switched out all occurrences of "Coca-Cola" in my vector of strings with "Pepsi". Please bear in mind that there is a big difference between **str_replace_all** and **str_replace**, as shown in the following code:
+
+```{r}
+#create a new vector using str_replace
+test_sentence_vector3 <- test_sentence_vector %>%
+  str_replace("Coca-Cola", "Pepsi")
+
+#print the result
+print(test_sentence_vector3)
+```
+
+Not that in the 1st and 3rd strings in the vector, there are still instances of "Coca-Cola." That's because *str_replace only replaces the first instance it finds of the specified substring in each string.* This is important any time a substring may appear more than once in a string. In the case of our Medium articles, for example, it's possible "AI" comes up more than once in the same headline. We can use a different function, **str_count**, to see if and where that's the case.
+
+```{r}
+df$title %>%
+  str_count("AI") %>%
+  table()
+```
+
+The above code counted the occurrences of "AI" in each headline. Of the 126 headlines we know include the string somewhere, 5 actually contain it twice. If we want all of those instances to be replaced with the non-abbreviated "Artificial Intelligence", we need to use **str_replace_all** rather than **str_replace**.
+
+To preserve the integrity of the original title column, I will make a new one with the unabbreviated text.
+
+```{r}
+df$title_unabbrev <- df$title %>%
+  str_replace_all("AI", "Artificial Intelligence")
+
+df$title_unabbrev %>%
+  str_subset("Artificial Intelligence")
+```
+We now have 128 unabbreviated article titles with the phrase "Artificial Intelligence" (the 126 that previously included "AI" and two which already included "Artificial Intelligence").
+
+Importantly, if we truly replaced all instances of the substring "AI", our new column should contain no instances of that substring.
+
+```{r}
+df$title_unabbrev %>%
+  str_subset("AI")
+```
+
+Indeed, no newly unabbreviated titles contain the substring. Success!
