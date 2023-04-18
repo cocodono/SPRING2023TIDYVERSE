@@ -147,4 +147,31 @@ The dataset I used was obtained from [Kaggle](https://www.kaggle.com/datasets/ra
 <li> <a href = "https://www.kaggle.com/datasets/rahul253801/political-donations-by-american-sports-owners"> Kaggle </a> </li>
 
 =======
+=======
+=======
+
+# Kory Martin
+
+Initial Description and Link:
+
+For this assignment, I choose the <b>dplyr<b> library in Tidyverse to show how to work with a dataframe that shows Netflix TV Shows and Movies dataset, which was pulled from Kaggle. 
+=======
+
+<li><a href = "https://github.com/klmartin1998/SPRING2023TIDYVERSE/blob/5d4e6d44e46e6da3221e55d85639799465567f6e/kmartin_dplyr.Rmd"> GitHub </a></li>
+
+
+<li><a href = "http://rpubs.com/korymartin/data607_tidyverse_assignment"> Rpubs </a></li>
+=======
+# Farhana Akther
+
+Initial Description and Links:
+
+In this assignment we will get to practice collaborating around a code project with GitHub. We will create, and example using one or more TidyVerse packages and demonstrate how to use the capabilities.
+
+We will use a birth dataset from ‘fivethirtyeight.com’. This dataset contains U.S. births data for 1994 - 2003 which, is provided by the Centers for Disease Control and Prevention’s (CDC’s) National Center for Health Statistics (NCNS). We will load the data from their GitHub repository.
+
+
+
+
+<li><a href = "https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/download?datasetVersionNumber=2"> Kaggle </a></li>
 
