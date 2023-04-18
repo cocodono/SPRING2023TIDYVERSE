@@ -9,8 +9,8 @@ Initial Description and Link:
 For this assignment, we'll be practicing our knowledge of Tidyverse functions by creating vignette examples of the packages that make up Tidyverse.
 In this project, my goal is to create a programming example or “vignette” that showcases the capabilities of a TidyVerse package, along with a dataset from either fivethirtyeight.com or Kaggle. The aim of this example is to demonstrate how to effectively use the selected TidyVerse package to manipulate, analyze, and visualize the selected dataset. 
 
-<li> <a href = "https://github.com/waheeb123/SPRING2023TIDYVERSE/blob/main/Waheeb_Algabri.Rmd"> Github </a> </li>
-<li> <a href = " file:///Users/waheebalgabri/Desktop/Tidyverse_Waheeb/SPRING2023TIDYVERSE/Waheeb_Algabri.html "> Rpubs </a></li>
+<li><a href = "https://github.com/waheeb123/SPRING2023TIDYVERSE/blob/main/Waheeb_Algabri.Rmd"> Github </a></li>
+<li><a href = " file:///Users/waheebalgabri/Desktop/Tidyverse_Waheeb/SPRING2023TIDYVERSE/Waheeb_Algabri.html "> Rpubs </a></li>
 
 # Taha A
 
