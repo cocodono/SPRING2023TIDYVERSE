@@ -238,8 +238,15 @@ For this assignment, we explore TidyVerse and how to use some of its features. I
 <li> <a href = "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"> FiveThirtyEight </a> </li>
 =======
 <li><a href = "https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/download?datasetVersionNumber=2"> Kaggle </a></li>
+=======
+# Keith Colella
 
+Initial Description and Links:
 
+This vignette will introduce the fuzzyjoin package, which enables joining of two datasets based on imperfect matches. This package is very helpful for combining data without unique keys. 
+
+<li> <a href = "https://github.com/kac624/cuny/blob/main/D607/keithC_fuzzyVignette.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/kac624/1030806"> RPubs </a> </li>
 
 
 
