@@ -250,5 +250,14 @@ This vignette will introduce the fuzzyjoin package, which enables joining of two
 <li> <a href = "https://github.com/kac624/cuny/blob/main/D607/keithC_fuzzyVignette.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/kac624/1030806"> RPubs </a> </li>
 
+# Joshua Lok
 
+Initial Description and Links:
 
+In this assignment we will get to practice collaborating around a code project with GitHub. We will create, and example using one or more TidyVerse packages and demonstrate how to use the capabilities.
+
+We will use the Bob Ross Dataset from "Fivethirtyeight.com". Within this data set, there are the different elements of Bob Ross Painting's/Work, here we will use the Tidyverse Package to show general trends and an analysis of these different elements.
+
+<li> <a href = "https://github.com/Jlok17/2022MSDS/blob/main/TidyVerse%20Create%20Lok.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/Jlok17/1029687"> Rpubs </a> </li>
+<li> <a href = "https://fivethirtyeight.com/features/a-statistical-analysis-of-the-work-of-bob-ross/"> fivethirtyeight </a> </li>
