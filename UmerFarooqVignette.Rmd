@@ -1,6 +1,6 @@
 ---
 title: "GGPLOT2"
-author: "Umer Farooq"
+author: "Waheeb Algabri"
 date: "`r Sys.Date()`"
 output:
   prettydoc::html_pretty:
@@ -20,7 +20,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-ggplot2 is an R package which is designed to carry out hassle free data visualization and exploratory data analysis. This package is designed to work in a layered fashion, one can start working by plotting raw data and carrying out exploratory data analysis and then later on can add layers to the existing plot to add more details and display/draw more insights out of data. ggplot2 works under deep grammar called as “Grammar of graphics” which is made up of a set of independent components that can be created in many ways.
+
+Our task here is to Extend an Existing Example.Using one of our classmate’s examples (as created here), we have to extend his or her example with additional annotated code.
+
+Tidyverse is a collection of R packages designed for data science that provides a consistent framework for working with data. The goal of Tidyverse is to make data manipulation, visualization, and analysis easier and more intuitive by providing a set of tools that work seamlessly together.ggplot2 is part of tidverse which is designed to carry out hassle free data visualization and exploratory data analysis. This package is designed to work in a layered fashion, one can start working by plotting raw data and carrying out exploratory data analysis and then later on can add layers to the existing plot to add more details and display/draw more insights out of data. ggplot2 works under deep grammar called as “Grammar of graphics” which is made up of a set of independent components that can be created in many ways.
 
 
 
@@ -31,6 +34,7 @@ In order to make ggplot2 available in your R and Rstudio you'll have to install 
 ```{r installing-loading-ggplot, include=FALSE}
 #install.packages("ggplot2")
 library(ggplot2)
+library(tidyverse)
 ```
 
 
@@ -44,8 +48,10 @@ Before jumping into explaining the function of ggplot2 lets quickly go through o
  * Facets
  * Labs and Annotations
  * Scales
-
-
+ * Data wrangling 
+ * Descriptive statistics 
+ * Correlation analysis 
+ * Build a linear regression model
 
 ## Basics of ggplot2
 
@@ -68,6 +74,10 @@ Now lets load this data set and get on with the basics of ggplot2. We will be us
 ```{r Loading-dataset , fig.show='hold', results='asis'}
 dataset <- read.csv("https://raw.githubusercontent.com/Umerfarooq122/Data_sets/main/diabetes_data.csv")
 knitr::kable(head(dataset))
+```
+
+```{r}
+glimpse(dataset)
 ```
 
 Now that we have got the data set lets try to use ggplot() function and make some basic plot. We will make a simple bar chart first to get an idea of how everything works together.
@@ -201,11 +211,88 @@ Over here, I will be touching on `scale_x()` functions with break,labels and lim
 ```{r}
 ggplot(data = dataset, mapping = aes(x=HighChol, fill=HighChol))+geom_bar()+labs(x="High Cholesterol", y="Count", title= "Cholesterol Frequnecy", subtitle = "Cholesterol vs the number of people having it", caption = "Each count represents one human")+annotate("text", x = 1:2, y = 35000, label = c("Lower", "Higher"))+scale_y_continuous("Count",breaks = scales::breaks_extended(8), labels = scales::label_number() , limits = c(0,40000))
 ```
+
 As we can that the scale of the plot or graph has been altered and increased to 40000 using `limits` argument and simultaneously, the breaks between every increased to 8 breaks using `break` argument similarly in `label` argument we kind of defined what are we dealing with.
+
+
+## Data wrangling 
+```{r}
+# Check for missing values
+sum(is.na(dataset_new))
+```
+
+```{r}
+# Remove rows with missing values
+dataset_new <- na.omit(dataset_new)
+```
+
+
+```{r}
+# Remove rows with missing values
+dataset_new <- na.omit(dataset_new)
+
+# Remove rows with invalid age values
+dataset_new <- subset(dataset_new, age >= 0)
+
+```
+
+
+## Descriptive statistics
+
+```{r}
+summary(dataset_new)
+```
+
+
+## Correlation analysis
+
+```{r}
+cor(dataset_new[,c("age", "hypertension", "heart_disease", "avg_glucose_level", "bmi")])
+
+```
+The correlation matrix above shows the correlation coefficients between pairs of variables in the dataset_new. The values range from -1 to 1, where -1 indicates a strong negative correlation, 0 indicates no correlation, and 1 indicates a strong positive correlation.
+
+Looking at the matrix, we can see that there is a positive correlation between hypertension and avg_glucose_level (correlation coefficient of 0.203), heart_disease and avg_glucose_level (correlation coefficient of 0.252), and bmi and avg_glucose_level (correlation coefficient of 0.243). This suggests that higher glucose levels may be associated with these health conditions.
+
+On the other hand, there is a negative correlation between age and bmi (correlation coefficient of -0.012), which suggests that as age increases, BMI tends to decrease slightly.
+
+
+## Regression analysis 
+
+```{r}
+model <- lm(stroke ~ age + hypertension + heart_disease + avg_glucose_level + bmi, data = dataset_new)
+
+model
+```
+
+The output of the linear regression model shows the coefficients for each independent variable, including the intercept (constant term). These coefficients indicate the strength and direction of the relationship between each independent variable and the dependent variable.
+
+For example, in this model, we can see that age has a positive coefficient, which means that as age increases, the likelihood of having a stroke also increases. Similarly, hypertension and heart disease also have positive coefficients, indicating that these factors are positively associated with stroke risk.
+
+On the other hand, avg_glucose_level and bmi have negative coefficients, suggesting that higher levels of these variables may be associated with a lower risk of stroke.
+
+Overall, the linear regression model provides insight into which variables are most strongly associated with the outcome of interest (in this case, stroke) and can be useful for predicting or explaining the likelihood of that outcome based on the values of the independent variables.
+
+
+```{r}
+library(ggplot2)
+
+ggplot(data = dataset_new, aes(x = age, y = stroke)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  xlab("Age") +
+  ylab("Stroke") +
+  ggtitle("Relationship between Age and Stroke")
+
+```
+
 
 ## Conclusion:
 
-There way more discuss and learn about ggplot2 library and we have only scratch the surface in every section but we the above basic knowledge of each and every aspect of ggplot2 will enable us enough to create a meaningful and effective plots. Plots made in ggplot2 are very flexible and customizable, we have not really talked much amount customizing the plot. While customizing, we can add our own pre-defined colors palette to graph's data and legends, we can play around with the size and fonts styling of different types texts used in labeling, legends, titles e.t.c and much more. 
+We have only scratch the surface in every section but we the above basic knowledge of each and every aspect of ggplot2 will enable us enough to create a meaningful and effective plots. Plots made in ggplot2 are very flexible and customizable, we have not really talked much amount customizing the plot. While customizing, we can add our own pre-defined colors palette to graph's data and legends, we can play around with the size and fonts styling of different types texts used in labeling, legends, titles e.t.c and much more.
 
+We explored the relationship between various factors and the likelihood of stroke using a linear regression model. We found that age, hypertension, and heart disease were positively associated with stroke risk, while higher levels of average glucose and BMI were negatively associated with stroke risk.
+
+These findings suggest that individuals with hypertension or heart disease, as well as those who are older, may be at increased risk of stroke. However, maintaining healthy levels of glucose and BMI may help reduce the risk of stroke.
 
 
