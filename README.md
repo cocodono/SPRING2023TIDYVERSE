@@ -261,3 +261,10 @@ We will use the Bob Ross Dataset from "Fivethirtyeight.com". Within this data se
 <li> <a href = "https://github.com/Jlok17/2022MSDS/blob/main/TidyVerse%20Create%20Lok.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/Jlok17/1029687"> Rpubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/a-statistical-analysis-of-the-work-of-bob-ross/"> fivethirtyeight </a> </li>
+
+=======
+# Coco Donovan
+
+Using a dataset containing NCAA Women's Basketball rosters for Division I, I performed a basic analysis of from the rosters using readr, dplyr and ggplot2.
+
+data = 'https://raw.githubusercontent.com/Sports-Roster-Data/womens-college-basketball/main/wbb_rosters_2022_23.csv'
