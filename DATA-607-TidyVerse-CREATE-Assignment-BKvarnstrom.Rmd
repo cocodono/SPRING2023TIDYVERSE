@@ -1,0 +1,137 @@
+---
+title: "DATA 607 - TidyVerse CREATE Assignment BKvarnstrom"
+author: "Beshkia Kvarnstrom"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    theme: cerulean
+    code_folding: hide
+    toc: true
+    toc_float: true
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## TidyVerse CREATE assignment - INSTRUCTIONS
+In this assignment, you’ll practice collaborating around a code project with GitHub.  You could consider our collective work as building out a book of examples on how to use TidyVerse functions.
+
+GitHub repository:  https://github.com/acatlin/SPRING2023TIDYVERSE
+
+FiveThirtyEight.com datasets.
+
+Kaggle datasets. 
+
+Your task here is to Create an Example.  Using one or more TidyVerse packages, and any dataset from fivethirtyeight.com or Kaggle, create a programming sample “vignette” that demonstrates how to use one or more of the capabilities of the selected TidyVerse package with your selected dataset. (25 points)
+
+Later, you'll be asked to extend an existing vignette.  Using one of your classmate’s examples (as created above), you'll then extend his or her example with additional annotated code. (15 points)
+
+You should clone the provided repository.  Once you have code to submit, you should make a pull request on the shared repository.  You should also update the README.md file with your example.
+
+After you’ve created your vignette, please submit your GitHub handle name in the submission link provided below. This will let your instructor know that your work is ready to be peer-graded.
+
+
+## Load the Packages used in the Assignment
+```{r }
+pkges <- c("tidyverse", "readr", "kableExtra", "dplyr")
+
+# Loop through the packages
+for (p in pkges) {
+  # Check if package is installed
+  if (!requireNamespace(p, quietly = TRUE)) {
+    install.packages(p) #If the package is not installed, install the package
+    
+    library(p, character.only = TRUE) #Load the package
+  } else {
+    library(p, character.only = TRUE) #If the package is already installed, load the package
+  }
+}
+```
+
+## The Data set
+I choose a dataset from FiveThirtyEight.com. The URL for the dataset is: https://fivethirtyeight.com/features/some-people-are-too-superstitious-to-have-a-baby-on-friday-the-13th/
+
+The data was analyzed to determine the year, month and day of the week with the highest birth rates
+
+## Import Dataset from Github and load in R
+
+The read_csv from from the readr package was used to read the dataset from Github.
+```{r Read Data from Github, warnings=FALSE, message=FALSE}
+
+USBirthsDS <- read_csv("https://raw.githubusercontent.com/BeshkiaKvarnstrom/MSDS-DATA607/main/US_births_2000-2014_SSA.csv", 
+                          show_col_types = FALSE)
+
+```
+
+
+```{r}
+
+USBirthsDSDF <- data.frame(USBirthsDS) # Create a dataframe to store the data
+
+glimpse(USBirthsDSDF) #The glimpse function is used to display all the columns in the dataframe
+
+```
+### Use the Rename() function to change the column names in the dataframe 
+```{r}
+USBirthsDSDF <- USBirthsDSDF %>% 
+           rename("Birth_Year" = "year", "Birth_Month" = "month", "Date_of_Month" = "date_of_month", "Day_of_Week" = "day_of_week", "Total_Births" = "births")
+USBirthsDSDF
+
+```
+### Use the Filter() function to return a subset of the data. In this instance I want to analyze on the births that took place on a Friday the 13th. I wanted to see which month had more births on Friday the 13th
+```{r}
+Friday13th_DS <- USBirthsDSDF  %>% filter(Date_of_Month == 13, Day_of_Week
+ == 5)
+Friday13th_DS
+```
+```{r}
+Friday13thBirths <- Friday13th_DS %>% 
+ # group_by(Birth_Month = month.name[Birth_Month] ) %>% 
+  group_by(Birth_Month) %>% 
+  summarize(Total_Birth_Year=sum(Total_Births,na.rm = TRUE)) %>% 
+  arrange(desc(Total_Birth_Year))
+
+
+Friday13thBirths
+```
+```{r}
+Fri13_births  <- Friday13thBirths%>%
+ggplot(aes(Birth_Month, Total_Birth_Year, group = 1)) + geom_point(na.rm=TRUE, color = "purple") + geom_line(na.rm=TRUE, color = "green")+
+  xlim(1,12)+
+  labs(title = "Total Birth in the US that occured on Friday the 13th", x = "Birth Year", y = "Total Birth")
+Fri13_births
+```
+
+### Use the group_by(),summarize() and arrange() function
+
+group_by() - used to group the data by the birth year
+summarize() - used to sum the Total_Births
+arrange() - used to order the rows by the newly summarized column Total_Birth_Year
+
+```{r}
+USBirths <- USBirthsDSDF %>% 
+  group_by(Birth_Year) %>% 
+  summarize(Total_Birth_Year=sum(Total_Births,na.rm = TRUE)) %>% 
+  arrange(desc(Total_Birth_Year))
+
+USBirths
+```
+
+### The ggplot below shows the total births from the year 2000 to 2014. Here you can see that the highest number of births took place in 2007
+```{r}
+us_births  <- USBirths%>%
+ggplot(aes(Birth_Year, Total_Birth_Year, group = 1)) + geom_point(na.rm=TRUE, color = "purple") + geom_line(na.rm=TRUE, color = "green")+
+  labs(title = "Total Birth in the US from 2000-2014", x = "Birth Year", y = "Total Birth")+
+  xlim(2000,2015)
+us_births
+```
+
+## Conclusion
+July had the most birth on Friday the 13th.
+
+Additionally most babies were born in the year 2007 when an analysis is done by years. 2013 had the lowest birth.
+
