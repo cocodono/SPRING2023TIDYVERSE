@@ -110,7 +110,7 @@ TIDYVERSE EXTEND
 The overarching purpose of this assignment was the utilization of github as a collaborative
 coding tool to explore push, pull, clone and forking capabilities. 
 In this assignment a github repository was cloned, another student's vignette .rmd file
-modified and then the .rmd file was pushed back to the original github repository to
+modified and then the .rmd file was pulled back to the original github repository to
 demonstrate github's collaboration capabilities.  
 
 The vignette which was modified was created by Jlok17.  The vignette was modified to improve
