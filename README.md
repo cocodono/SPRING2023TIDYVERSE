@@ -93,8 +93,7 @@ I worked using the lubridate package within the Tidyverse ensemble. With this, I
 =======
 
 # Gregg Maloy
-Initial Description and Link:
-
+TIDYVERSE CREATE
 For this assignment dplyr was utilized to conduct a superficial analysis of the 'Music
 Dataset : 1950 to 2019' which provides a list of songs 'from 1950 to 2019 describing
 music metadata as sadness, danceability, loudness, acousticness, etc.'  More
@@ -105,7 +104,18 @@ the main functions of the dplyr package.  The final product is a playlist of son
 <li> <a href = "https://rpubs.com/greggmaloy/1027079"> Rpubs </a> </li>
 <li> <a href = "https://www.kaggle.com/datasets/saurabhshahane/music-dataset-1950-to-2019?resource=downoad"> Kaggle </a> </li>
 
+TIDYVERSE EXTEND
+The overarching purpose of this assignment was the utilization of github as a collaborative
+coding tool to explore push, pull, clone and forking capabilities. 
+In this assignment a github repository was cloned, another student's vignette .rmd file
+modified and then the .rmd file was pushed back to the original github repository to
+demonstrate github's collaboration capabilities.  
 
+The vignette which was modified was created by Jlok17.  The vignette was modified to improve
+ggplot readability. More specifically the plot was reordered and observation value labels were
+introduced to a scatter plot.
+<li> <a href = "https://github.com/greggmaloy/SPRING2023TIDYVERSE/blob/main/Data_607_TidyVerse_Extend_Gregg_Maloys_Extend_of_Loks_Vignette.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/greggmaloy/1031975"> Rpubs </a> </li>
 =======
 
 # Glen Davis
