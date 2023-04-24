@@ -53,7 +53,11 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 
 <li><a href = "https://www.kaggle.com/datasets/ashishraut64/internet-users?select=Final.csv"> Kaggle </a></li>
 
-======= \# Glen Davis A vignette of example use cases for the purrr library within the tidyverse.
+======= 
+
+For my extend, I've chosen to add upon Farhana's implementation of `dplyr`. This is located <a href="https://github.com/acatlin/SPRING2023TIDYVERSE/blob/main/TidyVerse%20Assignment.Rmd"> here</a>. 
+
+\# Glen Davis A vignette of example use cases for the purrr library within the tidyverse.
 
 
 
