@@ -12,6 +12,11 @@ In this assignment we will get to practice collaborating around a code project w
 <li><a href = "https://rpubs.com/Farhana-MSDS/1019274"> Rpubs </a></li>
 <li> <a href = "https://github.com/fivethirtyeight/data/tree/master/births"> fivethirtyeight </a> </li>
 
+# TIDYVERSE EXTEND:
+
+In the extension part of this assignment I have chose Alic's work and used the TidyVerse package, specifically **dplyr** package to demonstrate it's capabilities.I have used dplyr to manipulate the dataset by using filter(), summarize(), sum(), and mean() functions, combine with group_by() which, allowed us to perform our operation “by group”.
+
+
 # Waheeb Algabri
 
 Initial Description and Link:
