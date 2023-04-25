@@ -127,3 +127,72 @@ congress_age %>%
   facet_wrap(~party)
 ```
 
+# Extend
+
+This is my extension to Alex Khaykin's vignette on the `ggplot2` package in the tidyverse. His "Create" assignment looked at key plots in `ggplot2` using the 'congress_age' dataset from fivethirtyeight. So far, he has demonstrated how to create a bar plot, boxplot, violin plot, and a scatterplot. I will expand on this by creating a density plot and histogram as well as some components in the ggplot2 package to improve data visualization. 
+
+## Density Plot of Congress Age
+
+The function `geom_density` plots a curve that shows the distribution of a continuous variable. The data is more densely distributed where the curve is highest. From the density plot, it looks like most of congress is around 50 years old. 
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x = age)) +
+  geom_density()
+```
+This density plot can be augmented to show the distribution of age in each party by adding the `fill` argument in `aes()`. I also changed the transparency of the curves by setting alpha to 0.3 in `geom_density()`.
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x = age, fill = party)) +
+  geom_density(alpha = 0.3)
+```
+
+This density plot is a bit hard to read as all the curves are on top of each other. We can further clean it up by using the `facet_grid` function to create a grid of plots based on a categorical variable. Compared to the other parties, AL seems to be have the highest percentage of young congress members.
+```{r}
+congress_age %>% 
+  ggplot(aes(x = age, fill = party)) +
+  geom_density(alpha = 0.3)+
+  facet_grid(~party,)
+```
+
+## Histogram of Ages
+
+Using `geom_histogram()`, histograms are another way to visualize the distribution of a continuous variable by grouping it into bins and counting the number of observations that fall into each bin. From the histogram, it looks like the most common age of congress members is around 50 years old.  
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x= age))+
+  geom_histogram()
+```
+
+### Adding Themes, Labels, and Color to Histogram
+The `ggplot2` package has several built-in themes to modify the appearance of the plot. Some of my favorites are `theme_minimal()`, `theme_bw()`, and `theme_light()`. Color can also be added to the plot to enhance its visual appeal and may aid in conveying more information. One way to do this is by adding the `color` argument in aesthetic mapping or in `geom_histogram`. This can be used to help visualize categorical data. In addition, labels allow the reader to easily interpret the data and plot. This is primarily done using the `labs()` function. 
+
+```{r}
+congress_age %>%
+  filter(party == "R" | party == "D") %>% 
+  ggplot(aes(x = age, fill = party), na.rm = TRUE) +
+  geom_histogram(color = "blue") +
+  labs(title = "Ages of Democrats and Republicans",x = "Age", y = "Count", caption = "A histogram of the ages of Democrats and Republicans in Congress")+
+  theme_bw()
+```
+## Embedding and Saving the Plot
+The histogram can be saved to an object, which can be embedded into a document. Finally, we can save this plot to our working directory using the `ggsave()` function. We can also adjust the width and height of the plot. 
+```{r}
+age_of_congress <- 
+  congress_age %>%
+    filter(party == "R" | party == "D") %>% 
+    ggplot(aes(x = age, fill = party), na.rm = TRUE) +
+    geom_histogram(color = "blue") +
+    labs(title = "Ages of Democrats and Republicans",x = "Age", y = "Count", caption = "A histogram of the ages of Democrats and Republicans in Congress")+
+    theme_bw()
+
+age_of_congress
+```
+```{r}
+ggsave("Age of Congress.pdf", age_of_congress, width = 10, height = 5)
+```
+
+# Conclusion
+In conclusion, the `ggplot2` package in the tidyverse is an important tool in visualizing data analysis. It has a wide range of functions that allow the user to create and customize plots. In this example, we were able demonstrate many uses of `ggplot2` in a large dataset of congress ages. From the plots, it is clear that the average age of congress is around 50 years old. Interestly enough, the curve of congress ages seems to follow a normal distribution. 
