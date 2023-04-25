@@ -120,8 +120,14 @@ introduced to a scatter plot.
 <li> <a href = "https://rpubs.com/greggmaloy/1031975"> Rpubs </a> </li>
 =======
 
-# Glen Davis
+# Glen Davis: Create:
 A vignette of example use cases for the purrr library within the tidyverse. 
+
+# Glen Davis: Extend:
+gdd - extending Mo's tidyverse create submission - starting lines for changes/comments - 
+line 29: combined your string replacements and class coercion into one line
+line 35: reordered/simplified your group_by/summarize workflow
+line 66: adjusted your bar plot so that the x-/y-values are in more standard positions (i.e. the x is a category, and the y is numeric), your bars are sorted, and then the coords are flipped so you still achieve what you wanted visually: a horizontal bar plot. This is better than setting the y-value as a category and the x-value as numeric and not doing the coord flip, as it's easy to get confused when you do it that way. Also updated your Amounts since you wanted them to represent millions of dollars, not dollars.
 
 # Eddie Xu
 Initial Description and Link:
