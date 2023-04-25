@@ -230,14 +230,19 @@ Links:
 <li> <a href = "https://rpubs.com/rossboehme/1029702"> RPubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/aging-congress-boomers/"> FiveThirtyEight Article </a> </li>
 =======
-# Jian Quan Chen
-
+  
+# Jian Quan Chen 
+### Create
 Initial Description and Link:
 
 For this assignment, I will be creating a programming sample vignette to demonstrate the use of the tidyr package in the tidyverse package. I will be working with the “Video Game Sales” (https://www.kaggle.com/datasets/gregorut/videogamesales) dataset from Kaggle. The dataset was generated from a scrape of vgchartz.com and contains the sales of video games that sold greater than 100,000 copies from 1980 to 2020.
 
 <li> <a href = "https://github.com/LeJQC/MSDS/blob/main/DATA%20607/TidyVerse%20CREATE%20Assignment/tidyverse_create_assignment_LeJQC.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/jianjqc/1029686"> Rpubs </a> </li>
+  
+### Extend 
+This is my extension to Alex Khaykin's vignette on the `ggplot2` package in the tidyverse. His "Create" assignment looked at key plots in `ggplot2` using the 'congress_age' dataset from fivethirtyeight. So far, he has demonstrated how to create a bar plot, boxplot, violin plot, and a scatterplot. I will expand on this by creating a density plot and histogram as well as showing useful components in the ggplot2 package to improve data visualization. 
+  
 =======
 =======
 
