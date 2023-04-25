@@ -1,6 +1,6 @@
 ---
 title: "Fuzzy Join Vignette"
-author: "Keith Colella"
+author: "Keith Colella, John Cruz"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -210,3 +210,112 @@ We could continue to tweak our join criteria to refine this join, but ultimately
 ## Conclusion
 
 I hope this vignette has demonstrated the value of the `fuzzyjoin` package, especially when dealing with unstructured / scraped data. The package offers many more functions, so opportunities abound for extension of this vignette!
+
+---
+
+## Extend fuzzyjoin Package Example
+
+Working with Keith's example using the *fuzzyjoin* library, I will be further showcasing what this package can do using a *geo_left_join* function based on geo-location data and the finding the distance between them.
+
+The data for this example will be using [MTA subway station locations](https://data.ny.gov/widgets/i9wp-a4ja), which provides latitude and longitude for every subway exit and its subway line. In addition, I will be using [data](https://data.cityofnewyork.us/Health/Hospitals/833h-xwsx) on NYC's [public acute care hospitals](https://portal.311.nyc.gov/article/?kanumber=KA-02793) throughout the NYC region. This dataset also provides latitude and longitude information. 
+
+The goal will be to determine which subway lines are at most one-mile away from the hospital. 
+
+## Import MTA data
+
+Here, the MTA data is imported and cleaned up to be joined later on with the NYC hospital data. 
+
+```{r import-mta, message=FALSE, warning=FALSE}
+library(janitor)
+
+mta_df <- read_csv('input_data/mta_subway_stations.csv') |> 
+  clean_names()
+```
+
+```{r distinct-mta-cols}
+station_locations <- 
+  mta_df |> 
+  distinct(route1, station_latitude, station_longitude) |> 
+  rename(train_route = route1, latitude = station_latitude, longitude = station_longitude)
+```
+
+## Import NYC Hospital Data
+
+We continue with cleaning of the data so that it can be joined with the MTA data.
+
+```{r import-hhc, message=FALSE}
+hhc_df <- read_csv('input_data/nyc_hhc.csv') |> 
+  clean_names()
+```
+
+```{r clean-lat-long}
+hhc_locations <-
+  hhc_df |> 
+  filter(facility_type == 'Acute Care Hospital') |> 
+  mutate(lat_long = str_split_i(location_1, "\\(", 2),
+         latitude = as.numeric(str_split_i(lat_long, "\\,", 1)),
+         longitude = str_split_i(lat_long, "\\,", 2),
+         longitude = as.numeric(str_remove(longitude, "\\)"))) |> 
+  select(facility_name, latitude, longitude)
+```
+
+## Fuzzyjoin 
+
+We can use fuzzyjoin and the geo_left_join() function to combine both datasets and determine a maximum distance on one-mile apart from the hospital and subway exit. It is important to note that subway lines have multiple exits and may vary how far from the hospital it will be. The data merge will be filtered to find the shortest exit path from the subway line to the hospital. 
+
+```{r fuzzy-geo-join, message=FALSE}
+station_hhc <-
+  hhc_locations |> 
+  geo_left_join(station_locations, max_dist = 1, distance_col = 'dist_to_hosp')
+
+station_hhc_short <-
+  station_hhc |>
+  group_by(facility_name, train_route) |> 
+  filter(dist_to_hosp == min(dist_to_hosp)) |>
+  mutate(dist_to_hosp = round(dist_to_hosp, 2)) |> 
+  ungroup()
+  
+station_hhc_short <-  
+  station_hhc_short |> 
+  group_by(facility_name) |> 
+  arrange(facility_name, train_route) |> 
+  mutate(all_trains = str_c(train_route, collapse = ", ")) |> 
+  ungroup()
+```
+
+## Leaflet Plot
+
+Lastly, lets plot on an interactive map the location of the public hospital using black circles and the location of the subway exit in orange circles. When clicking on the hospital location, it will provide which trains are within a one-mile radius and the subway exit marker will provide the hospital and the distance to it.
+
+```{r leaflet}
+library(leaflet)
+
+leaflet(station_hhc_short) |> 
+  addTiles() |> 
+  addCircles(lng = ~longitude.x, 
+             lat = ~latitude.x, 
+             radius = 30, 
+             weight = 1,
+             color = 'Black',
+             fillColor = 'Black',
+             fillOpacity = 0.05,
+             popup = paste("<b>Hospital: </b>", station_hhc_short$facility_name, "<br>",
+                           "<b>Subway Lines: </b>", station_hhc_short$all_trains)
+             ) |> 
+  addCircles(lng = ~longitude.y, 
+             lat = ~latitude.y, 
+             radius = 15, 
+             weight = 1,
+             color = '#c85200',
+             fillColor = '#c85200',
+             popup = paste("<b>Subway Line: </b>", station_hhc_short$train_route, "<br>",
+                           "<b>Hospital: </b>", station_hhc_short$facility_name, "<br>",
+                           "<b>Distance: </b>", station_hhc_short$dist_to_hosp, "mi.")
+             ) |> 
+  addProviderTiles("CartoDB.Positron") |> 
+  setView(-73.98, 40.75, zoom = 10)
+```
+
+## Conclusion
+
+Fuzzyjoin is not limited to finding similar names but also geo-location aspects. 
