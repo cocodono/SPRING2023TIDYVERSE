@@ -253,6 +253,11 @@ Links:
 
 I chose to extend John Cruz's vignette on the **lubridate** package by focusing on the `as_date()` function. 
 
+Links: 
+
+- [GitHub](https://github.com/ShanaFarber/SPRING2023TIDYVERSE/blob/main/lubridate.Rmd)
+- [Rpubs](https://rpubs.com/ShanaFarber/data607tidyverseextend)
+
 =======
   
 # Ross Boehme
