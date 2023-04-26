@@ -179,6 +179,22 @@ https://www.census.gov/library/publications/2001/dec/c2kbr01-12.html
 
 
 
+# EXTENDING DPLYR ANALYSIS
+### Alice Ding
+### 4/24/2023
 
+### Introduction
 
+For the TidyVerse Extension project, I will be extending Farhana's work using `dplyr`.
 
+### Addition of Code
+
+We can use `dplyr` to mutate fields as well as summarise and analyze the data. For example, if we wanted just one field to represent dates of birth.
+
+```{r mutate}
+head(us_births |> mutate(date=as.Date(paste(as.character(year), as.character(month), as.character(date_of_month), sep = "-"))))
+```
+
+### Conclusion
+
+Using `dplyr` makes it also easy to modify columns into the format in which we need the data to be presented!
