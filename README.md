@@ -88,16 +88,27 @@ Links:
 <li> <a href = "https://rpubs.com/ading56/1024722"> Rpubs </a> </li>
 <li> <a href = "https://www.kaggle.com/datasets/ashishraut64/internet-users?select=Final.csv"> Kaggle </a> </li>
 
+---
 
 # John Cruz
-Initial Description and Link:
+Tidyverse SELECT
 
 I worked using the lubridate package within the Tidyverse ensemble. With this, I created examples exploring NYC Filming Permits data. 
 
 <li> <a href = "https://github.com/hellojohncruz/SPRING2023TIDYVERSE/blob/main/lubridate.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/hellojohncruz/lubridate"> RPubs </a> </li>
 <li> <a href = "https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p"> NYC Open Data </a> </li>
-=======
+
+Tidyverse EXTEND
+
+To extend an example, I used Keith's fuzzyjoin package to work on MTA subway locations and NYC public hospitals
+
+<li> <a href = "https://github.com/hellojohncruz/SPRING2023TIDYVERSE/blob/main/keithC_fuzzyVignette.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/hellojohncruz/fuzzyjoin"> RPubs </a> </li>
+<li> <a href = "https://data.ny.gov/widgets/i9wp-a4ja"> MTA Data </a> </li>
+<li> <a href = "https://data.cityofnewyork.us/Health/Hospitals/833h-xwsx"> Hospital Data </a> </li>
+
+---
 
 =======
 
