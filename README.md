@@ -12,6 +12,11 @@ In this assignment we will get to practice collaborating around a code project w
 <li><a href = "https://rpubs.com/Farhana-MSDS/1019274"> Rpubs </a></li>
 <li> <a href = "https://github.com/fivethirtyeight/data/tree/master/births"> fivethirtyeight </a> </li>
 
+# TIDYVERSE EXTEND:
+
+In the extension part of this assignment I have chose Alic's work and used the TidyVerse package, specifically **dplyr** package to demonstrate it's capabilities.I have used dplyr to manipulate the dataset by using filter(), summarize(), sum(), and mean() functions, combine with group_by() which, allowed us to perform our operation “by group”.
+
+
 # Waheeb Algabri
 
 Initial Description and Link:
@@ -53,7 +58,11 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 
 <li><a href = "https://www.kaggle.com/datasets/ashishraut64/internet-users?select=Final.csv"> Kaggle </a></li>
 
-======= \# Glen Davis A vignette of example use cases for the purrr library within the tidyverse.
+======= 
+
+For my extend, I've chosen to add upon Farhana's implementation of `dplyr`. This is located <a href="https://github.com/acatlin/SPRING2023TIDYVERSE/blob/main/TidyVerse%20Assignment.Rmd"> here</a>. 
+
+\# Glen Davis A vignette of example use cases for the purrr library within the tidyverse.
 
 
 
@@ -79,16 +88,27 @@ Links:
 <li> <a href = "https://rpubs.com/ading56/1024722"> Rpubs </a> </li>
 <li> <a href = "https://www.kaggle.com/datasets/ashishraut64/internet-users?select=Final.csv"> Kaggle </a> </li>
 
+---
 
 # John Cruz
-Initial Description and Link:
+Tidyverse SELECT
 
 I worked using the lubridate package within the Tidyverse ensemble. With this, I created examples exploring NYC Filming Permits data. 
 
 <li> <a href = "https://github.com/hellojohncruz/SPRING2023TIDYVERSE/blob/main/lubridate.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/hellojohncruz/lubridate"> RPubs </a> </li>
 <li> <a href = "https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p"> NYC Open Data </a> </li>
-=======
+
+Tidyverse EXTEND
+
+To extend an example, I used Keith's fuzzyjoin package to work on MTA subway locations and NYC public hospitals
+
+<li> <a href = "https://github.com/hellojohncruz/SPRING2023TIDYVERSE/blob/main/keithC_fuzzyVignette.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/hellojohncruz/fuzzyjoin"> RPubs </a> </li>
+<li> <a href = "https://data.ny.gov/widgets/i9wp-a4ja"> MTA Data </a> </li>
+<li> <a href = "https://data.cityofnewyork.us/Health/Hospitals/833h-xwsx"> Hospital Data </a> </li>
+
+---
 
 =======
 
@@ -120,8 +140,14 @@ introduced to a scatter plot.
 <li> <a href = "https://rpubs.com/greggmaloy/1031975"> Rpubs </a> </li>
 =======
 
-# Glen Davis
+# Glen Davis: Create:
 A vignette of example use cases for the purrr library within the tidyverse. 
+
+# Glen Davis: Extend:
+gdd - extending Mo's tidyverse create submission - starting lines for changes/comments - 
+line 29: combined your string replacements and class coercion into one line
+line 35: reordered/simplified your group_by/summarize workflow
+line 66: adjusted your bar plot so that the x-/y-values are in more standard positions (i.e. the x is a category, and the y is numeric), your bars are sorted, and then the coords are flipped so you still achieve what you wanted visually: a horizontal bar plot. This is better than setting the y-value as a category and the x-value as numeric and not doing the coord flip, as it's easy to get confused when you do it that way. Also updated your Amounts since you wanted them to represent millions of dollars, not dollars.
 
 # Eddie Xu
 Initial Description and Link:
@@ -230,14 +256,19 @@ Links:
 <li> <a href = "https://rpubs.com/rossboehme/1029702"> RPubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/aging-congress-boomers/"> FiveThirtyEight Article </a> </li>
 =======
-# Jian Quan Chen
-
+  
+# Jian Quan Chen 
+### Create
 Initial Description and Link:
 
 For this assignment, I will be creating a programming sample vignette to demonstrate the use of the tidyr package in the tidyverse package. I will be working with the “Video Game Sales” (https://www.kaggle.com/datasets/gregorut/videogamesales) dataset from Kaggle. The dataset was generated from a scrape of vgchartz.com and contains the sales of video games that sold greater than 100,000 copies from 1980 to 2020.
 
 <li> <a href = "https://github.com/LeJQC/MSDS/blob/main/DATA%20607/TidyVerse%20CREATE%20Assignment/tidyverse_create_assignment_LeJQC.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/jianjqc/1029686"> Rpubs </a> </li>
+  
+### Extend 
+This is my extension to Alex Khaykin's vignette on the `ggplot2` package in the tidyverse. His "Create" assignment looked at key plots in `ggplot2` using the 'congress_age' dataset from fivethirtyeight. So far, he has demonstrated how to create a bar plot, boxplot, violin plot, and a scatterplot. I will expand on this by creating a density plot and histogram as well as showing useful components in the ggplot2 package to improve data visualization. 
+  
 =======
 =======
 
