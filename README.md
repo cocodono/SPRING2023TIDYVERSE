@@ -237,6 +237,8 @@ For this assignment, I choose the <b>dplyr<b> library in Tidyverse to show how t
 
 # Shoshana Farber
 
+### Tidyverse CREATE
+
 This vignette demonstrates some of the capabilities of the **tidyr** package from the **tidyverse** suite. It also utilizes **dplyr** and **ggplot2** functions. 
 
 The data set used was from FiveThirtyEight.com and it focused on Elo ratings and other metrics for NBA basketball teams. 
@@ -246,6 +248,15 @@ Links:
 - [Dataset](https://github.com/fivethirtyeight/data/tree/master/nba-forecasts)
 - [Rpubs](https://rpubs.com/ShanaFarber/data607tidyversecreate)
 - [GitHub](https://github.com/ShanaFarber/cuny-sps/blob/master/DATA_607/Tidyverse_CREATE/TidyverseCREATE.Rmd)
+
+### Tidyverse EXTEND
+
+I chose to extend John Cruz's vignette on the **lubridate** package by focusing on the `as_date()` function. 
+
+Links: 
+
+- [GitHub](https://github.com/ShanaFarber/SPRING2023TIDYVERSE/blob/main/lubridate.Rmd)
+- [Rpubs](https://rpubs.com/ShanaFarber/data607tidyverseextend)
 
 =======
   
