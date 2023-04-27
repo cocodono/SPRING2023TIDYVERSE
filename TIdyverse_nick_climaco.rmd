@@ -1,0 +1,134 @@
+---
+title: "CREATE An Example: TidyVerse Vignette"
+author: "Nick Climaco"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  warning = FALSE
+)
+```
+
+##  Introduction 
+
+In this vignette, we will demonstrate how to use the dplyr and ggplot2 packages from the TidyVerse ecosystem to analyze the US mass shootings dataset. The dataset contains information about mass shootings in the United States from 1982 to 2023.
+
+You can download the dataset from this link: https://raw.githubusercontent.com/Nick-Climaco/Rdataset/main/shooting-1982-2023.csv
+
+The Tidyverse is a collection of powerful and flexible packages in R designed to make data manipulation, exploration, and visualization more efficient and intuitive. It includes popular packages like ggplot2, dplyr, tidyr, and more. The Tidyverse also provides a consistent and coherent syntax, making it easy to learn and use different packages in conjunction with each other. 
+
+### Step 1: Load the required package and dataset
+
+Before starting the analysis, we need to load the required packages, which include tidyverse and readr. Tidyverse is a collection of R packages designed for data manipulation, visualization, and analysis. Readr is a part of the tidyverse collection and is specifically used to read data from files.
+
+We first import the TidyVerse Collection:
+```{r, message=FALSE}
+library(tidyverse)
+library(readr)
+```
+
+Next, we want to download the dataset that we will be using for this example:
+```{r}
+#load the dataset
+mass_shootings <- read.csv("https://raw.githubusercontent.com/Nick-Climaco/Rdataset/main/shooting-1982-2023.csv")
+```
+We used read.csv() function to read in the data from the url.
+
+### Step 2: Perform data exploration
+
+First, Let us take at look/glimpse of the data:
+```{r}
+glimpse(mass_shootings)
+```
+We can see that the dataset contains 141 observations and 21 variables. We can also see that some of these variables are factors, which will useful for later when we create visualizations.
+
+Now, to show some summary statistics, we will use summary() function:
+```{r}
+summary(mass_shootings)
+```
+
+### Step 3: Data wrangling and cleaning using dplyr
+
+Next, we need to clean and transform the dataset. This step is essential because the raw dataset may contain missing values or incorrect data types, which can affect the analysis results. In this step, we will convert the 'Date' column to a proper Date data type.
+
+Here, we will change the date column from being a "chr" type to "date" type and format all the date to be in the form Year-Month-Day:
+```{r}
+# rows 1- 53 are in mdy format and 54-141 in dmy format
+mass_shootings <- mass_shootings |> 
+    mutate(date = if_else(row_number() <= 53, lubridate::mdy(date), lubridate::dmy(date))) |> 
+    mutate(injured = as.numeric(injured)) |> 
+    mutate(total_victims = as.numeric(total_victims)) |> 
+    mutate(age_of_shooter = as.numeric(age_of_shooter)) |> 
+    separate(location, into = c("city", "state"), sep = ", ", remove = FALSE) |> 
+    select(-location) |> 
+    mutate(state = ifelse(state == "TN", "Tennessee", state))
+```
+
+### Step 4: Data Visualization using ggplot2
+
+Data visualization is an essential tool for gaining insights from complex datasets. By presenting data in a visual form such as graphs or charts, it becomes easier to identify patterns, trends, and outliers. This can help to highlight important features of the data and guide decision-making processes.
+
+Now, we want to know the frequency of mass shooting location in the graph below:
+```{r}
+location <- mass_shootings |> 
+    group_by(location.1) |> 
+    summarise(count = n()) |> 
+    arrange(desc(count))
+```
+```{r}
+ggplot(location, aes(x = reorder(location.1, count), y = count, fill = location.1)) +
+    geom_bar(stat = "identity") +
+    coord_flip() +
+    labs(x = "", y = "Number of Mass Shooting") +
+    theme(legend.position = "none")
+```
+
+We can observe that, besides "Other" category, "Workspaces" and "School" are the most frequent locations that mass shootings happened. The most likely reason why "Workspaces" is the one of the top location may be due to a disgruntled employee or unsatisfied client. 
+
+Next, we will look at how often of the term "mass" shooting used contrary to a shooting "spree":
+```{r}
+mass_shootings |> 
+    group_by(type) |> 
+    summarise(count = n()) |> 
+    arrange(desc(count)) |> 
+    ggplot(aes(x = type, y = count, fill = type)) +
+    geom_bar(stat = "identity") +
+    theme(legend.position = "none")
+
+```
+
+Despite the lack of a universal definition, the term "mass shooting" has become a commonly used label in media and public discourse to describe these types of incident compared to the term "shooting spree".
+
+Lastly for this example, we want to know the number of "mass shootings" that happen in the US based on this dataset:
+```{r}
+mass_shootings |> 
+    group_by(year) |> 
+    summarise(count = n()) |> 
+    ggplot(aes(year, count)) +
+    geom_line() + 
+    geom_point(shape = 21,color = "black", fill = "blue", size = 4) +
+    labs(x = "Year", y = "Number of Shootings") +
+    scale_x_continuous(breaks = seq(1980, 2022, 8)) +
+    scale_y_continuous(breaks = seq(0,12.5, 1)) +
+    theme_bw()
+```
+
+The bar graph shows that the frequency of mass shooting incidents increased notably after the year 2011. Prior to this period, from 1982 to 2010, the frequency of incidents appeared to be relatively low. This suggests that something may have changed in the years following 2011 that led to an increase in mass shootings. Possible explanations for the increase in mass shootings since 2011 include changes in access to firearms, political and social unrest, and mental health issues. However, further research is needed to better understand the underlying causes of this trend.
+
+* * *
+In this vignette, we used dplyr to clean, transform, and summarize the US mass shootings dataset, and ggplot2 to visualize the results. This is just one example of how you can use the TidyVerse packages to analyze and visualize a dataset. By following these steps and understanding the underlying concepts, you can apply similar techniques to analyze other datasets as well.
+
+
+
+
+
+
+
