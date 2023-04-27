@@ -113,3 +113,37 @@ hall-of-fame coach C. Vivian Stringer and their roster only contains 8 players
 (their average height may be inflated by the lack of players on the roster). However,
 my first thought after looking at this would be that it seems that height plays
 some component in basketball (stating the obvious).
+
+
+## Mohamed Hassan-El Serafi Tidyverse Extend
+
+Changing values in primary_position from uppercase to lowercase, filtering data to see the amount of players whose primary position is guard and were redshirt for each team.
+
+```{r}
+library(DT)
+df2 <- ncaa_wbb_rosters %>%
+  select(team, primary_position, redshirt) %>%
+  mutate(primary_position = tolower(primary_position)) %>%
+  filter(primary_position == 'guard' & redshirt == 1) %>%
+  group_by(team) %>%
+  summarise(count_of_guard_red = sum(redshirt)) %>%
+  arrange(desc(count_of_guard_red))
+DT::datatable(df2)
+```
+
+## Barplot of Results
+
+
+```{r}
+top_n(df2, n=10, `count_of_guard_red`) %>%
+  ggplot(., mapping = aes(x=reorder(team, desc(`count_of_guard_red`)),y=`count_of_guard_red`, fill=team)) +
+  geom_bar(stat='identity') +
+  geom_text(aes(label = count_of_guard_red), vjust = 1,
+              position = position_dodge(width = 0.5))+
+  xlab("Team") +
+  ylab("Number of Redshirt Guards per Team") +
+  coord_flip()
+```
+
+Cal St. San Bernardino and Grand Valley State had the most redshirt guards with 7.
+
