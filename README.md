@@ -41,7 +41,7 @@ For this assignment, we'll be practicing our knowledge of Tidyverse functions by
 
 =======
 
-For my extend I have extended Kory Martin's dplyr create assignment.
+For my extend I have extended Kory Martin's dplyr create assignment. This is located <a href="https://github.com/acatlin/SPRING2023TIDYVERSE/blob/main/kmartin_dplyr.Rmd"> here</a>. 
 
 =======
 # Alice D
