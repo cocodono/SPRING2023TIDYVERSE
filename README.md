@@ -181,10 +181,18 @@ For the tidyverse extend, I chose to work with Taha's code and to demonstrate mo
 =======
 # Umer Farooq
 
+## Create
+
 This Vignette is eying at a tidyverse package ggplot2. This purpose of this vignette is to explain how basics of ggplot2 works and how can we make effective graphs. A random data set in the field to healthcare is being picked from Kaggle to plot data using ggplot2
 
 <li> <a href = "https://github.com/Umerfarooq122/R-Projects/blob/main/UmerFarooqVignette.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/Umer_Farooq/1027417"> Rpubs </a> </li>
+
+## Extend
+
+In the tidyverse extend assignment I have extended Alex Khaykin's vignette. Below is the github link for that entension: 
+
+<li> <a href = "https://github.com/Umerfarooq122/R-Projects/blob/main/Tidyverse-extend-Umer.Rmd"> Github </a> </li>
 
 =======
 =======
