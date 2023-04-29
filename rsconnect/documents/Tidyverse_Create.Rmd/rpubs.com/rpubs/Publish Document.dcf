@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/1035552/5974c806dbdb4b548dba8a9b1232e0d6
+bundleId: https://api.rpubs.com/api/v1/document/1035552/5974c806dbdb4b548dba8a9b1232e0d6
+url: http://rpubs.com/korymartin/1035552/edit
+when: 1682798709.95259
+lastSyncTime: 1682798709.95262

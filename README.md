@@ -224,6 +224,7 @@ The dataset I used was obtained from [Kaggle](https://www.kaggle.com/datasets/ra
 
 # Kory Martin
 
+### Tidyverse Create:
 Initial Description and Link:
 
 For this assignment, I choose the <b>dplyr<b> library in Tidyverse to show how to work with a dataframe that shows Netflix TV Shows and Movies dataset, which was pulled from Kaggle. 
@@ -233,6 +234,16 @@ For this assignment, I choose the <b>dplyr<b> library in Tidyverse to show how t
 
 
 <li><a href = "http://rpubs.com/korymartin/data607_tidyverse_assignment"> Rpubs </a></li>
+=======
+
+### Tidverse Extend:
+
+For the extend portion of this assignment, I looked at the code originally created by classmate Coco Donavon, [here](https://github.com/acatlin/SPRING2023TIDYVERSE/blob/c78417d791beb7bea503826b025fd992de9fac74/Tidyverse_Create.Rmd). 
+
+=======
+
+
+<li><a href = "http://rpubs.com/korymartin/data607_tidyverse_extended"> Rpubs </a></li>
 =======
 
 # Shoshana Farber
