@@ -68,6 +68,8 @@ I worked using the lubridate package within the Tidyverse ensemble. With this, I
 <li> <a href = "https://github.com/hellojohncruz/SPRING2023TIDYVERSE/blob/main/lubridate.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/hellojohncruz/lubridate"> RPubs </a> </li>
 <li> <a href = "https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p"> NYC Open Data </a> </li>
+
+Extension by Jacob Silver
 =======
 
 =======
