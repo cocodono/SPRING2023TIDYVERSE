@@ -298,7 +298,10 @@ For this assignment, we explore TidyVerse and how to use some of its features. I
 
 <li> <a href = "https://github.com/Foxxenn/DATA607_TidyVerse_Create/blob/main/DATA607_TidyVerse.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/joeG1212/1029214"> RPubs </a> </li>
-<li> <a href = "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"> FiveThirtyEight </a> </li>
+<li> <a href = "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"> FiveThirtyEight </a> </li> 
+<li> <a href = "https://github.com/suswong/DATA-607-Tidyverse/blob/main/DATA%20607%20Tidyverse%20create%20Susanna.Rmd"> TidyVerse Extend to Susanna's Github</a> </li>
+  
+
 =======
 <li><a href = "https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/download?datasetVersionNumber=2"> Kaggle </a></li>
 =======
