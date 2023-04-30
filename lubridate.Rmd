@@ -140,3 +140,38 @@ graph_hour_table <-
 
 knitr::kable(arrange(graph_hour_table, start_hour))
 ```
+# Jacob Silver Updates
+
+Because John did the work of making the data usable with respect to datetimes, as well as analyzing the data by borough, I'm interested in running an additional combination analysis of those two variables. Specifically, I would like to see the number of permits provided by borough month by month.
+
+First, I need to make a new column isolating just month and year.
+
+```{r}
+update_df$start_date_ym <- update_df$start_date %>%
+    format_ISO8601(precision = "ym")
+```
+
+Now that I have a year-month column, I can make a dataframe breaking out the number of permits for each borough and for each month.
+
+```{r}
+over_time_df <- update_df %>%
+  group_by(borough, start_date_ym) %>%
+  summarise(num_permits = n())
+```
+
+Now, I need to make sure my month_year information is read as a date.
+```{r}
+over_time_df$start_date_ym <- as.Date(paste(over_time_df$start_date_ym, "-01", sep=""))
+```
+
+Finally, I can plot a line chart of permit volumes broken out by borough.
+
+```{r}
+over_time_df %>%
+  ggplot(mapping = aes(x = start_date_ym, y = num_permits, color = borough)) + 
+  geom_line() + 
+  scale_x_date(date_labels = "%b %Y")
+
+```
+Interestingly, Manhattan and Brooklyn saw a sharp decline coming into January, while Queens actually saw an uptick. Perhaps studios like to shoot wintery scenes in Queens?
+ 
