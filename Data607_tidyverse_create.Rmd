@@ -145,5 +145,28 @@ ggplot(year_df, aes(`Election Year`, `Amount`, fill=`Party`)) +
        y="Election Year")
 ```
 
+## Tidyverse Extend (Nick Climaco)
 
+### Who are the top league donors for each political party?
+
+```{r}
+top_donors_df <- df %>%
+    filter(Party %in% c("Democrat", "Republican")) |> 
+    group_by(Party, League) |> 
+    dplyr::summarize(total_donation = sum(Amount))
+```
+
+```{r}
+top_donors_df %>%
+    slice(1:8) |> 
+    ggplot(aes(x = reorder(League, total_donation), y = total_donation, fill = Party)) +
+    geom_col(position = "dodge") +
+    coord_flip() +
+    facet_wrap(~ Party, scales = "free_y") +
+    labs(y = "Total Donation Amount",
+    title = "Top Donors to Political Parties by Sports League") +
+    theme_minimal() +
+    scale_y_log10() +
+    theme(legend.position = "none", axis.title.y = element_blank()) 
+```
 
