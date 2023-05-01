@@ -198,11 +198,17 @@ In this assignment we will get to practice collaborating around a code project w
 <li> <a href = "https://rpubs.com/akhaykin/1022461"> Rpubs </a> </li>
 =======
 
-# Miguel G
+# Miguel Gomez
 
+TidyVerse Create
 <li> <a href = "https://github.com/miguelgomez7287/Tidyverse_Miguel.g/blob/main/Miguel%20Gomez%20Data%20607%20TidyVerse%20CREATE.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/miguelgomez7287/1026742"> Rpubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/where-police-have-killed-americans-in-2015/"> fivethirtyeight </a> </li>
+
+TidyVerse Extend
+
+<li> <a href = "https://github.com/miguelgomez7287/Tidyverse_Miguel.g/blob/main/TidyVerse_extend.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/miguelgomez7287/1033644"> Rpubs </a> </li>
 
 # Mohamed Hassan
 
