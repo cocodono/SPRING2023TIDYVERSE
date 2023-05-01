@@ -187,3 +187,76 @@ Interestingly, Canada is only 8% of internet users for North America.
 ## Conclusion
 
 `ggplot2` provides users a ton of different ways to make visualizations and customize them however they want. From the various colors, chart types, and other changeable features, `ggplot2` is a great package to help tell visual stories with data and make things easily digestible with a variety of graph types to suit any use case!
+
+====
+
+# Extension of "TidyVerse Create: ggplot2"
+#### Farhana Akther
+#### 04/24/2023
+
+## Introduction
+
+### To further analyze the "internet_users" dataset I will look into **dplyr** package
+
+## View Data
+
+```{r}
+head(internet_users)
+tail(internet_users)
+dim_desc(internet_users)
+dim_desc
+```
+
+### dplyr::Groupby(), dplyr::summerize() & dplyr::sum()
+
+**How many total internet users are there between the years 1980 and 2020 each year?**
+
+```{r}
+Int_users<-internet_users %>%
+  group_by(Year) %>%
+  summarise(total_internet_users = sum(No..of.Internet.Users))
+Int_users
+```
+
+### dplyr::filter(), dplyr::summerize() & dplyr::sum()
+
+**How many total number of internet users are there in the years 2020?**
+
+```{r}
+Int_users2020<-internet_users %>%
+  filter(Year==2020) %>%
+  summarise(total_int_users = sum(No..of.Internet.Users))
+Int_users2020
+```
+
+### dplyr::filter(), dplyr::summerize() & dplyr::sum()
+
+**How many total number of internet users are there in the years 2020 in a country (China)?**
+
+```{r}
+Int_users2020Country<-internet_users %>%
+  filter(Year == 2020, Entity == "China") %>%
+  group_by(Entity)%>%
+  summarise(total_int_users = sum(No..of.Internet.Users))
+Int_users2020Country
+```
+
+### dplyr::filter(), dplyr::summerize() &  dplyr::mean()
+
+**What was the average total number of internet users are there in the year 2020?**
+
+```{r}
+avg_int_users <- internet_users %>%
+  filter(Year >= 1990) %>%
+  group_by(Year) %>%
+  summarize(Average = mean(No..of.Internet.Users))
+avg_int_users
+```
+
+## Conclusion: 
+
+In the extension part of this assignment I have used the TidyVerse package, specifically **dplyr** package to demonstrate it's capabilities. I have used dplyr to manipulate the dataset by using filter(), summarize(), sum(), and mean() functions, combine with group_by() which, allowed us to perform our operation “by group”.
+
+
+
+
