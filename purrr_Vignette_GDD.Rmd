@@ -126,7 +126,7 @@ p2 <- map_dbl(disney_movies_df[, cols], mean, na.rm = TRUE)
 p3 <- map_dbl(disney_movies_df[, cols], max, na.rm = TRUE)
 disney_movies_summary <- as.data.frame(map_dfr(list(p1, p2, p3),
                                                round, digits = 6))
-
+disney_movies_summary
 ```
 
 We name the rows of this new summary data frame by the summary statistic the values in that row represent, and we further round many of the columns to two digits because we only need six digits to capture the smallest values in the **budget_float_in_millions** and **box_office_float_in_millions** columns.
@@ -185,6 +185,8 @@ by_decade <- by_decade %>%
     filter(!is.na(release_decade)) %>%
     mutate(plot = map(data, imdb_hist))
 
+
+by_decade$plot
 ```
 
 Finally, we pass our plot list column to **cowplot::plot_grid** to look at all the decade's imdb score distributions together.

@@ -21,3 +21,13 @@ I've chosen `ggplot2` as my tidyverse package to showcase and worked with a data
 # Glen Davis
 A vignette of example use cases for the purrr library within the tidyverse. 
 
+# Daniel Craig
+Readr Vignette - 
+
+Yahoo Finance Kaggle Dataset: 
+<li> <a href = https://www.kaggle.com/datasets/tanavbajaj/yahoo-finance-all-stocks-dataset-daily-update?resource=download> Kaggle </a> </li>
+
+Github: 
+<li> <a href = https://github.com/d-ev-craig/DATA607/tree/main/TIDYVERSE%20Create> Github </a> </li>
+
+Rpubs: <li> <a href =  https://rpubs.com/devcraig/DATA607readrVig> RPubs </a> </li>

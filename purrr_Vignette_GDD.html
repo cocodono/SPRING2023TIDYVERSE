@@ -631,7 +631,16 @@ p1 &lt;- map_dbl(disney_movies_df[, cols], min, na.rm = TRUE)
 p2 &lt;- map_dbl(disney_movies_df[, cols], mean, na.rm = TRUE)
 p3 &lt;- map_dbl(disney_movies_df[, cols], max, na.rm = TRUE)
 disney_movies_summary &lt;- as.data.frame(map_dfr(list(p1, p2, p3),
-                                               round, digits = 6))</code></pre>
+                                               round, digits = 6))
+disney_movies_summary</code></pre>
+<pre><code>##   running_time_int budget_float_in_millions box_office_float_in_millions
+## 1         40.00000                  0.00015                     0.000008
+## 2         97.30569                 63.58861                   167.401382
+## 3        168.00000                410.60000                  1657.000000
+##       imdb metascore rotten_tomatoes
+## 1 1.500000  18.00000        0.000000
+## 2 6.545433  61.48763        0.626427
+## 3 8.700000  99.00000        1.000000</code></pre>
 <p>We name the rows of this new summary data frame by the summary
 statistic the values in that row represent, and we further round many of
 the columns to two digits because we only need six digits to capture the
