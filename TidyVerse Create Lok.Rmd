@@ -1,6 +1,6 @@
 ---
-title: "TidyVerse Extend"
-author: "Jlok17, Susanna"
+title: "TidyVerse Create"
+author: "Jlok17"
 date: "2023-04-11"
 output: html_document
 ---
@@ -110,9 +110,10 @@ library(wordcloud)
 wordcloud(row.names(top30), top30$sums_, max.words = 100, random.order = FALSE)
 ```
 -------------------------------------------------------------------------------
-# Susanna Tidyverse Extend {.tabset}
 
-# Extend Visualization of the JLok17's example above
+# Susanna Tidyverse Extend 
+
+# Extend Visualization of the JLok17's example above {.tabset}
 
 In order to visualize the elements Bob Ross used the most in his painting, "The Joy of Painting", we should order the elements based on the number of occurrence from greatest to least. 
 

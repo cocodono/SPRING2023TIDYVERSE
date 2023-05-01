@@ -83,6 +83,10 @@ Links:
 -   [FiveThirtyEight](https://github.com/fivethirtyeight/data/tree/master/college-majors)
 -   [Github](https://github.com/suswong/DATA-607-Tidyverse/blob/main/DATA%20607%20Tidyverse%20create%20Susanna.Rmd)
 -   [Rpub](https://rpubs.com/sussing/1028956)
+
+Extend: 
+-   [Github](https://github.com/suswong/SPRING2023TIDYVERSE/blob/main/TidyVerse%20Extend%20on%20JLok's%20Create%20Assignment.Rmd)
+-   [Rpub](https://rpubs.com/sussing/1035929)
 =======
 <li> <a href = "https://github.com/addsding/data607/blob/main/tidyverse/ading%20ggplot2%20create.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/ading56/1024722"> Rpubs </a> </li>
