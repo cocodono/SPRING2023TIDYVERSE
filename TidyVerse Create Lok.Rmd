@@ -1,6 +1,6 @@
 ---
-title: "TidyVerse Create"
-author: "Jlok17"
+title: "TidyVerse Extend"
+author: "Jlok17, Susanna"
 date: "2023-04-11"
 output: html_document
 ---
@@ -109,4 +109,87 @@ Another form analysis can be done through the library "wordcloud", here we will 
 library(wordcloud)
 wordcloud(row.names(top30), top30$sums_, max.words = 100, random.order = FALSE)
 ```
+-------------------------------------------------------------------------------
+# Susanna Tidyverse Extend {.tabset}
 
+# Extend Visualization of the JLok17's example above
+
+In order to visualize the elements Bob Ross used the most in his painting, "The Joy of Painting", we should order the elements based on the number of occurrence from greatest to least. 
+
+
+## Option 1: 
+
+The elements is on the x-axis. However, it would be easier to visualize the elements by rotate the labels 45° instead of rotating it 90°. In addition, center the title using `+ theme(plot.title=element_text(hjust=0.5))`
+
+```{r}
+ggplot(top30, aes(x = rownames(top30), y = sums_)) +
+  geom_point() +
+  labs(x = "Elements", y = "Number of Appearances", title = "Elements found in Bob Ross's Paintings") +
+ # Instead of rotating the labels on the x-axis 90°, rotate the labels 45°
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) + theme(plot.title=element_text(hjust=0.5)) #Center the title
+```
+
+To visualize which element occurs the most, we should order the elements based on the number of occurrence from greatest to least. 
+
+```{r}
+# Reorder the elements based on the number of occurrence from greatest to least. 
+ggplot(top30, aes(x = reorder(rownames(top30),-sums_ ), y = sums_)) +
+  geom_point() +
+  labs(x = "Elements", y = "Number of Appearances", title = "Elements found in Bob Ross's Paintings") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) + theme(plot.title=element_text(hjust=0.5)) #Center the title
+```
+
+## Option 2: 
+The elements is on the y-axis. Swap the x and y to flip the axes. Usually, we would use coord_flip(). However, there is an error.
+
+We will need the following portion of the original code 
+`+ theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))`
+```{r}
+# Swap the x and y to flip the axes. Usually, we would use coord_flip(). However, there is an error.
+# Reorder the elements based on the number of occurrence from greatest to least. 
+ggplot(top30, aes(y = reorder(rownames(top30),sums_ ), x = sums_)) +
+  geom_point() +
+ labs(y = "Elements", x = "Number of Appearances", title = "Elements found in Bob Ross's Paintings") + # Swap the x and y to change the labels
+theme(plot.title=element_text(hjust=0.5)) #Center the title
+# We don't need the following portion of the original code 
+# + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+```
+
+## Option 3
+
+We can also visualize it using bar plot.
+```{r}
+# Swap the x and y to flip the axes. Usually, we would use coord_flip(). However, there is an error.
+# Reorder the elements based on the number of occurrence from greatest to least. 
+ggplot(top30, aes(y = reorder(rownames(top30),sums_ ), x = sums_)) +
+  geom_bar(stat = "identity",fill = "seagreen", color = "black") +
+  labs(x = "Elements", y = "Number of Appearances", title = "Elements found in Bob Ross's Paintings") + theme(plot.title=element_text(hjust=0.5)) #Center the title
+# We do not need the following portion of the original code 
+# + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+```
+
+# Dplyr Functions Extend
+
+## Beside trees, which element did Bob Ross Use most often per season?
+
+```{r}
+long_table <- bob_ross %>% 
+  pivot_longer(cols = !c('title','season','episode',"episode_num","title"), names_to = "color", values_to = "count" )
+
+season <- long_table[,-1] #Removes the episode column
+season <- season[,-2] #Removes the episode_num column
+season <- season[,-2] #Removes the title column
+
+season <- season %>% 
+  group_by(season, color) %>% 
+  mutate(count= sum(count))
+
+season <- season %>%
+  group_by(season) %>%
+  filter(!color%in% c('tree', 'trees')) %>% # If we did not filter out the "tree" or "trees", the top element for all season will be "tree" or "trees"
+  arrange(desc(count)) %>% 
+  slice(1)
+
+library(DT)
+datatable(season)
+```
