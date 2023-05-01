@@ -31,3 +31,10 @@ Github:
 <li> <a href = https://github.com/d-ev-craig/DATA607/tree/main/TIDYVERSE%20Create> Github </a> </li>
 
 Rpubs: <li> <a href =  https://rpubs.com/devcraig/DATA607readrVig> RPubs </a> </li>
+
+# Daniel Craig
+Purrr Extension -
+
+Github: <li> <a href =  https://github.com/d-ev-craig/DATA607/blob/main/TIDYVERSE%20Create/purrr%20Vignette%20Extension/purrr_Vignette_ext_dcraig.Rmd </a> </li>
+
+Rpubs: <li> <a href =  https://rpubs.com/devcraig/DATA607purrrVig </a> </li>
