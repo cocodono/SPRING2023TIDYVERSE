@@ -173,20 +173,22 @@ ggplot(top30, aes(y = reorder(rownames(top30),sums_ ), x = sums_)) +
 ## Beside trees, which element did Bob Ross Use most often per season?
 
 ```{r}
+# Convert from wide to long format
 long_table <- bob_ross %>% 
-  pivot_longer(cols = !c('title','season','episode',"episode_num","title"), names_to = "color", values_to = "count" )
+  pivot_longer(cols = !c('title','season','episode',"episode_num","title"), names_to = "element", values_to = "count" )
 
 season <- long_table[,-1] #Removes the episode column
 season <- season[,-2] #Removes the episode_num column
 season <- season[,-2] #Removes the title column
 
+# Count the number of times each element occurs in each season
 season <- season %>% 
-  group_by(season, color) %>% 
+  group_by(season, element) %>% 
   mutate(count= sum(count))
 
 season <- season %>%
   group_by(season) %>%
-  filter(!color%in% c('tree', 'trees')) %>% # If we did not filter out the "tree" or "trees", the top element for all season will be "tree" or "trees"
+  filter(!element%in% c('tree', 'trees')) %>% # If we did not filter out the "tree" or "trees", the top element for all season will be "tree" or "trees"
   arrange(desc(count)) %>% 
   slice(1)
 
