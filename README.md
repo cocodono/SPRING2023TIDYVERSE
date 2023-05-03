@@ -33,15 +33,15 @@ Initial Description and Link:
 
 For this assignment, we'll be practicing our knowledge of Tidyverse functions by creating vignette examples of the packages that make up Tidyverse. In my case, I wanted to attempt going over the forcats package which focuses on manipulating factor elements in a dataframe, as I have no experience with using it at this point.
 
-
-<li><a href = "https://github.com/alu-potato/DATA607/blob/main/Assignments/Week%209%20Project/Week%209%20Project.Rmd"> Github </a></li>
-
-<li><a href = "https://rpubs.com/tahmad/DATA607Week9Project"> Rpubs </a></li>
 =======
 
 <li><a href = "https://github.com/alu-potato/DATA607/blob/main/Assignments/Week%209%20Project/Week%209%20Project.Rmd"> Github </a></li>
 
 <li><a href = "https://rpubs.com/tahmad/DATA607Week9Project"> Rpubs </a></li>
+
+=======
+
+For my extend I have extended Kory Martin's dplyr create assignment. This is located <a href="https://github.com/acatlin/SPRING2023TIDYVERSE/blob/main/kmartin_dplyr.Rmd"> here</a>. 
 
 =======
 # Alice D
