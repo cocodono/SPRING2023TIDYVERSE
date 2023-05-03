@@ -1,5 +1,5 @@
 ---
-title: "Extended Tidyverse"
+title: "GGPLOT2"
 author: "Waheeb Algabri"
 date: "`r Sys.Date()`"
 output:

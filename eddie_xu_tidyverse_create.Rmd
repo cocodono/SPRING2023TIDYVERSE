@@ -1,0 +1,166 @@
+---
+title: "DATA 607 - Tidyverse CREATE"
+author: "Eddie Xu"
+date: "2023-04-12"
+output: html_document
+---
+## TIDYVERSE CREATE ASSIGNMENT
+
+This assignment will be create a vignette about one of TIDYVERSE libraries, ggplot. Other libraries of the tidyverse will be used for data wrangling. In this case, a dataset from kaggle (https://www.kaggle.com/datasets/arnabchaki/popular-video-games-1980-2023?resource=download) will be used to demonstrates the capacity of data visualization in R Studio.
+
+## Load Packages
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+## Load Dataset
+
+The dataset contains popular video games titles from 1980 to 2023.
+```{r}
+# read. csv and load the dataset
+raw_file <- "https://raw.githubusercontent.com/eddiexunyc/SPRING2023TIDYVERSE/exu2/games.csv"
+raw_dataset <- read.csv(raw_file)
+
+head(raw_dataset)
+```
+
+## Data Clean up 
+
+By using dplyr package for data wrangling, the data can be cleaned up and be perpared for data visualization.
+```{r}
+# Convert "K" into 1000 and the data type to numeric
+raw_dataset$Number.of.Reviews <- as.numeric(gsub("K", "e3", raw_dataset$Number.of.Reviews))
+
+# Convert Release Date into date data type through the lubridate package
+raw_dataset$Release.Date <- mdy(raw_dataset$Release.Date)
+
+# sort the data based on the rating
+video_game_data <- raw_dataset %>%
+  arrange(desc(raw_dataset$Rating))
+
+head(video_game_data)
+```
+
+## Data Visualization
+
+With data clean up, the data will be analyzed and presented with a visual for better presentation for audiences.
+
+## Top 10
+
+Let start with the top 10 popular games in the past 40 years.
+```{r}
+# find the top 10 games based on the rating
+top_10_game <- video_game_data %>%
+  slice_max(video_game_data$Rating, n = 10)
+
+# top 10 lolipop chart
+ggplot(top_10_game, aes(x = reorder(`Title`, `Rating`), y = `Rating`)) +
+  geom_segment(aes(x = reorder(`Title`, `Rating`), xend = reorder(`Title`, `Rating`), y = 0, yend = `Rating`), color = "gray", lwd = 1.5) +
+  geom_point(size = 7.5, pch = 21, bg = 4, col = 1) +
+  geom_text(aes(label = `Rating`), color = "white", size = 3) +
+  xlab("Game Title") +
+  ylab("Rating") +
+  coord_flip() +
+  theme_minimal()
+```
+
+Based on the graph, The game, "Elden Ring: Shadow of the Erdtree", have the highest rating.
+
+## Bottom 10
+
+Now let's see the bottom 10 games.
+```{r}
+# find the top 10 games based on the rating
+bottom_10_game <- video_game_data %>%
+  slice_min(video_game_data$Rating, n = 10)
+
+# bottom 10 lolipop chart
+ggplot(bottom_10_game, aes(x = reorder(`Title`, -`Rating`), y = `Rating`)) +
+  geom_segment(aes(x = reorder(`Title`, -`Rating`), xend = reorder(`Title`, -`Rating`), y = 0, yend = `Rating`), color = "gray", lwd = 1.5) +
+  geom_point(size = 7.5, pch = 21, bg = 4, col = 1) +
+  geom_text(aes(label = `Rating`), color = "white", size = 3) +
+  xlab("Game Title") +
+  ylab("Rating") +
+  coord_flip() +
+  theme_minimal()
+```
+
+On the bottom end, the game with the lowest rating is "Superman: The New Superman Adventures"
+
+## Popular Games throughout the Year
+
+With so many popular video games released every year, let' see how many games were released in every year.
+```{r}
+# calculate the total count of popular video games each year
+vg_year_count <- video_game_data %>%
+  mutate(release_year = as.numeric(format(video_game_data$Release.Date, "%Y"))) %>%
+  drop_na() %>%
+  group_by(release_year) %>%
+  summarise(year_count = n())
+  
+colnames(vg_year_count) <- c("Release Year", "Year Count")
+
+
+# line graph
+ggplot(vg_year_count, aes(x = `Release Year`, y = `Year Count`)) +
+  geom_line() +
+  geom_area(fill = 4,
+            alpha = 0.5,
+            color = 1,    
+            lwd = 0.5,
+            linetype = 1) +
+  theme_minimal()
+```
+
+As we can see the trend, there are a lot of popular video games released in the 2010s era. From there, we should find out which year have the most popular video games released.
+```{r}
+vg_year_count <- vg_year_count %>%
+  arrange(desc(vg_year_count$`Year Count`))
+
+head(vg_year_count)
+# bar graph
+ggplot(vg_year_count, aes(reorder(x = `Release Year`, `Year Count`), y = `Year Count`)) +
+  geom_bar(stat = "identity", fill = "lightgreen") +
+  geom_text(aes(label = `Year Count`), 
+            vjust = 0.5,
+            hjust = -0.5,
+            color = "black", 
+            size = 2) +
+  coord_flip() +
+  xlab("Release Year") +
+  theme_minimal()
+
+```
+It shows that 2022 was the biggest year with 132 video games released. Compared to other years with the lowest video games released, it is a hug difference.
+
+## Conclusion
+With ggplot, we can see how visualizations provide better understanding of the data. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

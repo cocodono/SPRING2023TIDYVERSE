@@ -1,0 +1,146 @@
+---
+title: "DATA 607 - TidyVerse Extend"
+author: "Coco Donovan"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    theme: cerulean
+    code_folding: hide
+    toc: yes
+    toc_float: yes
+editor_options:
+  markdown:
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## TidyVerse CREATE assignment - INSTRUCTIONS
+In this assignment, you’ll practice collaborating around a code project with GitHub.  You could consider our collective work as building out a book of examples on how to use TidyVerse functions.
+
+GitHub repository:  https://github.com/acatlin/SPRING2023TIDYVERSE
+
+FiveThirtyEight.com datasets.
+
+Kaggle datasets. 
+
+Your task here is to Create an Example.  Using one or more TidyVerse packages, and any dataset from fivethirtyeight.com or Kaggle, create a programming sample “vignette” that demonstrates how to use one or more of the capabilities of the selected TidyVerse package with your selected dataset. (25 points)
+
+Later, you'll be asked to extend an existing vignette.  Using one of your classmate’s examples (as created above), you'll then extend his or her example with additional annotated code. (15 points)
+
+You should clone the provided repository.  Once you have code to submit, you should make a pull request on the shared repository.  You should also update the README.md file with your example.
+
+After you’ve created your vignette, please submit your GitHub handle name in the submission link provided below. This will let your instructor know that your work is ready to be peer-graded.
+
+
+If you'll notice, I kept the part of the code where Beshkia Kvarnstrom loaded the
+packages and data, but from that point the extend was all mine!
+
+## Load the Packages used in the Assignment
+```{r }
+pkges <- c("tidyverse", "readr", "kableExtra", "dplyr")
+# Loop through the packages
+for (p in pkges) {
+  # Check if package is installed
+  if (!requireNamespace(p, quietly = TRUE)) {
+    install.packages(p) #If the package is not installed, install the package
+    
+    library(p, character.only = TRUE) #Load the package
+  } else {
+    library(p, character.only = TRUE) #If the package is already installed, load the package
+  }
+}
+```
+
+## The Data set
+I choose a dataset from FiveThirtyEight.com. The URL for the dataset is: https://fivethirtyeight.com/features/some-people-are-too-superstitious-to-have-a-baby-on-friday-the-13th/
+
+The data was analyzed to determine the year, month and day of the week with the highest birth rates
+
+## Import Dataset from Github and load in R
+
+The read_csv from from the readr package was used to read the dataset from Github.
+```{r Read Data from Github, warnings=FALSE, message=FALSE}
+USBirthsDS <- read_csv("https://raw.githubusercontent.com/BeshkiaKvarnstrom/MSDS-DATA607/main/US_births_2000-2014_SSA.csv", 
+                          show_col_types = FALSE)
+```
+
+
+```{r}
+USBirthsDSDF <- data.frame(USBirthsDS) # Create a dataframe to store the data
+glimpse(USBirthsDSDF) #The glimpse function is used to display all the columns in the dataframe
+```
+### Use the Rename() function to change the column names in the dataframe 
+```{r}
+USBirthsDSDF <- USBirthsDSDF %>% 
+           rename("Birth_Year" = "year", "Birth_Month" = "month", "Date_of_Month" = "date_of_month", "Day_of_Week" = "day_of_week", "Total_Births" = "births")
+USBirthsDSDF
+```
+
+----------------
+
+# Coco Donovan Extend
+
+I just want to recheck what columns I have available for analysis in the 
+USBirthsDSDF
+
+```{r}
+colnames(USBirthsDSDF)
+```
+
+## What are the most common birth months (using dplyr)
+
+```{r}
+birth_month_counts <- USBirthsDSDF %>%
+  group_by(Birth_Month) %>%
+  summarize(total = sum(Total_Births)) %>%
+  arrange(desc(total))
+
+knitr::kable(birth_month_counts)
+
+birth_month_avgs <- birth_month_counts %>%
+  group_by(Birth_Month) %>%
+  summarize(avg = total/length(unique(USBirthsDSDF$Birth_Year))) %>%
+  arrange(-avg)
+
+birth_month_avgs$Birth_Month <- as.character(birth_month_avgs$Birth_Month)
+
+knitr::kable(birth_month_avgs)
+
+ggplot(data = birth_month_avgs, mapping = aes(x=reorder(Birth_Month, desc(avg)), y=avg, fill = Birth_Month)) +
+  geom_bar(stat = 'identity') +
+  coord_cartesian(ylim = c(min(birth_month_avgs$avg) - 10000, max(birth_month_avgs$avg + 10000))) +
+  geom_hline(aes(yintercept= mean(birth_month_avgs$avg),linetype = "Average of Average Monthly Births")) +
+  xlab("Month") +
+  ylab("Average Monthly Births")
+```
+
+From this quick analysis, it would seem that the most common months to have a 
+baby are the summer / late fall months. However, population grows over time and
+so a certain month could have possibly been a more popular birth month over the 
+years, but with a few years with very large birth totalsyears these sums can lead 
+to misleading results. To verify this information, I'll look at the average ranking
+of birth totals per month over all the years of recorded data.
+
+```{r}
+month_year_totals <- USBirthsDSDF %>%
+  group_by(Birth_Year, Birth_Month) %>%
+  summarize(total_births_month_year = sum(Total_Births))
+
+average_total_ranking <- month_year_totals %>% arrange(Birth_Year, total_births_month_year) %>%
+  group_by(Birth_Year) %>%
+  mutate(rank = rank(-total_births_month_year)) %>%
+  group_by(Birth_Month) %>%
+  summarise(avg_rank = mean(rank)) %>%
+  arrange(avg_rank)
+
+knitr::kable(average_total_ranking)
+```
+
+This further analysis supports the observation from the first table (specifically
+that the summer and early fall months seem to be the most common months to have a 
+baby in the US with the timeframe of this data).
