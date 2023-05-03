@@ -19,7 +19,7 @@ library(lubridate)
 The dataset contains popular video games titles from 1980 to 2023.
 ```{r}
 # read. csv and load the dataset
-raw_file <- "https://raw.githubusercontent.com/eddiexunyc/SPRING2023TIDYVERSE/exu/games.csv"
+raw_file <- "https://raw.githubusercontent.com/eddiexunyc/SPRING2023TIDYVERSE/exu2/games.csv"
 raw_dataset <- read.csv(raw_file)
 
 head(raw_dataset)
