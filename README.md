@@ -148,6 +148,25 @@ introduced to a scatter plot.
 # Glen Davis: Create:
 A vignette of example use cases for the purrr library within the tidyverse. 
 
+
+# Daniel Craig
+Readr Vignette - 
+
+Yahoo Finance Kaggle Dataset: 
+<li> <a href = https://www.kaggle.com/datasets/tanavbajaj/yahoo-finance-all-stocks-dataset-daily-update?resource=download> Kaggle </a> </li>
+
+Github: 
+<li> <a href = https://github.com/d-ev-craig/DATA607/tree/main/TIDYVERSE%20Create> Github </a> </li>
+
+Rpubs: <li> <a href =  https://rpubs.com/devcraig/DATA607readrVig> RPubs </a> </li>
+
+# Daniel Craig
+Purrr Extension -
+
+Github: <li> <a href =  https://github.com/d-ev-craig/DATA607/blob/main/TIDYVERSE%20Create/purrr%20Vignette%20Extension/purrr_Vignette_ext_dcraig.Rmd </a> </li>
+
+Rpubs: <li> <a href =  https://rpubs.com/devcraig/DATA607purrrVig </a> </li>
+=======
 # Glen Davis: Extend:
 gdd - extending Mo's tidyverse create submission - starting lines for changes/comments - 
 line 29: combined your string replacements and class coercion into one line
