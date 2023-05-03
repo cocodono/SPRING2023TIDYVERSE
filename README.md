@@ -262,10 +262,15 @@ Links:
   
 # Ross Boehme
 
-
+### Ross Create
 <li> <a href = "https://github.com/rossboehme/DATA607/blob/main/tidyverse/data607_tidyverseCreate_rossboehme.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/rossboehme/1029702"> RPubs </a> </li>
 <li> <a href = "https://fivethirtyeight.com/features/aging-congress-boomers/"> FiveThirtyEight Article </a> </li>
+
+### Ross Extend
+- Extended Alex Khaykin's analysis of Congressmembers' ages.
+<li> <a href = "https://github.com/rossboehme/DATA607/blob/main/tidyverse/data607_tidyverseExtend_rossboehme.Rmd"> Github </a> </li>
+<li> <a href = "https://rpubs.com/rossboehme/1035128"> RPubs </a> </li>
 =======
   
 # Jian Quan Chen 
