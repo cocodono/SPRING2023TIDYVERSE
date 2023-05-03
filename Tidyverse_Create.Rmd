@@ -1,9 +1,8 @@
 ---
-title: "Tidyverse Create"
-author: "Coco Donovan"
+title: "Tidyverse Create - Extended"
+author: "Coco Donovan, Kory Martin"
 date: "`r Sys.Date()`"
 output:
-  pdf_document: default
   html_document: default
 ---
 
@@ -100,6 +99,53 @@ top_n(avg_heights, n=6, Avg_height) %>%
   xlab("Team") +
   ylab("Average Height (in)")
 ```
+
+## Extending the Examples (by Kory Martin):
+
+For this we will extend upon the examples presented, by looking at the number of international students that are attending the universities and gleaning some meaningful insights based on this.
+
+We begin by using the **mutate** function in dplpyr to create a new column that will hold a value of 'international' if the student is not from the US, and a value of 'domestic' if they are from the US. In addition to the mutate function, we will use the **if_else** function to assign the value to the new column, based on whether or not the value of country_clean is 'USA' or not.
+
+```{r}
+(ncaa_wbb_roster_extended <- ncaa_wbb_rosters %>% 
+  mutate(domestic_international = ifelse(country_clean == 'USA', 'domestic', 'international')))
+
+
+```
+
+We will then use **select** function combined with the **slice_sample** function to confirm that our new column has the expected values, by selecting a random sample of rows and looking at their country_clean and domestic_international values
+
+```{r}
+ncaa_wbb_roster_extended %>% select(country_clean, domestic_international) %>% slice_sample(n=15)
+```
+
+Next we will use the **group_by** function to generate a count of the number of domestic vs international students at each college. Furthermore, we will use the **summarize** function to create summary measures for the total number of domestic students, the total number of international students, and the total number of players on the team. Finally, based on these counts, we will then create an additional variable pct_international that will represent the pct of international students on the student rosters. 
+
+```{r}
+(ncaa_international_domestic <- ncaa_wbb_roster_extended %>%
+  group_by(team) %>%
+  summarize(num_domestic = sum(ifelse(domestic_international == 'domestic',1,0)),
+            num_international = sum(ifelse(domestic_international == 'international',1,0)),
+            num_players = n()) %>%
+  mutate(pct_international = num_international/num_players))
+
+
+```
+We will use the **left_join** function to connect our data to the division in which the college belongs to
+```{r}
+(ncaa_international_domestic <- left_join(ncaa_international_domestic, ncaa_wbb_rosters %>% select(team, division) %>% distinct(), by=c("team"="team")))
+
+```
+Finally we will use the **group_by** and **summarize** functions, to determine the average pct of international students per team, across teams in each of the three divisions. 
+```{r}
+ncaa_international_domestic %>%
+  group_by(division) %>%
+  summarize(num_teams = n(),
+            avg_pct_international = mean(pct_international))
+
+```
+
+
 
 ## Conclusion:
 
