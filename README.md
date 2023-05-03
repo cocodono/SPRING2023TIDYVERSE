@@ -99,6 +99,10 @@ I worked using the lubridate package within the Tidyverse ensemble. With this, I
 <li> <a href = "https://rpubs.com/hellojohncruz/lubridate"> RPubs </a> </li>
 <li> <a href = "https://data.cityofnewyork.us/City-Government/Film-Permits/tg4x-b46p"> NYC Open Data </a> </li>
 
+
+Extension by Jacob Silver
+=======
+=======
 Tidyverse EXTEND
 
 To extend an example, I used Keith's fuzzyjoin package to work on MTA subway locations and NYC public hospitals
@@ -109,6 +113,7 @@ To extend an example, I used Keith's fuzzyjoin package to work on MTA subway loc
 <li> <a href = "https://data.cityofnewyork.us/Health/Hospitals/833h-xwsx"> Hospital Data </a> </li>
 
 ---
+
 
 =======
 
