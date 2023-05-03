@@ -1,0 +1,225 @@
+---
+title: "GGPLOT2 by Alex Khaykin"
+author: "Extended by Umer Farooq"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Introduction:
+
+This vignette is an extension of Alex Khaykin ggplot2 vignette. Ggplot 2 was the first of Hadley Wickham's tidy packages and was intended to simplify and streamline the appearance of R graphics. Ggplot2 is an R package which is designed to carry out hassle free data visualization and exploratory data analysis. This package is designed to work in a layered fashion, one can start working by plotting raw data and carrying out exploratory data analysis and then later on can add layers to the existing plot to add more details and display/draw more insights out of data. ggplot2 works under deep grammar called as “Grammar of graphics” which is made up of a set of independent components that can be created in many ways.
+
+In this vignette, we will walk through key plots in ggplot2 using the 'congress_age' dataset from fivethirtyeight and best tidy practices.
+
+## Loading the library and data set:
+
+```{r installing-loading-ggplot, warning=FALSE, message=FALSE}
+library(fivethirtyeight)
+library(tidyverse)
+
+```
+
+Load the tidyverse and ggplot2 packages:
+```{r Loading-dataset, warning=FALSE, message=FALSE}
+
+data("congress_age")
+knitr::kable(head(congress_age))
+
+```
+
+## Setting up the data set:
+
+First, Lets reset or rearrange and extract the data that we want to  our data set so that we can see the full functionality of ggplot2. We will be using the dplyr package to count and then sort the number of first names in the data set.
+
+```{r}
+first_names <- congress_age %>% 
+  group_by(firstname) %>% 
+  count(firstname) %>% 
+  arrange(desc(n))
+head(first_names)
+```
+
+This uses the **group_by** function to group the congresspeople by their first names so they we can **count** them, and then we **arrange** them in descending (**desc**) order by the count (**n**) we generated.
+
+### Barplot with geom_bar
+
+Barplots with geom_bar are a very quick way to look at summary data like counts. Although geom_bar will do the counting for you, here I are passing a dataframe that has already been summarized in counts so I will use the **stat="identity"** parameter inside of geom_bar.
+```{r}
+first_names[1:10,] %>% 
+  ggplot(aes(y = n, x = firstname)) +
+  geom_bar(stat = "identity") +
+  labs(x = "First Name", y = "Frequency")
+
+```
+
+Please note that x and y labels are added by using the **labs()** function. Unlike with the dplyr or tidyverse, ggplot requires + signs rather than a %>% to separate the statements. For all ggplots the aesthetic mapping **aes()** is vital as well as some form of geom statement. What is passed through the aesthetic determines what is on the x and y axis. 
+
+For example, by default ggplot will place the x axis into alphabetical order rather than take the order provided by the table. To fix this I can pass an additional parameter **scale_x_discrete()**:
+
+```{r}
+level_order <- first_names[1:10, "firstname"] 
+first_names[1:10,] %>% 
+  ggplot(aes(y = n, x = firstname)) +
+  geom_bar(stat = "identity") +
+  labs(x = "First Name", y = "Frequency") +
+  scale_x_discrete(limits = level_order$firstname) 
+```
+In the history of the US congress the frequency of the name John has outstripped other first name with William, James, and Robert not far behind.
+
+## Does the median age of a congress persons differ by political party?
+In order to answer this question I will use a box plot on the raw dataset without any tidy manipulation.
+
+### Box plot with geom_boxplot.
+This will create a conventional box and whisker plot.
+```{r}
+congress_age %>% 
+  ggplot(aes(x = party, y = age, colour = party)) +
+  geom_boxplot() +
+  labs(x = "Party", y = "Age in Years")
+```
+The median age is similar across all political parties, except the Libertarian(L) and the American Independent party(AL).
+
+### Violin plot with geom_violin.
+Violin plots are an alternative to box plots that add more information than a box plot in terms of the underlying distribution of the data. I will create a violin plot with the same data as above to demonstrate the additional information that can be obtained.
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x = party, y = age, colour = party)) +
+  geom_violin() +
+  labs(x = "Party", y = "Age in Years")
+```
+From this plot I can that the distribution of ages is most similar between Democrats(D) and Republicans(R). The Libertarian group is not shown because there was only one in the dataset.
+
+What if we would like to visualize this plot horizontally instead?
+I can employ **coord_flip()** to flip the coordinates of the plot:
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x = party, y = age, colour = party)) +
+  geom_violin() +
+  labs(x = "Party", y = "Age in Years") +
+  coord_flip()
+```
+
+### Scaterplot with geom_point and geom_smooth.
+Scaterplots in ggplot are accomplished with **geom_point()** function and one can choose to add an an optional regression line to the data using either **geom_smooth()** or **geom_abline()**. However geom_abline requires that you have already calculated the line of best fit or another line before ploting. Geom_smooth is the ggplot replacement for baseR abline().
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x = termstart, y = age)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Start of Term", y = "Age in Years") 
+```
+
+
+The scatterplot and regression line demonstrate that over time we are electing older people to congress. 
+
+
+### Facet_wrap is one way to create multiple plot pannel within the same plot.
+Lets use the above regression plot to test whether there is a difference between democrats and republicans at age at start of term. To create panels in a ggplot one can use either **facet_wrap()** or **facet_grid()**. Both functions perform similarly although facet_grid will create plots even for missing data where as facet_wrap will not. Here I used facet_wrap to demonstrate how the wraping works by adding "~z" where z is grouping variable.    
+
+```{r}
+congress_age %>% 
+  filter(party == "D" | party == "R") %>% 
+  ggplot(aes(x = termstart, y = age)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Start of Term", y = "Age in Years") +
+  facet_wrap(~party)
+```
+
+## Extension:
+
+Apart from some modifications in the above work, this portion contains further extension of the Alex Khaykin's ggplot2 vignette. 
+
+### Density plot:
+
+Lets start with a density graph using `geom_density()` function from ggplot2. Density plots are very handy in determining the distribution, highs and lows of the data. We'll start with checking the age distribution based on chamber  
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x = age, fill = chamber)) +
+  geom_density(alpha = 0.5)
+```
+
+Now we can see the distribution and of both house and senate members age. We can also add the mean line on the graph too using another geom function called as `geom_vline()` from ggplot2 but first we have to filter our data based of chamber in order to get the mean for their ages.
+
+```{r}
+senate_age <- congress_age|>
+  filter(chamber == "senate")
+house_age <- congress_age|>
+  filter(chamber == "house")
+```
+
+Let's plot the data with mean of ages based on chamber.
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x = age, fill = chamber)) +
+  geom_density(alpha = 0.5)+
+  geom_vline(xintercept = mean(senate_age$age), color="blue")+
+  geom_vline(xintercept = mean(house_age$age), color ="red")+
+  labs(x="Age", y="Density", legends="Chamber")
+```
+
+We can also use `facet_grid()` function from ggplot2 to create a subplot of each chamber.
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x = age, fill = chamber))+
+  geom_density(alpha = 0.5)+
+  geom_vline(xintercept = mean(congress_age$age), color="blue")+
+  facet_grid(~chamber)+
+  labs(x="Age", y="Density", legends="Chamber")
+```
+## Line Plot:
+
+We can also create line plot using `geom_line()` function from ggplot2. Line plots are usually useful for checking the relation between any two relational variable since this data set mostly contains categorical variable but for the sake of knowledge I will plot a line graph between variable that has numbers in it. We will plot termstart against birthday to plot a line graph.
+
+```{r}
+ggplot(data = congress_age, mapping = aes(x=termstart, y=birthday, color= chamber))+
+  geom_line()+
+    facet_grid(~chamber)+
+  labs(x="Term Start", y="Date of Birth")
+    
+```
+Similarly we can also creating histograms.
+
+## Histograms:
+
+A histogram is a graph used to represent the frequency distribution of a few data points of one variable. Histograms often classify data into various “bins” or “range groups” and count how many data points belong to each of those bins. 
+
+```{r}
+congress_age %>% 
+  ggplot(aes(x= age))+
+  geom_histogram(bins = 30)
+```
+
+Similarly we can further layers to divide the histogram based on chamber:
+
+```{r}
+congress_age %>%
+  ggplot(aes(x = age, fill = chamber), na.rm = TRUE) +
+  geom_histogram( bins = 30) +
+  labs(title = "Ages of Chamber members",x = "Age", y = "Count")
+```
+
+
+## Conclusion: 
+
+There is way more to discuss and learn about ggplot2 library and we have only scratch the surface in every section but we the above basic knowledge of each and every aspect of ggplot2 will enable us enough to create a meaningful and effective plots. Plots made in ggplot2 are very flexible and customizable, we have not really talked much amount customizing the plot. While customizing, we can add our own pre-defined colors palette to graph's data and legends, we can play around with the size and fonts styling of different types texts used in labeling, legends, titles e.t.c and much more.

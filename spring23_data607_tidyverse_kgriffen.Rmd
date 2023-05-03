@@ -1,0 +1,343 @@
+---
+title: "Tidyverse Exploration"
+author: "Kayleah Griffen"
+date: "3/21/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The objective of this assignment was twofold (1) to practice collaborating around a code project with GitHub and (2) to use a capability of tidyverse and demonstrate it with a vignette. The gitHub repository the code was submitted to with a pull request is https://github.com/acatlin/SPRING2023TIDYVERSE. 
+
+The dataset I chose to work with is data that I obtained from working with the Franklin Community Center. The Franklin Community Center is a nonprofit organization that aims to help families and individuals in Saratoga County. They have been in operation for 40 years and their Food Pantry has been operational since 2018. In 2019, the Food Pantry began using the Oasis database to manage their cases. Each family or individual is assigned a case number, and every time a person from the case comes in to receive a service it is documented. I worked with the Oasis team to understand how to extract data from their database. With the data I extracted, my goal is to visualizations showing what parts of NY the food bank services are going to. 
+
+The tidyverse capabilities that I wanted to demonstrate using the dataset are extensions of `ggplot2`. The Simple Features for R, or `sf` package, can be used in conjunction with `ggplot2` in tidyverse to create maps. Additionally the `treemapify` can be used with `ggplot2` to make treemaps. 
+
+## Mapping Vingette 
+
+Load require packages.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(sf)
+library(zipcodeR)
+library(treemapify)
+library(httr)
+```
+
+First, load the data.
+
+```{r}
+df <- read.csv("https://github.com/klgriffen96/spring23_franklin/blob/main/15015_households_report_03-16-2023.csv?raw=true", skip=4)
+```
+
+Now, I can create a basic map based on the data. To do this first I will load the shapefile containing the zipcode level data. I originally got the shapefile from # Read in shapefile from the census website at:
+https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.2020.html. The shapefile was too large to be stored on github, I tried, unsucesfully to use githubs large file storage option. I ultimately went the route of using R to load the shapefile, use the `zipecodeR` package to find just the NYS zipcodes, then join the dataframes and filter only for NYS, then save the dataframe in a .Rda file which was small enough to load to the github repository.
+
+This is the code (commented out) that was used to get the data from the shapefile into a small enough form to be saved on github.
+
+```{r}
+# # Read in the shapefile
+# zip_codes <- sf::st_read("C:/Users/kayle/Downloads/cb_2020_us_zcta520_500k/cb_2020_us_zcta520_500k.shp")
+# # Next I will use the `zipcodeR` package to get all NYS zipcodes.
+# zip_codes_ny <- search_state('NY')
+# colnames(zip_codes_ny)[1] ="ZCTA5CE20"
+# zip_codes <- merge(x=zip_codes, y= zip_codes_ny, by= "ZCTA5CE20", all.x=TRUE)
+# zip_codes <- zip_codes |> filter(state == "NY")
+# save(zip_codes,file="data.Rda")
+```
+
+
+```{r}
+# Read in shapefile from
+github_link <- "https://github.com/klgriffen96/spring23_franklin/blob/main/data.Rda?raw=true"
+temp_file <- tempfile(fileext = ".Rda")
+req <- GET(github_link, 
+          # write result to disk
+          write_disk(path = temp_file))
+# zip_codes <- sf::st_read("C:/Users/kayle/Downloads/cb_2020_us_zcta520_500k/cb_2020_us_zcta520_500k.shp")
+load(temp_file)
+```
+
+Now I will filter for zipcodes that were served by the food pantry.
+
+```{r}
+# Get the count of households in each zip code
+zip_count <- df |> count(Zip.code)
+df_zip <- data.frame(ZCTA5CE20 = as.character(zip_count$Zip.code),
+                     n = zip_count$n)
+# 
+# zip_codes <- cbind(zip_codes, zip_count)
+zip_codes <- merge(x=zip_codes, y= df_zip, by= "ZCTA5CE20", all.x=TRUE)
+
+# Check if zipcode is in Food Bank zipcode
+zip_codes$n <- ifelse(as.integer(zip_codes$ZCTA5CE20) %in% unique(df$Zip.code), 
+                      zip_codes$n,
+                      0)
+```
+
+Now using a combination of `tidyverse` `ggplot` and the `sf` package, the map can be created.
+
+```{r}
+# save the food pantry lat/lon
+food_pantry <- data.frame(lat =  c(43.08070452585789), 
+                          lon = c(-73.79091824496555))
+
+# Make a map
+zip_codes |>
+  ggplot() +
+  geom_sf(mapping = aes(fill = n)) + 
+  geom_point(data = food_pantry, 
+             mapping = aes(x = lon, y = lat), 
+             colour = "red") + # put a point where the food pantry is 
+  coord_sf(xlim = c(-72, -78), ylim =c(41.9, 44)) # zoom in on the NY area
+```
+The grayed out areas on the map are zip codes that received no assistance from the food pantry. The red dot is the actual location of the food pantry. The color scale shows how much assistance was received by each zip code This map clearly shows that the most represented zip code is where the food pantry is actually located, neighboring zip codes are assisted in moderate numbers and further out zip codes received a small amount of assistance.
+
+Now I will make another map, zoomed in a bit more and using a log scale to try to make the different colors more visible. I will also try a different color scale based on a recommendation from the book "ggplot2: Elegant Graphics for Data Analysis" that says that the viridis scale can be printed in black/white and is colorblind safe.
+
+```{r}
+# Make a map
+zip_codes |>
+  ggplot() +
+  geom_sf(mapping = aes(fill = log(n)), show.legend = FALSE) + 
+  geom_point(data = food_pantry, 
+             mapping = aes(x = lon, y = lat), 
+             colour = "red") + # put a point where the food pantry is 
+  coord_sf(xlim = c(-73, -75), ylim =c(42.5, 44)) + # zoom in on the NY area
+  scale_fill_viridis_c(option = "magma",begin = 0.1)
+
+```
+
+With this map, although the log(n) is not a meaningful number to most people it is much more visually clear which zip codes are receiving more or less pantry assistance. 
+
+## Treemap Vingette 
+
+Another helpful visualization to get an idea of the areas assistance is provided to is called a tree map. A tree map has 2 levels of blocks, one category block size and color and then within that block other blocks that make up the main block. This type of visualization could be useful to look at the city and county information. 
+
+First, the city information needs to be cleaned up because upon inspection there are several abbreviations and misspellings.
+
+```{r}
+# First, need to clean up the city data
+df$City <- tolower(df$City)
+
+# There are multiple misspellings/abbreviations for saratoga springs, south glens falls, fort edward, mechanicville, edinburgh
+
+df$City <- ifelse(df$City %in% c("saratpga springs", 
+                                 "saratoga sprinfs", 
+                                 "sara",
+                                 "sartoga springs",
+                                 "saratoga spring",
+                                 "saratoga springs?",
+                                 "saatoga springs",
+                                 "saratoga"), 
+                  "saratoga springs",
+                  df$City)
+
+
+df$City <- ifelse(df$City %in% c("balllston spa"), 
+                  "ballston spa",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("edinbur"), 
+                  "edinburg",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("edinbur", "edinburg"), 
+                  "edinburgh",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("ft edward", "ft. edward"), 
+                  "fort edward",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("gansevoort,"), 
+                  "gansevoort",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("lake luzurne"), 
+                  "lake luzerne",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("mechanicvile"), 
+                  "mechanicville",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("middlegrove"), 
+                  "middle grove",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("porter corner"), 
+                  "porter corners",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("s. glens falls", "so. glens falls"), 
+                  "south glens falls",
+                  df$City)
+
+df$City <- ifelse(df$City %in% c("schuylervill", 
+                                 "schylerville",
+                                 "schyulerville",
+                                 "sch"), 
+                  "schuylerville",
+                  df$City)
+
+```
+
+
+Another issue with the current data, is for the same City sometimes a different County is selected. This needs to be corrected. 
+
+```{r}
+df$County <- ifelse(df$City %in% c("albany"), 
+                  "Albany",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("amsterdam"), 
+                  "Montgomery",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("ballston spa"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("broadalbin"), 
+                  "Fulton",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("cambridge"), 
+                  "Washington",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("clifton park"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("corinth"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("fort ann"), 
+                  "Washington",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("fort edward"), 
+                  "Washington",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("gansevoort"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("glens falls"), 
+                  "Warren",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("granville"), 
+                  "Washington",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("greenfield"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("greenfield center"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("greenwich"), 
+                  "Washington",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("halfmoon"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("porter corners"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("queensbury"), 
+                  "Warren",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("salem"), 
+                  "Washington",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("saratoga springs"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("schenectady"), 
+                  "Schenectady",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("scotia"), 
+                  "Schenectady",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("stillwater"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("south glens falls"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("troy"), 
+                  "Rensselaer",
+                  df$County)
+
+df$County <- ifelse(df$City %in% c("wilton"), 
+                  "Saratoga",
+                  df$County)
+
+df$County <- ifelse((df$City %in% c("") & df$County  %in% c("", "Other")), 
+                  "Other",
+                  df$County)
+```
+
+
+Now that all of the city data is cleaned up, the goal is to have a dataframe with the city, county and case count. 
+
+```{r}
+city_count <- df |> count(City, County)
+```
+
+Now that the necessary information is together, I can make the plot.
+
+```{r}
+city_count |> ggplot(aes(area = n, 
+                      fill = County, 
+                      label = City, 
+                      subgroup = County)) +
+  geom_treemap(colour = "white", size = 2) +
+  geom_treemap_subgroup_border(colour = "white", size = 2) +
+  geom_treemap_text(grow = T, reflow = T, colour = "black") +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "Regions Served by the Franklin Community Center Food Pantry",
+    caption = "The area of each tile represents case count in that area.",
+    fill = "County"
+  ) +
+  scale_fill_brewer(palette = "Set3")
+```
+
+## Conclusion
+
+I was able to demonstrate capabilities of the `tidyverse` package and the functionality of `ggplot2` paired with the `sf` package and `treemapify` package.
+
+Going forward, what I would like to do is to connect this dataset of household cases with another dataset I have of assistance. The dataset used in this analysis just has information on the households containing their demographic information and how much total assistance they received. The assistance dataset has details about each time assistance was received, such as when and what. I think time series maps could be made if the household data was combined with the assistance data. I'd also like to bring in data from the census to try and normalize the assistance counts for each zip code by the population of each zip code.
+
+## Citations
+
+To create this vignette I referenced:
+
+1) https://ggplot2-book.org/
+2) https://r-spatial.github.io/sf/
+3) https://ggplot2.tidyverse.org/reference/ggsf.html
+4) https://cran.r-project.org/web/packages/treemapify/vignettes/introduction-to-treemapify.html
