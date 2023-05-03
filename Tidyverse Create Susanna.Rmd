@@ -299,6 +299,11 @@ Question 2: Which major category has the highest unemployment rate?
 The top three major category that has the highest unemployment rate are Social Science, Arts, and Humanities & Liberal Arts.
 The top three major category that has the lowest unemployment rate are Education, Physical Sciences, and Agriculture & Natural Resources.
 
+# TidyVerse Extend
+
+https://github.com/suswong/SPRING2023TIDYVERSE/blob/main/TidyVerse%20Extend%20on%20JLok's%20Create%20Assignment.Rmd
+https://rpubs.com/sussing/1035929
+
 # Source
 
 <https://github.com/fivethirtyeight/data/tree/master/college-majors>
