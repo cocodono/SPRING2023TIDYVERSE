@@ -371,6 +371,12 @@ This vignette will introduce the fuzzyjoin package, which enables joining of two
 <li> <a href = "https://github.com/kac624/cuny/blob/main/D607/keithC_fuzzyVignette.Rmd"> Github </a> </li>
 <li> <a href = "https://rpubs.com/kac624/1030806"> RPubs </a> </li>
 
+=======
+
+For the extension assignment, I added onto Waheeb's tidyverse vignette, located <a href = "https://github.com/acatlin/SPRING2023TIDYVERSE/blob/main/Waheeb_Algabri.Rmd">here</a>.
+
+=======
+
 # Joshua Lok
 
 Initial Description and Links:
