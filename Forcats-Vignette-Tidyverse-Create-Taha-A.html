@@ -9,11 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Glen Dale Davis" />
+<meta name="author" content="Taha Ahmad with additions from Kayleah Griffen" />
 
-<meta name="date" content="2023-03-30" />
+<meta name="date" content="2023-04-21" />
 
-<title>purrr Vignette - GDD</title>
+<title>Week 9 Project</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,412 +350,711 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">purrr Vignette - GDD</h1>
-<h4 class="author">Glen Dale Davis</h4>
-<h4 class="date">2023-03-30</h4>
+<h1 class="title toc-ignore">Week 9 Project</h1>
+<h4 class="author">Taha Ahmad with additions from Kayleah Griffen</h4>
+<h4 class="date">2023-04-21</h4>
 
 </div>
 
 
-<div id="load-the-required-packages" class="section level3">
-<h3>Load the Required Packages:</h3>
-<p>Below we load the <strong>tidyverse</strong> library, which includes
-our library of interest: <strong>purrr</strong>. We also load the
-<strong>knitr</strong> library for displaying simple tables with
-<strong>kable</strong>, as well as the <strong>cowplot</strong> library
-for creating one grid of many plots with <strong>plot_grid</strong>.</p>
-<pre class="r"><code>library(knitr)
-library(tidyverse)
-library(cowplot)</code></pre>
-</div>
-<div id="load-the-disney-movies-data-frame" class="section level3">
-<h3>Load the Disney Movies Data Frame:</h3>
-<p>Below we load a <a href="https://www.kaggle.com/datasets/therealsampat/disney-movies-dataset">Disney
-movies data frame from Kaggle</a> that was last updated a couple years
-ago. We will use this data frame to demonstrate examples of the data
-cleaning, transformation, and visualization tasks possible with
-<strong>purrr</strong>. In essence, this library is mainly useful once
-you identify a problem for a particular kind of data you’re working
-with, you know how to develop a solution that will work on one element
-of that data, and you would then like to apply that solution to the
-entire column/list/vector at hand. The solutions can range from simple
-to complex, and therein often lies the power of
-<strong>purrr</strong>.</p>
-<pre class="r"><code>my_url &lt;- &quot;https://raw.githubusercontent.com/geedoubledee/SPRING2023TIDYVERSE/main/DisneyMoviesDataset.csv&quot;
-disney_movies_df &lt;- as.data.frame(read_csv(file = my_url))
-disney_movies_df &lt;- disney_movies_df[, -1]</code></pre>
-</div>
-<div id="using-purrr-to-rename-columns" class="section level3">
-<h3>Using purrr to Rename Columns:</h3>
-<p>We examine the original column names in our data frame to assess
-where we can make some improvements by renaming the columns.</p>
-<pre class="r"><code>colnames(disney_movies_df)</code></pre>
-<pre><code>##  [1] &quot;title&quot;                   &quot;Production company&quot;     
-##  [3] &quot;Release date&quot;            &quot;Running time&quot;           
-##  [5] &quot;Country&quot;                 &quot;Language&quot;               
-##  [7] &quot;Running time (int)&quot;      &quot;Budget (float)&quot;         
-##  [9] &quot;Box office (float)&quot;      &quot;Release date (datetime)&quot;
-## [11] &quot;imdb&quot;                    &quot;metascore&quot;              
-## [13] &quot;rotten_tomatoes&quot;         &quot;Directed by&quot;            
-## [15] &quot;Produced by&quot;             &quot;Written by&quot;             
-## [17] &quot;Based on&quot;                &quot;Starring&quot;               
-## [19] &quot;Music by&quot;                &quot;Distributed by&quot;         
-## [21] &quot;Budget&quot;                  &quot;Box office&quot;             
-## [23] &quot;Story by&quot;                &quot;Narrated by&quot;            
-## [25] &quot;Cinematography&quot;          &quot;Edited by&quot;              
-## [27] &quot;Screenplay by&quot;           &quot;Production companies&quot;   
-## [29] &quot;Adaptation by&quot;           &quot;Traditional&quot;            
-## [31] &quot;Simplified&quot;</code></pre>
-<p>We write a short function to do all the string formatting we would
-like to perform on our data frame’s vector of column names. This
-includes making everything lowercase, eliminating parentheses, and
-replacing spaces with underscores.</p>
-<pre class="r"><code>fix_col_names &lt;- function(s){
-    s &lt;- gsub(&quot;[()]&quot;, &quot;&quot;, tolower(s))
-    s &lt;- gsub(&quot; &quot;, &quot;_&quot;, s)
-    s
-}</code></pre>
-<p>Then we use <strong>purrr::map_char</strong> to apply our function to
-that vector. It returns a character vector of the same length. We then
-set the data frame’s column names to the values in that character
-vector.</p>
-<pre class="r"><code>col_names &lt;- map_chr(colnames(disney_movies_df), fix_col_names)
-colnames(disney_movies_df) &lt;- col_names
-colnames(disney_movies_df)</code></pre>
-<pre><code>##  [1] &quot;title&quot;                 &quot;production_company&quot;    &quot;release_date&quot;         
-##  [4] &quot;running_time&quot;          &quot;country&quot;               &quot;language&quot;             
-##  [7] &quot;running_time_int&quot;      &quot;budget_float&quot;          &quot;box_office_float&quot;     
-## [10] &quot;release_date_datetime&quot; &quot;imdb&quot;                  &quot;metascore&quot;            
-## [13] &quot;rotten_tomatoes&quot;       &quot;directed_by&quot;           &quot;produced_by&quot;          
-## [16] &quot;written_by&quot;            &quot;based_on&quot;              &quot;starring&quot;             
-## [19] &quot;music_by&quot;              &quot;distributed_by&quot;        &quot;budget&quot;               
-## [22] &quot;box_office&quot;            &quot;story_by&quot;              &quot;narrated_by&quot;          
-## [25] &quot;cinematography&quot;        &quot;edited_by&quot;             &quot;screenplay_by&quot;        
-## [28] &quot;production_companies&quot;  &quot;adaptation_by&quot;         &quot;traditional&quot;          
-## [31] &quot;simplified&quot;</code></pre>
-</div>
-<div id="updating-column-classes-with-purrr" class="section level3">
-<h3>Updating Column Classes with purrr:</h3>
-<p>Next, we examine the current classes of our columns by using
-<strong>purrr::map_dfr</strong> to apply the base R
-<strong>class</strong> function to all of our columns. It returns a data
-frame that we transpose to better display the column names and column
-classes. Then we can easily locate any columns we want to fix.</p>
-<pre class="r"><code>kable(t(map_dfr(disney_movies_df, class)), format = &quot;simple&quot;)</code></pre>
-<table>
-<tbody>
-<tr class="odd">
-<td align="left">title</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">production_company</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">release_date</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">running_time</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">country</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">language</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">running_time_int</td>
-<td align="left">numeric</td>
-</tr>
-<tr class="even">
-<td align="left">budget_float</td>
-<td align="left">numeric</td>
-</tr>
-<tr class="odd">
-<td align="left">box_office_float</td>
-<td align="left">numeric</td>
-</tr>
-<tr class="even">
-<td align="left">release_date_datetime</td>
-<td align="left">Date</td>
-</tr>
-<tr class="odd">
-<td align="left">imdb</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">metascore</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">rotten_tomatoes</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">directed_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">produced_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">written_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">based_on</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">starring</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">music_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">distributed_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">budget</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">box_office</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">story_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">narrated_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">cinematography</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">edited_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">screenplay_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">production_companies</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">adaptation_by</td>
-<td align="left">character</td>
-</tr>
-<tr class="even">
-<td align="left">traditional</td>
-<td align="left">character</td>
-</tr>
-<tr class="odd">
-<td align="left">simplified</td>
-<td align="left">character</td>
-</tr>
-</tbody>
-</table>
-<p>There are four character-class and other columns that will benefit
-from being updated to more accurate integer-class and numeric-class
-columns: <strong>running_time_int</strong>, <strong>imdb</strong>,
-<strong>metascore</strong>, and <strong>rotten_tomatoes</strong>.</p>
-<p>Before we can update those classes though, we need to replace all
-instances of “N/A” with NA.</p>
-<pre class="r"><code>disney_movies_df &lt;- disney_movies_df %&gt;%
-    mutate_if(is.character, list(~na_if(., &quot;N/A&quot;)))</code></pre>
-<p>We then update the column classes using
-<strong>purrr::map_int</strong> and <strong>purrr::map_dbl</strong> to
-apply the base R functions <strong>as.double</strong> and
-<strong>as.integer</strong> as needed.</p>
-<pre class="r"><code>disney_movies_df$running_time_int &lt;- map_int(disney_movies_df$running_time_int,
-                                             as.integer)
-disney_movies_df$imdb &lt;- map_dbl(disney_movies_df$imdb, as.double)
-disney_movies_df$metascore &lt;- map_int(disney_movies_df$metascore, as.integer)</code></pre>
-<p>For one column, we instead apply a custom function designed to
-convert percentages stored as characters to numeric values between 0 and
-1.</p>
-<pre class="r"><code>fix_percentage &lt;- function(s){
-    s &lt;- gsub(&quot;%&quot;, &quot;&quot;, s)
-    s &lt;- as.double(as.integer(s) / 100)
-    s
+<pre class="r"><code>library(tidyverse)
+library(httr2)</code></pre>
+<pre><code>## Warning: package &#39;httr2&#39; was built under R version 4.2.3</code></pre>
+<pre class="r"><code>library(jsonlite)
+library(keyring)</code></pre>
+<pre><code>## Warning: package &#39;keyring&#39; was built under R version 4.2.3</code></pre>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>For this assignment, we’ll be practicing our knowledge of Tidyverse
+functions by creating vignette examples of the packages that make up
+Tidyverse. In my case, I wanted to attempt going over the forcats
+package which focuses on manipulating factor elements in a dataframe, as
+I have no experience with using it at this point.</p>
+<div id="loading-a-dataset" class="section level3">
+<h3>Loading a Dataset</h3>
+<p>In order to make examples for forcats, we need a dataset loaded into
+R with categorical data. Preferably both ordinal and nominal. The
+dataset I have chosen is Employee Attrition and Factors from Kaggle <a href="https://www.kaggle.com/datasets/thedevastator/employee-attrition-and-factors" class="uri">https://www.kaggle.com/datasets/thedevastator/employee-attrition-and-factors</a>.
+We begin by loading the data through the Kaggle API. After loading it in
+we take a subset of the data with a few columns and rows that will be
+relevant with the examples.</p>
+<pre class="r"><code>### INSTRUCTIONS FOR FIRST TIME (provided by Taha) ###
+
+# On Windows:
+# 1. If you don&#39;t already have a Kaggle account, creating one is the first step.
+# 2. Set the username variable to your Kaggle username.
+# 3. From your Kaggle account page generate a token, this will download a file that you can open up in a code editor and copy the token from.
+# 4. Once you have the token generated, if you run the code chunk keyring::key_set() will ask you to insert a password. That&#39;s going to be this token.
+# 5. If you&#39;ve already attempted to run this before you may have set a different password. In that case I would run key_delete(&quot;APIKeys&quot;,&quot;kaggle&quot;) in a new code block once before running the original code block again.
+# 6. If you come back to the project afterwards, whenever you run the first bit of code keyring will ask you for your computer password to access the API key through key_get.
+
+##################################
+
+# username = &quot;tahamad&quot;
+username = &quot;kayleahgriffen&quot;
+filename = &quot;attrition.zip&quot;
+
+if (!(&quot;kaggle&quot; %in% as_vector(key_list()[2]))) {
+  key_set(&quot;APIKeys&quot;,&quot;kaggle&quot;)
 }
-disney_movies_df$rotten_tomatoes &lt;- map_dbl(disney_movies_df$rotten_tomatoes, fix_percentage)</code></pre>
-<p>There are also two numeric columns, <strong>budget_float</strong> and
-<strong>box_office_float</strong>, that need adjustments. They store
-mostly very large numbers, so we combine <strong>purrr::map_dbl</strong>
-and a formula instead of a function this time to divide all the original
-values by one million. The formula is initiated by the “~”, the “.” is a
-stand-in for each input variable, and the “/ 1000000” indicates the math
-we want performed on each input variable.</p>
-<pre class="r"><code>renames &lt;- c(budget_float_in_millions = &quot;budget_float&quot;, box_office_float_in_millions = &quot;box_office_float&quot;)
-disney_movies_df &lt;- rename(disney_movies_df, all_of(renames))
-disney_movies_df$budget_float_in_millions &lt;- map_dbl(
-    disney_movies_df$budget_float_in_millions, ~ . / 1000000)
-disney_movies_df$box_office_float_in_millions &lt;- map_dbl(
-    disney_movies_df$box_office_float_in_millions, ~ . / 1000000)</code></pre>
-<p>Now these columns’ unit of measure is millions, and we rename their
-columns to reflect that by adding “_in_millions” to their names. Later,
-these more reasonable figures will make summarizing our data a little
-easier.</p>
+
+api &lt;- request(r&quot;(https://www.kaggle.com/api/v1/datasets/download/thedevastator/employee-attrition-and-factors)&quot;)
+req &lt;- api %&gt;%
+  req_auth_basic(username = username, password = key_get(&quot;APIKeys&quot;,&quot;kaggle&quot;)) %&gt;%
+  req_method(&quot;GET&quot;)
+
+resp &lt;- req %&gt;%
+  req_perform()
+
+download.file(resp$url, filename, mode=&quot;wb&quot;, quiet = TRUE)
+
+att_df &lt;- read_csv(filename, show_col_types = FALSE)
+
+att_df &lt;- att_df %&gt;%
+  select(Age, Attrition, BusinessTravel, DailyRate, Department, JobRole) %&gt;%
+  head(20)
+
+glimpse(att_df)</code></pre>
+<pre><code>## Rows: 20
+## Columns: 6
+## $ Age            &lt;dbl&gt; 41, 49, 37, 33, 27, 32, 59, 30, 38, 36, 35, 29, 31, 34,…
+## $ Attrition      &lt;chr&gt; &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;,…
+## $ BusinessTravel &lt;chr&gt; &quot;Travel_Rarely&quot;, &quot;Travel_Frequently&quot;, &quot;Travel_Rarely&quot;, …
+## $ DailyRate      &lt;dbl&gt; 1102, 279, 1373, 1392, 591, 1005, 1324, 1358, 216, 1299…
+## $ Department     &lt;chr&gt; &quot;Sales&quot;, &quot;Research &amp; Development&quot;, &quot;Research &amp; Developm…
+## $ JobRole        &lt;chr&gt; &quot;Sales Executive&quot;, &quot;Research Scientist&quot;, &quot;Laboratory Te…</code></pre>
 </div>
-<div id="getting-summary-statistics-with-purrr" class="section level3">
-<h3>Getting Summary Statistics with purrr:</h3>
-<p>We would like to see min, mean, and max values for all six columns we
-updated: <strong>running_time_int</strong>, <strong>imdb</strong>,
-<strong>metascore</strong>, <strong>rotten_tomatoes</strong>,
-<strong>budget_float_in_millions</strong>, and
-<strong>box_office_float_in_millions</strong>. We use
-<strong>purrr::map_dbl</strong> to apply each of these functions to this
-subset of columns, and then we combine a list of the resulting vectors
-into a data frame using <strong>purrr::map_dfr</strong>, which also
-rounds all entries to six digits.</p>
-<pre class="r"><code>cols &lt;- c(&quot;running_time_int&quot;, &quot;budget_float_in_millions&quot;,
-          &quot;box_office_float_in_millions&quot;, &quot;imdb&quot;, &quot;metascore&quot;,
-          &quot;rotten_tomatoes&quot;)
-p1 &lt;- map_dbl(disney_movies_df[, cols], min, na.rm = TRUE)
-p2 &lt;- map_dbl(disney_movies_df[, cols], mean, na.rm = TRUE)
-p3 &lt;- map_dbl(disney_movies_df[, cols], max, na.rm = TRUE)
-disney_movies_summary &lt;- as.data.frame(map_dfr(list(p1, p2, p3),
-                                               round, digits = 6))
-disney_movies_summary</code></pre>
-<pre><code>##   running_time_int budget_float_in_millions box_office_float_in_millions
-## 1         40.00000                  0.00015                     0.000008
-## 2         97.30569                 63.58861                   167.401382
-## 3        168.00000                410.60000                  1657.000000
-##       imdb metascore rotten_tomatoes
-## 1 1.500000  18.00000        0.000000
-## 2 6.545433  61.48763        0.626427
-## 3 8.700000  99.00000        1.000000</code></pre>
-<p>We name the rows of this new summary data frame by the summary
-statistic the values in that row represent, and we further round many of
-the columns to two digits because we only need six digits to capture the
-smallest values in the <strong>budget_float_in_millions</strong> and
-<strong>box_office_float_in_millions</strong> columns.</p>
-<pre class="r"><code>row_names &lt;- c(&quot;min&quot;, &quot;mean&quot;, &quot;max&quot;)
-rownames(disney_movies_summary) &lt;- row_names
-disney_movies_summary &lt;- disney_movies_summary %&gt;%
-    mutate(across(c(1, 4:6), \(x) round(x, digits = 2)))
-kable(disney_movies_summary, format = &quot;simple&quot;)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th></th>
-<th align="right">running_time_int</th>
-<th align="right">budget_float_in_millions</th>
-<th align="right">box_office_float_in_millions</th>
-<th align="right">imdb</th>
-<th align="right">metascore</th>
-<th align="right">rotten_tomatoes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>min</td>
-<td align="right">40.00</td>
-<td align="right">0.00015</td>
-<td align="right">0.000008</td>
-<td align="right">1.50</td>
-<td align="right">18.00</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="even">
-<td>mean</td>
-<td align="right">97.31</td>
-<td align="right">63.58861</td>
-<td align="right">167.401382</td>
-<td align="right">6.55</td>
-<td align="right">61.49</td>
-<td align="right">0.63</td>
-</tr>
-<tr class="odd">
-<td>max</td>
-<td align="right">168.00</td>
-<td align="right">410.60000</td>
-<td align="right">1657.000000</td>
-<td align="right">8.70</td>
-<td align="right">99.00</td>
-<td align="right">1.00</td>
-</tr>
-</tbody>
-</table>
+<div id="factors" class="section level3">
+<h3>Factors</h3>
+<p>Our dataframe now has categorical data multiple columns of
+categorical data. However, let’s focus on the ordinal variable of
+“BusinessTravel” and nominal variable of “JobRole”. Looking at the
+glimpse of the dataframe, we actually don’t have any factors as a column
+type. Forcats can help us fix that!</p>
+<div id="factor" class="section level4">
+<h4>factor()</h4>
+<p>factor() is the function which lets us create the factor datatype. It
+has the following arguments:</p>
+<p>factor(x = character(), levels, labels = levels, exclude = NA,
+ordered = is.ordered(x), nmax = NA)</p>
+<ul>
+<li><p>x is the character vector which we want to factorize. With levels
+being the different unique values the character vectors can be.</p></li>
+<li><p>levels are the specific character values within the data that
+form the unique values. Factor() will automatically retrieve these
+unique values but you can specify these if you would like to order the
+factors or only take certain values as factors. Those left unspecified
+will turn into NA values.</p></li>
+<li><p>labels are new names you can specify for the various different
+factors. By default the names are the same as the levels, however if you
+would like to change the names you can from here.</p></li>
+<li><p>exclude allows you to input a character vector of unique values
+that you would not like to be included within your level.</p></li>
+<li><p>ordered will take a boolean that sets if the factor variable is
+ordered or not.</p></li>
+<li><p>nmax can be set to an integer that will only allow a maximum
+number of levels.</p></li>
+</ul>
+<div id="examples" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use factor() to turn our dataframe columns of “BusinessTravel”
+and “JobRole” into factored columns. Notice how we specify the order of
+levels for “BusinessTravel” as we want to ensure the levels go from
+least to most amount of travel. A clear order. However, for “JobRole” we
+set ordered to FALSE as by being a nominal variable, these variables do
+not actually have a set order.</p>
+<pre class="r"><code>att_df$BusinessTravel &lt;- factor(att_df$BusinessTravel,levels=c(&quot;Non-Travel&quot;,&quot;Travel_Rarely&quot;,&quot;Travel_Frequently&quot;))
+att_df$JobRole &lt;- factor(att_df$JobRole, ordered = FALSE)
+glimpse(att_df)</code></pre>
+<pre><code>## Rows: 20
+## Columns: 6
+## $ Age            &lt;dbl&gt; 41, 49, 37, 33, 27, 32, 59, 30, 38, 36, 35, 29, 31, 34,…
+## $ Attrition      &lt;chr&gt; &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;,…
+## $ BusinessTravel &lt;fct&gt; Travel_Rarely, Travel_Frequently, Travel_Rarely, Travel…
+## $ DailyRate      &lt;dbl&gt; 1102, 279, 1373, 1392, 591, 1005, 1324, 1358, 216, 1299…
+## $ Department     &lt;chr&gt; &quot;Sales&quot;, &quot;Research &amp; Development&quot;, &quot;Research &amp; Developm…
+## $ JobRole        &lt;fct&gt; Sales Executive, Research Scientist, Laboratory Technic…</code></pre>
+<p>Notice how the column type has changed to <fct>!</p>
 </div>
-<div id="plotting-data-with-purrr" class="section level3">
-<h3>Plotting Data with purrr:</h3>
-<p>We would like to look at the distribution of imdb scores for Disney
-movies by the decade in which they were released. So we use
-<strong>lubridate::year</strong> to extract the year value from our
-<strong>release_date_datetime</strong> column and store it in a new
-<strong>release_year</strong> column. We can then subtract the release
-year modulo 10 from itself to get the decade value and store that in a
-new <strong>release_decade</strong> column.</p>
-<pre class="r"><code>disney_movies_df &lt;- disney_movies_df %&gt;%
-    mutate(release_year = lubridate::year(release_date_datetime),
-           release_decade = release_year - release_year %% 10)</code></pre>
-<p>Then we use <strong>group_nest</strong> to group the data by the
-<strong>release_decade</strong> column and store each decade’s matching
-rows of the remaining columns in a list column of tibbles.</p>
-<pre class="r"><code>by_decade &lt;- disney_movies_df %&gt;%
-    filter(!is.na(imdb)) %&gt;%
-    group_nest(release_decade)</code></pre>
-<p>This will allow us to create one plot that visualizes each decade. To
-accomplish this, we first create a function that will produce histogram
-plot data for our decades.</p>
-<pre class="r"><code>imdb_hist &lt;- function(dat){
-    ggplot(dat, aes(x = imdb)) +
-    geom_histogram(binwidth = 0.5, fill=&quot;lightblue&quot;) + 
-    xlim(0,10) + 
-    ylim(0,20) +
-    labs(x = &quot;imdb score&quot;, y = &quot;movie count&quot;) + 
-    theme(plot.margin = unit(c(1.5, 0.5, 0, 0), &quot;lines&quot;),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(),
-          axis.line = element_line(colour = &quot;darkblue&quot;))
-}</code></pre>
-<p>Then we use <strong>purrr::map</strong> to apply the histogram plot
-data producing function to each decade and return a list that we store
-in a new <strong>plot</strong> column.</p>
-<pre class="r"><code>by_decade &lt;- by_decade %&gt;%
-    filter(!is.na(release_decade)) %&gt;%
-    mutate(plot = map(data, imdb_hist))</code></pre>
-<p>Finally, we pass our plot list column to
-<strong>cowplot::plot_grid</strong> to look at all the decade’s imdb
-score distributions together.</p>
-<pre class="r"><code>plot_grid(plotlist = by_decade$plot, labels = by_decade$release_decade,
-          label_colour = &quot;darkblue&quot;)</code></pre>
-<p><img src="data:image/png;base64,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" width="672" /></p>
 </div>
-<div id="conclusions" class="section level3">
-<h3>Conclusions:</h3>
-<p>The plots have the same x- and y-axes so that eyeball comparisons can
-be made quickly. It looks like the 2000s have the highest mean imdb
-score. This decade also has the widest spread, with a couple of very low
-scores skewing the distribution left. The 1960s and 1970s appear to have
-the smallest spreads and the most normal distributions when you only
-consider decades with more than 10 movies with imdb scores.</p>
-<p>So we’ve been able to do a lot with <strong>purrr</strong> here. It’s
-a nice library that eliminates the need for long and repetitive code
-like for loops in many instances. It could definitely be useful for
-handling more complex data problems than we’ve looked at here, as it
-encourages users to write functions that work on a piece of data and let
-it handle applying that function to all the data it needs to be applied
-to. So users’ functions can probably be less complex and more readable
-without losing power/utility.</p>
+<div id="levels" class="section level4">
+<h4>levels()</h4>
+<p>levels() is the function which shows us the levels set to a factor.
+It has the following arguments:</p>
+<p>levels(x)</p>
+<ul>
+<li>x is the factor vector which we want to see the levels of.</li>
+</ul>
+<div id="examples-1" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use levels() to see which levels the now factorized column of
+“JobRole” has.</p>
+<pre class="r"><code>levels(att_df$JobRole)</code></pre>
+<pre><code>## [1] &quot;Healthcare Representative&quot; &quot;Laboratory Technician&quot;    
+## [3] &quot;Manager&quot;                   &quot;Manufacturing Director&quot;   
+## [5] &quot;Research Scientist&quot;        &quot;Sales Executive&quot;</code></pre>
+</div>
+</div>
+</div>
+<div id="inspecting-factors" class="section level3">
+<h3>Inspecting Factors</h3>
+<p>Now that we have factor columns, what exactly else does forcats let
+us do with them? Well forcats provides for many functions that apply to
+factor vectors and we’ll go over inspecting factors in this section.</p>
+<div id="fct_count" class="section level4">
+<h4>fct_count()</h4>
+<p>fct_count() is the function which allows to get the counts of each
+value in a factor. It has the following arguments:</p>
+<p>fct_count(f, sort = FALSE, prop = FALSE)</p>
+<ul>
+<li><p>f is the factor vector which we want to see the levels
+of.</p></li>
+<li><p>sort takes a boolean which allows us to sort the data by count
+value instead of level order if set to true.</p></li>
+<li><p>prop takes a boolean which allows us to convert the count to
+proportions of each level instead.</p></li>
+</ul>
+<div id="examples-2" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_count() to see the counts of people’s travel habits
+from “BusinessTravel”. Once with sort disabled and once with sort and
+prop set to TRUE.</p>
+<pre class="r"><code>fct_count(att_df$BusinessTravel)</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   f                     n
+##   &lt;fct&gt;             &lt;int&gt;
+## 1 Non-Travel            1
+## 2 Travel_Rarely        15
+## 3 Travel_Frequently     4</code></pre>
+<pre class="r"><code>fct_count(att_df$BusinessTravel, sort= TRUE, prop = TRUE)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   f                     n     p
+##   &lt;fct&gt;             &lt;int&gt; &lt;dbl&gt;
+## 1 Travel_Rarely        15  0.75
+## 2 Travel_Frequently     4  0.2 
+## 3 Non-Travel            1  0.05</code></pre>
+</div>
+</div>
+<div id="fct_match" class="section level4">
+<h4>fct_match()</h4>
+<p>fct_match() is the function which allows to find the presence of
+values in a factor. It has the following arguments:</p>
+<p>fct_match(f, lvls)</p>
+<ul>
+<li><p>f is the factor vector which we want to see the levels
+of.</p></li>
+<li><p>lvls takes a character vector of each value that you want the
+presence of checked. Note that you can not check for values that are not
+in the factor vector itself.</p></li>
+</ul>
+<div id="examples-3" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_match() to see the which rows of our dataframe have the
+levels of “BusinessTravel” of “Travel_Frequently” and “Non-Travel”.</p>
+<pre class="r"><code>att_df %&gt;%
+  filter(fct_match(att_df$BusinessTravel, c(&quot;Travel_Frequently&quot;,&quot;Non-Travel&quot;)))</code></pre>
+<pre><code>## # A tibble: 5 × 6
+##     Age Attrition BusinessTravel    DailyRate Department             JobRole    
+##   &lt;dbl&gt; &lt;chr&gt;     &lt;fct&gt;                 &lt;dbl&gt; &lt;chr&gt;                  &lt;fct&gt;      
+## 1    49 No        Travel_Frequently       279 Research &amp; Development Research S…
+## 2    33 No        Travel_Frequently      1392 Research &amp; Development Research S…
+## 3    32 No        Travel_Frequently      1005 Research &amp; Development Laboratory…
+## 4    38 No        Travel_Frequently       216 Research &amp; Development Manufactur…
+## 5    22 No        Non-Travel             1123 Research &amp; Development Laboratory…</code></pre>
+</div>
+</div>
+<div id="fct_unique" class="section level4">
+<h4>fct_unique()</h4>
+<p>fct_unique() is the function which returns the unique factor values.
+It has the following arguments:</p>
+<p>fct_unique(f)</p>
+<ul>
+<li>f is the factor vector which we want to see the levels of.</li>
+</ul>
+<div id="examples-4" class="section level5">
+<h5>Examples</h5>
+<pre class="r"><code>fct_unique(att_df$BusinessTravel)</code></pre>
+<pre><code>## [1] Non-Travel        Travel_Rarely     Travel_Frequently
+## Levels: Non-Travel Travel_Rarely Travel_Frequently</code></pre>
+</div>
+</div>
+</div>
+<div id="combining-factors" class="section level3">
+<h3>Combining Factors</h3>
+<p>There are occasions where we’ll have multiple factor vectors of data
+which we’ll want to combine. Forcats provides for this as well.</p>
+<div id="fct_c" class="section level4">
+<h4>fct_c()</h4>
+<p>fct_c() is the function which allows to combine together factor
+vectors with different levels. It has the following arguments:</p>
+<p>fct_c(…)</p>
+<ul>
+<li>… includes each factor vector that you want to combine.</li>
+</ul>
+<div id="examples-5" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_c() to combine the two columns “BusinessTravel” and
+“JobRole” into one.</p>
+<pre class="r"><code>fct_c(att_df$BusinessTravel,att_df$JobRole)</code></pre>
+<pre><code>##  [1] Travel_Rarely             Travel_Frequently        
+##  [3] Travel_Rarely             Travel_Frequently        
+##  [5] Travel_Rarely             Travel_Frequently        
+##  [7] Travel_Rarely             Travel_Rarely            
+##  [9] Travel_Frequently         Travel_Rarely            
+## [11] Travel_Rarely             Travel_Rarely            
+## [13] Travel_Rarely             Travel_Rarely            
+## [15] Travel_Rarely             Travel_Rarely            
+## [17] Travel_Rarely             Non-Travel               
+## [19] Travel_Rarely             Travel_Rarely            
+## [21] Sales Executive           Research Scientist       
+## [23] Laboratory Technician     Research Scientist       
+## [25] Laboratory Technician     Laboratory Technician    
+## [27] Laboratory Technician     Laboratory Technician    
+## [29] Manufacturing Director    Healthcare Representative
+## [31] Laboratory Technician     Laboratory Technician    
+## [33] Research Scientist        Laboratory Technician    
+## [35] Laboratory Technician     Manufacturing Director   
+## [37] Research Scientist        Laboratory Technician    
+## [39] Manager                   Research Scientist       
+## 9 Levels: Non-Travel Travel_Rarely ... Sales Executive</code></pre>
+</div>
+</div>
+<div id="fct_unify" class="section level4">
+<h4>fct_unify()</h4>
+<p>fct_unify() is the function which allows for sharing the levels of
+different factor vectors with each other. It has the following
+arguments:</p>
+<p>fct_c(fs, levels = lvls_union(fs))</p>
+<ul>
+<li><p>fs includes each factor vector that you want to combine the
+levels of.</p></li>
+<li><p>levels can be set to a character vector of the specific values
+that you want shared if you have them.</p></li>
+</ul>
+<div id="examples-6" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_unify() to combine the levels of the two columns
+“BusinessTravel” and “JobRole” for each column.</p>
+<pre class="r"><code>businesstrav &lt;- att_df$BusinessTravel
+jobrol &lt;- att_df$JobRole
+fct_unify(list(businesstrav,jobrol))</code></pre>
+<pre><code>## [[1]]
+##  [1] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Frequently
+##  [5] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Rarely    
+##  [9] Travel_Frequently Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [13] Travel_Rarely     Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [17] Travel_Rarely     Non-Travel        Travel_Rarely     Travel_Rarely    
+## 9 Levels: Non-Travel Travel_Rarely ... Sales Executive
+## 
+## [[2]]
+##  [1] Sales Executive           Research Scientist       
+##  [3] Laboratory Technician     Research Scientist       
+##  [5] Laboratory Technician     Laboratory Technician    
+##  [7] Laboratory Technician     Laboratory Technician    
+##  [9] Manufacturing Director    Healthcare Representative
+## [11] Laboratory Technician     Laboratory Technician    
+## [13] Research Scientist        Laboratory Technician    
+## [15] Laboratory Technician     Manufacturing Director   
+## [17] Research Scientist        Laboratory Technician    
+## [19] Manager                   Research Scientist       
+## 9 Levels: Non-Travel Travel_Rarely ... Sales Executive</code></pre>
+</div>
+</div>
+</div>
+<div id="changing-order" class="section level3">
+<h3>Changing Order</h3>
+<p>In order to explore data we may want to look at different orders of
+the levels. Forcats allows for multiple different ways to do this.</p>
+<div id="fct_relevel" class="section level4">
+<h4>fct_relevel()</h4>
+<p>fct_relevel() is the function which allows you to manually change the
+order of factor levels. It has the following arguments:</p>
+<p>fct_relevel(.f, …, after = 0L)</p>
+<ul>
+<li><p>.f is the factor vector you want to relevel.</p></li>
+<li><p>… includes a character vector of the new order of the levels or
+any functions that you might want to relevel by such as sort().</p></li>
+<li><p>after is the position you want to place the levels included in …
+after.</p></li>
+</ul>
+<div id="examples-7" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_relevel() to reverse the ordering of “BusinessTravel”.
+(fct_reverse() actually does this exact same thing but we won’t be going
+over it in this vignette).</p>
+<pre class="r"><code>att_df %&gt;%
+  pull(BusinessTravel) %&gt;%
+  fct_relevel(c(&#39;Travel_Frequently&#39;, &#39;Travel_Rarely&#39;, &#39;Non-Travel&#39;))</code></pre>
+<pre><code>##  [1] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Frequently
+##  [5] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Rarely    
+##  [9] Travel_Frequently Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [13] Travel_Rarely     Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [17] Travel_Rarely     Non-Travel        Travel_Rarely     Travel_Rarely    
+## Levels: Travel_Frequently Travel_Rarely Non-Travel</code></pre>
+<p>Let’s also showcase the use of the after parameter. Here we move the
+level “Non-Travel” to after the first position where it previously
+was.</p>
+<pre class="r"><code>att_df %&gt;%
+  pull(BusinessTravel) %&gt;%
+  fct_relevel(c(&#39;Non-Travel&#39;), after = 1)</code></pre>
+<pre><code>##  [1] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Frequently
+##  [5] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Rarely    
+##  [9] Travel_Frequently Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [13] Travel_Rarely     Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [17] Travel_Rarely     Non-Travel        Travel_Rarely     Travel_Rarely    
+## Levels: Travel_Rarely Non-Travel Travel_Frequently</code></pre>
+</div>
+</div>
+<div id="fct_shift" class="section level4">
+<h4>fct_shift()</h4>
+<p>fct_shift() is the function which allows for moving the order of
+factors to the left or to the right. It has the following arguments:</p>
+<p>fct_shift(f, n = 1L)</p>
+<ul>
+<li><p>f includes the factor vector that you want to shift the levels
+of.</p></li>
+<li><p>n is a integer which determines what direction and how many
+levels you’ll be shifting the order in said direction. A postive n
+shifts all levels n times to the left, while a negative n shifts all
+levels n times to the right.</p></li>
+</ul>
+<div id="examples-8" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_shift() shift the order of “JobRole” around first to
+the left and then to the right.</p>
+<pre class="r"><code>att_df %&gt;%
+  pull(JobRole) %&gt;%
+  fct_shift(1)</code></pre>
+<pre><code>##  [1] Sales Executive           Research Scientist       
+##  [3] Laboratory Technician     Research Scientist       
+##  [5] Laboratory Technician     Laboratory Technician    
+##  [7] Laboratory Technician     Laboratory Technician    
+##  [9] Manufacturing Director    Healthcare Representative
+## [11] Laboratory Technician     Laboratory Technician    
+## [13] Research Scientist        Laboratory Technician    
+## [15] Laboratory Technician     Manufacturing Director   
+## [17] Research Scientist        Laboratory Technician    
+## [19] Manager                   Research Scientist       
+## 6 Levels: Laboratory Technician Manager ... Healthcare Representative</code></pre>
+<pre class="r"><code>att_df %&gt;%
+  pull(JobRole) %&gt;%
+  fct_shift(-1)</code></pre>
+<pre><code>##  [1] Sales Executive           Research Scientist       
+##  [3] Laboratory Technician     Research Scientist       
+##  [5] Laboratory Technician     Laboratory Technician    
+##  [7] Laboratory Technician     Laboratory Technician    
+##  [9] Manufacturing Director    Healthcare Representative
+## [11] Laboratory Technician     Laboratory Technician    
+## [13] Research Scientist        Laboratory Technician    
+## [15] Laboratory Technician     Manufacturing Director   
+## [17] Research Scientist        Laboratory Technician    
+## [19] Manager                   Research Scientist       
+## 6 Levels: Sales Executive Healthcare Representative ... Research Scientist</code></pre>
+</div>
+</div>
+<div id="fct_infreq" class="section level4">
+<h4>fct_infreq()</h4>
+<p>fct_infreq() is the function which allows for reordering the levels
+by the frequency they occur. It has the following arguments:</p>
+<p>fct_infreq(f)</p>
+<ul>
+<li>f includes the factor vector that you want to shift the levels
+of.</li>
+</ul>
+<div id="examples-9" class="section level5">
+<h5>Examples</h5>
+<pre class="r"><code>fct_infreq(att_df$BusinessTravel, ordered = NA)</code></pre>
+<pre><code>##  [1] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Frequently
+##  [5] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Rarely    
+##  [9] Travel_Frequently Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [13] Travel_Rarely     Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [17] Travel_Rarely     Non-Travel        Travel_Rarely     Travel_Rarely    
+## Levels: Travel_Rarely Travel_Frequently Non-Travel</code></pre>
+</div>
+</div>
+<div id="fct_inseq" class="section level4">
+<h4>fct_inseq()</h4>
+<p>fct_inseq() is the same as fct_infreq() but for numeric values of the
+level</p>
+</div>
+<div id="fct_inorder" class="section level4">
+<h4>fct_inorder()</h4>
+<p>fct_inorder() orders the factors by how they appear in the data</p>
+<p>fct_inorder(f)</p>
+<ul>
+<li>f includes the factor vector that you want to shift the levels
+of.</li>
+</ul>
+<div id="examples-10" class="section level5">
+<h5>Examples</h5>
+<pre class="r"><code>fct_inorder(att_df$BusinessTravel, ordered = NA)</code></pre>
+<pre><code>##  [1] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Frequently
+##  [5] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Rarely    
+##  [9] Travel_Frequently Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [13] Travel_Rarely     Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [17] Travel_Rarely     Non-Travel        Travel_Rarely     Travel_Rarely    
+## Levels: Travel_Rarely Travel_Frequently Non-Travel</code></pre>
+</div>
+</div>
+<div id="fct_rev" class="section level4">
+<h4>fct_rev()</h4>
+<p>fct_rev() orders the factors in reverse by how they appear in the
+data</p>
+<p>fct_rev(f)</p>
+<ul>
+<li>f includes the factor vector that you want to shift the levels
+of.</li>
+</ul>
+<div id="examples-11" class="section level5">
+<h5>Examples</h5>
+<pre class="r"><code>fct_rev(att_df$BusinessTravel)</code></pre>
+<pre><code>##  [1] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Frequently
+##  [5] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Rarely    
+##  [9] Travel_Frequently Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [13] Travel_Rarely     Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [17] Travel_Rarely     Non-Travel        Travel_Rarely     Travel_Rarely    
+## Levels: Travel_Frequently Travel_Rarely Non-Travel</code></pre>
+</div>
+</div>
+<div id="fct_reorder" class="section level4">
+<h4>fct_reorder()</h4>
+<p>fct_reorder() reorders the levels by their relationship to another
+variable</p>
+<div id="examples-12" class="section level5">
+<h5>Examples</h5>
+<pre class="r"><code>boxplot(data = att_df, DailyRate ~ reorder(BusinessTravel, DailyRate))</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+</div>
+</div>
+<div id="fct_reorder2" class="section level4">
+<h4>fct_reorder2()</h4>
+<p>fct_reorder2() reorders levels by their final values</p>
+</div>
+</div>
+<div id="change-values" class="section level3">
+<h3>Change Values</h3>
+<p>With each value in a factor being mapped to a level, it becomes easy
+to modify these values through forcats functions operating on the
+levels.</p>
+<div id="fct_recode" class="section level4">
+<h4>fct_recode()</h4>
+<p>fct_recode() is the function which allows you to manually change the
+values of each level. It has the following arguments:</p>
+<p>fct_recode(.f, …)</p>
+<ul>
+<li><p>.f is the factor vector you want to change the values
+of.</p></li>
+<li><p>… includes a mapping of each new value to the existing
+levels.</p></li>
+</ul>
+<div id="examples-13" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_recode() to change the values of “BusinessTravel”. A
+simple renaming should suffice here. We’ll change “Non-Travel” to “No”,
+“Travely_Rarely” to “Some”, and “Travel_Frequently” to “Yes”.</p>
+<pre class="r"><code>att_df %&gt;%
+  pull(BusinessTravel) %&gt;%
+  fct_recode(Yes = &quot;Travel_Frequently&quot;, Some = &quot;Travel_Rarely&quot;, No = &quot;Non-Travel&quot;)</code></pre>
+<pre><code>##  [1] Some Yes  Some Yes  Some Yes  Some Some Yes  Some Some Some Some Some Some
+## [16] Some Some No   Some Some
+## Levels: No Some Yes</code></pre>
+<p>Let’s also showcase that you can simply rename a single value
+below.</p>
+<pre class="r"><code>att_df %&gt;%
+  pull(BusinessTravel) %&gt;%
+  fct_recode(Yes = &quot;Travel_Frequently&quot;)</code></pre>
+<pre><code>##  [1] Travel_Rarely Yes           Travel_Rarely Yes           Travel_Rarely
+##  [6] Yes           Travel_Rarely Travel_Rarely Yes           Travel_Rarely
+## [11] Travel_Rarely Travel_Rarely Travel_Rarely Travel_Rarely Travel_Rarely
+## [16] Travel_Rarely Travel_Rarely Non-Travel    Travel_Rarely Travel_Rarely
+## Levels: Non-Travel Travel_Rarely Yes</code></pre>
+</div>
+</div>
+<div id="fct_other" class="section level4">
+<h4>fct_other()</h4>
+<p>fct_other() is a very useful function which allows for replacing
+certain levels to a single other value. It has the following
+arguments:</p>
+<p>fct_other(f, keep, drop, other_level = “Other”)</p>
+<ul>
+<li><p>f includes the factor vector that you want to change the levels
+of.</p></li>
+<li><p>keep is a character vector of the values that you would like to
+keep.</p></li>
+<li><p>drop is a character vector of the values that you would like to
+remove.</p></li>
+<li><p>other_level is a string that you would like to change the removed
+values to, by default this is “Other”.</p></li>
+</ul>
+<div id="examples-14" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_other() on “JobRole” to first change any levels that
+are not “Research Scientist” and “Laboratory Technician” to other.</p>
+<pre class="r"><code>att_df %&gt;%
+  pull(JobRole) %&gt;%
+  fct_other(keep = c(&quot;Research Scientist&quot;, &quot;Laboratory Technician&quot;))</code></pre>
+<pre><code>##  [1] Other                 Research Scientist    Laboratory Technician
+##  [4] Research Scientist    Laboratory Technician Laboratory Technician
+##  [7] Laboratory Technician Laboratory Technician Other                
+## [10] Other                 Laboratory Technician Laboratory Technician
+## [13] Research Scientist    Laboratory Technician Laboratory Technician
+## [16] Other                 Research Scientist    Laboratory Technician
+## [19] Other                 Research Scientist   
+## Levels: Laboratory Technician Research Scientist Other</code></pre>
+<p>Afterwards we showcase using drop to only change the levels “Research
+Scientist” and “Laboratory Technician” to “Unimportant Role” by
+utilizing the other_level argument.</p>
+<pre class="r"><code>att_df %&gt;%
+  pull(JobRole) %&gt;%
+  fct_other(drop = c(&quot;Research Scientist&quot;, &quot;Laboratory Technician&quot;), other_level = &quot;Unimportant Role&quot;)</code></pre>
+<pre><code>##  [1] Sales Executive           Unimportant Role         
+##  [3] Unimportant Role          Unimportant Role         
+##  [5] Unimportant Role          Unimportant Role         
+##  [7] Unimportant Role          Unimportant Role         
+##  [9] Manufacturing Director    Healthcare Representative
+## [11] Unimportant Role          Unimportant Role         
+## [13] Unimportant Role          Unimportant Role         
+## [15] Unimportant Role          Manufacturing Director   
+## [17] Unimportant Role          Unimportant Role         
+## [19] Manager                   Unimportant Role         
+## 5 Levels: Healthcare Representative Manager ... Unimportant Role</code></pre>
+</div>
+</div>
+<div id="fct_anon" class="section level4">
+<h4>fct_anon()</h4>
+<p>fct_anon() assigns random integers to the levels</p>
+<div id="examples-15" class="section level5">
+<h5>Examples</h5>
+<pre class="r"><code>fct_anon(att_df$BusinessTravel)</code></pre>
+<pre><code>##  [1] 3 2 3 2 3 2 3 3 2 3 3 3 3 3 3 3 3 1 3 3
+## Levels: 1 2 3</code></pre>
+</div>
+</div>
+<div id="fct_collapse" class="section level4">
+<h4>fct_collapse()</h4>
+<p>fct_collapse() collapses levels into user defined groups</p>
+<div id="examples-16" class="section level5">
+<h5>Examples</h5>
+<pre class="r"><code>fct_collapse(att_df$BusinessTravel, x = c(&quot;Travel_Rarely&quot;, &quot;Non-Travel&quot;))</code></pre>
+<pre><code>##  [1] x                 Travel_Frequently x                 Travel_Frequently
+##  [5] x                 Travel_Frequently x                 x                
+##  [9] Travel_Frequently x                 x                 x                
+## [13] x                 x                 x                 x                
+## [17] x                 x                 x                 x                
+## Levels: x Travel_Frequently</code></pre>
+</div>
+</div>
+<div id="fct_lump_min" class="section level4">
+<h4>fct_lump_min()</h4>
+<p>fct_lump_min() combines factors that appear less than a specified
+number of times</p>
+<div id="examples-17" class="section level5">
+<h5>Examples</h5>
+<pre class="r"><code>fct_lump_min(att_df$BusinessTravel, min = 3)</code></pre>
+<pre><code>##  [1] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Frequently
+##  [5] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Rarely    
+##  [9] Travel_Frequently Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [13] Travel_Rarely     Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [17] Travel_Rarely     Other             Travel_Rarely     Travel_Rarely    
+## Levels: Travel_Rarely Travel_Frequently Other</code></pre>
+</div>
+</div>
+</div>
+<div id="adding-or-removing-levels" class="section level3">
+<h3>Adding or Removing Levels</h3>
+<p>Occasionally we’ll want to add new levels to expand our dataset or
+remove levels that don’t end up being used. Forcats lets us do that!</p>
+<div id="fct_expand" class="section level4">
+<h4>fct_expand()</h4>
+<p>fct_expand() is the function which allows you to manually add levels
+to a factor vector. It has the following arguments:</p>
+<ul>
+<li><p>fct_expand(.f, …)</p></li>
+<li><p>.f is the factor vector you want to change the values
+of.</p></li>
+<li><p>… includes each new level that you want to add.</p></li>
+</ul>
+<div id="examples-18" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_expand() to add the level of “Travel_Always” to
+“BusinessTravel”.</p>
+<pre class="r"><code>att_df %&gt;%
+  pull(BusinessTravel) %&gt;%
+  fct_drop(&quot;Travel_Rarely&quot;)</code></pre>
+<pre><code>##  [1] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Frequently
+##  [5] Travel_Rarely     Travel_Frequently Travel_Rarely     Travel_Rarely    
+##  [9] Travel_Frequently Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [13] Travel_Rarely     Travel_Rarely     Travel_Rarely     Travel_Rarely    
+## [17] Travel_Rarely     Non-Travel        Travel_Rarely     Travel_Rarely    
+## Levels: Non-Travel Travel_Rarely Travel_Frequently</code></pre>
+<pre class="r"><code>  fct_expand(&quot;Travel_Always&quot;)</code></pre>
+<pre><code>## [1] Travel_Always
+## Levels: Travel_Always</code></pre>
+</div>
+</div>
+<div id="fct_drop" class="section level4">
+<h4>fct_drop()</h4>
+<p>fct_drop() is a function that removes any unused levels from a factor
+vector. It has the following arguments:</p>
+<p>fct_drop(f, only)</p>
+<ul>
+<li><p>f includes the factor vector that you want to drop the levels
+of.</p></li>
+<li><p>only is a character vector of the values that you would like to
+drop so other unused values stay.</p></li>
+</ul>
+<div id="examples-19" class="section level5">
+<h5>Examples</h5>
+<p>Let’s use fct_drop() on “JobRole” to drop “Research Scientist” from
+levels after filtering it out.</p>
+<pre class="r"><code>att_df %&gt;%
+  filter(JobRole != &quot;Research Scientist&quot;) %&gt;%
+  pull(JobRole) %&gt;%
+  fct_drop()</code></pre>
+<pre><code>##  [1] Sales Executive           Laboratory Technician    
+##  [3] Laboratory Technician     Laboratory Technician    
+##  [5] Laboratory Technician     Laboratory Technician    
+##  [7] Manufacturing Director    Healthcare Representative
+##  [9] Laboratory Technician     Laboratory Technician    
+## [11] Laboratory Technician     Laboratory Technician    
+## [13] Manufacturing Director    Laboratory Technician    
+## [15] Manager                  
+## 5 Levels: Healthcare Representative Laboratory Technician ... Sales Executive</code></pre>
+<p>Afterwards we showcase using drop to only remove the level of
+“Laboratory Technician” despite also not having “Research Scientist” as
+a value within the data.</p>
+<pre class="r"><code>att_df %&gt;%
+  filter(JobRole != &quot;Research Scientist&quot; &amp; JobRole != &quot;Laboratory Technician&quot;) %&gt;%
+  pull(JobRole) %&gt;%
+  fct_drop(only = &quot;Laboratory Technician&quot;)</code></pre>
+<pre><code>## [1] Sales Executive           Manufacturing Director   
+## [3] Healthcare Representative Manufacturing Director   
+## [5] Manager                  
+## 5 Levels: Healthcare Representative Manager ... Sales Executive</code></pre>
+</div>
+</div>
+<div id="fct_explicit_na" class="section level4">
+<h4>fct_explicit_na()</h4>
+<p>fct_explicit_na() assigns NA vales to a level so that they can be
+plotted</p>
+</div>
+</div>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>We’ve learned some forcats functions that allow us to factorize data
+and also manipulate the factorize data. This comes in handy when working
+with categorical variables of both the ordinal and nominal kind. If we
+wanted to extend this vignette, we could either tackle more forcats
+functions or apply our examples in some real world scenarios where they
+could be used.</p>
+</div>
+<div id="tidyverse-extend" class="section level2">
+<h2>Tidyverse Extend</h2>
+<p>Taha demonstrated multiple capabilities of the <code>tidyverse</code>
+- <code>forcats</code> package. As an extension, I demonstrated the
+remaining <code>forcats</code> capabilities with the same dataset. My
+additions are interspersed in Taha’s code.</p>
 </div>
 
 

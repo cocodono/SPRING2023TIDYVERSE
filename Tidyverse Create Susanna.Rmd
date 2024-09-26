@@ -13,6 +13,9 @@ editor_options:
     wrap: sentence
 ---
 
+# Joe Garcia's Extend Assignment*****
+I decided to extend Susanna Wong's College Grads dataset, because used the same dataset. Here I just changed Women to Men! Good job Susanna!
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -151,6 +154,20 @@ The code below will reorder the `Major_category` by the percentage of women from
 ```{r}
 ggplot(data = college_major, aes(y = reorder(Major_category, -ShareWomen), x = ShareWomen)) + geom_bar(stat="identity")  
 ```
+# Joe Garcia's Extend Assignment***
+
+```{r}
+# Joe Garcia Extending Susanna's code, Here I added the men as well!
+college_major <- raw_data %>%
+  group_by(Major_category) %>% 
+  summarise(Total = sum(Total,na.rm=TRUE),
+            Men = sum(Men,na.rm=TRUE),
+            Women = sum(Women,na.rm=TRUE)) %>% 
+  mutate(ShareMen = Men/Total)
+
+ggplot(data = college_major, aes(y = reorder(Major_category, -ShareMen), x = ShareMen)) + geom_bar(stat="identity")
+
+```
 
 Rename the axes label using `labs()`.
 Add a title for the bar graph using `ggtitle()`.
@@ -281,6 +298,11 @@ Question 2: Which major category has the highest unemployment rate?
 
 The top three major category that has the highest unemployment rate are Social Science, Arts, and Humanities & Liberal Arts.
 The top three major category that has the lowest unemployment rate are Education, Physical Sciences, and Agriculture & Natural Resources.
+
+# TidyVerse Extend
+
+https://github.com/suswong/SPRING2023TIDYVERSE/blob/main/TidyVerse%20Extend%20on%20JLok's%20Create%20Assignment.Rmd
+https://rpubs.com/sussing/1035929
 
 # Source
 

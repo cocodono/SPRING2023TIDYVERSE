@@ -1,6 +1,6 @@
 ---
 title: "Tidyverse-Create"
-author: "Ross Boehme"
+author: "Ross Boehme Extended by Joshua Lok"
 date: "2023-04-14"
 output: html_document
 ---
@@ -115,6 +115,18 @@ library(cowplot)
 plot_grid(repub_age,dem_age)
 ```
 
+#### Extend:
 
+Here we will make a quick Scatter plot comparing the ages and what Congressional Session. An interesting thing is that you can see a couple of slow growth trends to show how many terms a congressional memebers have served back to back. 
 
+```{r}
+str(congress_ross)
+summary(congress_ross$age_years)
+summary(congress$congress)
+ggplot(congress_ross, aes(x = age_years, y = congress_sess, color = party_name)) +
+  geom_jitter() +
+  scale_color_manual(values = c("blue", "green", "red")) +
+  labs(x = "Age (years)", y = NULL) +
+  theme_classic()
 
+```

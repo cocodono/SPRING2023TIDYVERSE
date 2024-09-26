@@ -1,6 +1,6 @@
 ---
 title: "Tidyverse: Lubridate"
-author: "John Cruz"
+author: "John Cruz, Shoshana Farber"
 date: "2023-04-09"
 output: 
   html_document: default
@@ -51,7 +51,7 @@ import_data <- as.data.frame(fromJSON('https://data.cityofnewyork.us/resource/tg
 After importing the data using *jsonlite*, we are left we nineteen (19) columns which includes the start and end dates within different zip codes in New York City. We can see it uses the ISO 8601 standard format of date and time separated from each other with the usage of the string literal "T". 
 
 ```{r browse}
-knitr::kable(head(import_data, 1))
+rmarkdown::paged_table(head(import_data, 5))
 ```
 
 ---
@@ -95,9 +95,11 @@ knitr::kable(head(minimize_cols_df))
 ```
 ---
 
-## Visualize Dates
+## Visualize Dates {.tabset .tabset-fade .tabset-pills}
 
 Lastly, two plots will be created filtering out for only "shooting permits" where we can see the day of the week filming begins within each borough and what hour does filming begin based on the category such as television or commercial.
+
+### Day of Week Filming Began
 
 ```{r day-week-graph, echo=FALSE, message=FALSE}
 graph_week <-
@@ -120,6 +122,8 @@ graph_week_table <-
 knitr::kable(graph_week_table)
 ```
 
+### Hour Filming Began
+
 ```{r hour-graph, echo=FALSE, message=FALSE}
 graph_hour <-
   minimize_cols_df |> 
@@ -140,3 +144,82 @@ graph_hour_table <-
 
 knitr::kable(arrange(graph_hour_table, start_hour))
 ```
+# Jacob Silver Updates
+
+Because John did the work of making the data usable with respect to datetimes, as well as analyzing the data by borough, I'm interested in running an additional combination analysis of those two variables. Specifically, I would like to see the number of permits provided by borough month by month.
+
+First, I need to make a new column isolating just month and year.
+
+```{r}
+update_df$start_date_ym <- update_df$start_date %>%
+    format_ISO8601(precision = "ym")
+```
+
+Now that I have a year-month column, I can make a dataframe breaking out the number of permits for each borough and for each month.
+
+```{r}
+over_time_df <- update_df %>%
+  group_by(borough, start_date_ym) %>%
+  summarise(num_permits = n())
+```
+
+Now, I need to make sure my month_year information is read as a date.
+```{r}
+over_time_df$start_date_ym <- as.Date(paste(over_time_df$start_date_ym, "-01", sep=""))
+```
+
+Finally, I can plot a line chart of permit volumes broken out by borough.
+
+```{r}
+over_time_df %>%
+  ggplot(mapping = aes(x = start_date_ym, y = num_permits, color = borough)) + 
+  geom_line() + 
+  scale_x_date(date_labels = "%b %Y")
+
+```
+Interestingly, Manhattan and Brooklyn saw a sharp decline coming into January, while Queens actually saw an uptick. Perhaps studios like to shoot wintery scenes in Queens?
+ 
+=======
+
+## Changing to Date Data Type
+
+Another functionality of the **lubridate** package is the ability to extract just the date from a timestamp, or to convert from a character type date to a date data type using `as_date()`.
+
+First, let's use `as_date()` to extract the date from each row of `startdatetime` and create a new variable `start_date`:
+
+```{r extract-date}
+import_data |>
+  mutate(start_date = as_date(startdatetime)) |>
+  select(borough, category, eventtype, startdatetime, start_date) |>
+  head(5) |>
+  knitr::kable()
+```
+
+Now, let's use `as_date()` to convert dates from a character data type to a date data type. If the character date is not in the form "yyyy-mm-dd", we can use the `format` argument to tell the function how the date is formatted so that it knows how to convert it.   
+
+Let's convert a few different dates from character to date data types. Note that you do not need to provide a 2 digit date, as the function will supply a starting zero for single digit months or days. You do, however, need to provide a four digit year. 
+
+```{r convert-data-type}
+# format = yyyy-mm-dd
+dates1 <- c("2021-4-7", "2021-9-13", "2021-10-15", "2021-11-14")
+as_date(dates1)
+
+# format = mm-dd-yyyy
+dates2 <- c("4-7-2021", "9-13-2021", "10-15-2021", "11-14-2021")
+as_date(dates2, format = '%m-%d-%Y')
+
+# format = mm/dd/yyyy
+dates3 <- c("4/7/2021", "9/13/2021", "10/15/2021", "11/14/2021")
+as_date(dates3, format = '%m/%d/%Y')
+```
+
+If the date is improperly formatted, the function will coerce those values to NA.
+
+```{r improper-format}
+dates4 <- c("12-1-2021", "1-5-2023", "2/14/2023")
+as_date(dates4, format = '%m-%d-%Y')
+```
+
+Additional documentation for **lubridate** package can be found [here](https://cran.r-project.org/web/packages/lubridate/lubridate.pdf). 
+
+

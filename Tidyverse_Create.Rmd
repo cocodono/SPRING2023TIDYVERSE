@@ -1,9 +1,8 @@
 ---
-title: "Tidyverse Create"
-author: "Coco Donovan"
+title: "Tidyverse Create - Extended"
+author: "Coco Donovan, Kory Martin"
 date: "`r Sys.Date()`"
 output:
-  pdf_document: default
   html_document: default
 ---
 
@@ -101,6 +100,53 @@ top_n(avg_heights, n=6, Avg_height) %>%
   ylab("Average Height (in)")
 ```
 
+## Extending the Examples (by Kory Martin):
+
+For this we will extend upon the examples presented, by looking at the number of international students that are attending the universities and gleaning some meaningful insights based on this.
+
+We begin by using the **mutate** function in dplpyr to create a new column that will hold a value of 'international' if the student is not from the US, and a value of 'domestic' if they are from the US. In addition to the mutate function, we will use the **if_else** function to assign the value to the new column, based on whether or not the value of country_clean is 'USA' or not.
+
+```{r}
+(ncaa_wbb_roster_extended <- ncaa_wbb_rosters %>% 
+  mutate(domestic_international = ifelse(country_clean == 'USA', 'domestic', 'international')))
+
+
+```
+
+We will then use **select** function combined with the **slice_sample** function to confirm that our new column has the expected values, by selecting a random sample of rows and looking at their country_clean and domestic_international values
+
+```{r}
+ncaa_wbb_roster_extended %>% select(country_clean, domestic_international) %>% slice_sample(n=15)
+```
+
+Next we will use the **group_by** function to generate a count of the number of domestic vs international students at each college. Furthermore, we will use the **summarize** function to create summary measures for the total number of domestic students, the total number of international students, and the total number of players on the team. Finally, based on these counts, we will then create an additional variable pct_international that will represent the pct of international students on the student rosters. 
+
+```{r}
+(ncaa_international_domestic <- ncaa_wbb_roster_extended %>%
+  group_by(team) %>%
+  summarize(num_domestic = sum(ifelse(domestic_international == 'domestic',1,0)),
+            num_international = sum(ifelse(domestic_international == 'international',1,0)),
+            num_players = n()) %>%
+  mutate(pct_international = num_international/num_players))
+
+
+```
+We will use the **left_join** function to connect our data to the division in which the college belongs to
+```{r}
+(ncaa_international_domestic <- left_join(ncaa_international_domestic, ncaa_wbb_rosters %>% select(team, division) %>% distinct(), by=c("team"="team")))
+
+```
+Finally we will use the **group_by** and **summarize** functions, to determine the average pct of international students per team, across teams in each of the three divisions. 
+```{r}
+ncaa_international_domestic %>%
+  group_by(division) %>%
+  summarize(num_teams = n(),
+            avg_pct_international = mean(pct_international))
+
+```
+
+
+
 ## Conclusion:
 
 As you can see Indiana has the tallest average height, followed by UConn, Michigan,
@@ -113,3 +159,37 @@ hall-of-fame coach C. Vivian Stringer and their roster only contains 8 players
 (their average height may be inflated by the lack of players on the roster). However,
 my first thought after looking at this would be that it seems that height plays
 some component in basketball (stating the obvious).
+
+
+## Mohamed Hassan-El Serafi Tidyverse Extend
+
+Changing values in primary_position from uppercase to lowercase, filtering data to see the amount of players whose primary position is guard and were redshirt for each team.
+
+```{r}
+library(DT)
+df2 <- ncaa_wbb_rosters %>%
+  select(team, primary_position, redshirt) %>%
+  mutate(primary_position = tolower(primary_position)) %>%
+  filter(primary_position == 'guard' & redshirt == 1) %>%
+  group_by(team) %>%
+  summarise(count_of_guard_red = sum(redshirt)) %>%
+  arrange(desc(count_of_guard_red))
+DT::datatable(df2)
+```
+
+## Barplot of Results
+
+
+```{r}
+top_n(df2, n=10, `count_of_guard_red`) %>%
+  ggplot(., mapping = aes(x=reorder(team, desc(`count_of_guard_red`)),y=`count_of_guard_red`, fill=team)) +
+  geom_bar(stat='identity') +
+  geom_text(aes(label = count_of_guard_red), vjust = 1,
+              position = position_dodge(width = 0.5))+
+  xlab("Team") +
+  ylab("Number of Redshirt Guards per Team") +
+  coord_flip()
+```
+
+Cal St. San Bernardino and Grand Valley State had the most redshirt guards with 7.
+

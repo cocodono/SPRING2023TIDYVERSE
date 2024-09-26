@@ -26,30 +26,20 @@ glimpse(df)
 ```
 
 ```{r}
-df$Amount <- str_replace_all(df$Amount, "\\$", "")
-df$Amount <- str_replace_all(df$Amount, ",", "")
+df$Amount <- as.integer(str_replace_all(df$Amount, "\\$|,", "")) #gdd - combined your string replacements and class coercion into one line
 ```
-
-
-
-
-```{r}
-df$Amount <- as.integer(df$Amount)
-```
-
-
-
-
 
 ### Which Political Party received the most contributors?
 
 ```{r}
+#gdd - reordered/simplified your group_by/summarize workflow
 new_df <- df %>%
-  filter(`Party` == "Republican" | `Party` == "Democrat") %>%
-  dplyr::count(Party) %>%
-  group_by(Party) %>%
-  arrange(desc(n))
+    filter(Party == "Republican" | Party == "Democrat") %>%
+    group_by(Party) %>% 
+    dplyr::summarize(n = n()) %>% 
+    arrange(desc(n))
 new_df
+
 ```
 
 ```{r}
@@ -73,11 +63,15 @@ DT::datatable(owner_df)
 ```
 
 ```{r}
-ggplot(owner_df[tail(order(owner_df$Amount), 10), ], aes(x=`Amount`, y=`Owner`, fill=`League`)) +
-  geom_bar(stat="identity", position="dodge", width=0.7) + 
-  labs(title="American Sports Owners That Politically Contributed the Most Money",
+#gdd - adjusted your bar plot so that the x-/y-values are in more standard positions (i.e. the x is a category, and the y is numeric), your bars are sorted, and then the coords are flipped so you still achieve what you wanted visually: a horizontal bar plot. This is better than setting the y-value as a category and the x-value as numeric and not doing the coord flip, as it's easy to get confused when you do it that way. Also updated your Amounts since you wanted them to represent millions of dollars, not dollars.
+ggplot(owner_df[tail(order(owner_df$Amount), 10), ],
+       aes(x = reorder(Owner, Amount / 1000000),
+           y = Amount / 1000000, fill = League)) +
+    geom_bar(stat="identity", position="dodge", width=0.7) + 
+    labs(title="American Sports Owners That Politically Contributed the Most Money",
        x="Name of Sports Owners",
-       y="Amount Contributed (in millions $)") 
+       y="Amount Contributed (in millions $)") +
+    coord_flip()
 ```
 
 
@@ -151,5 +145,28 @@ ggplot(year_df, aes(`Election Year`, `Amount`, fill=`Party`)) +
        y="Election Year")
 ```
 
+## Tidyverse Extend (Nick Climaco)
 
+### Who are the top league donors for each political party?
+
+```{r}
+top_donors_df <- df %>%
+    filter(Party %in% c("Democrat", "Republican")) |> 
+    group_by(Party, League) |> 
+    dplyr::summarize(total_donation = sum(Amount))
+```
+
+```{r}
+top_donors_df %>%
+    slice(1:8) |> 
+    ggplot(aes(x = reorder(League, total_donation), y = total_donation, fill = Party)) +
+    geom_col(position = "dodge") +
+    coord_flip() +
+    facet_wrap(~ Party, scales = "free_y") +
+    labs(y = "Total Donation Amount",
+    title = "Top Donors to Political Parties by Sports League") +
+    theme_minimal() +
+    scale_y_log10() +
+    theme(legend.position = "none", axis.title.y = element_blank()) 
+```
 
